@@ -1,0 +1,628 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&family=Playwrite+IS:wght@100..400&display=swap');
+
+
+*{
+    list-style: none;
+    text-decoration: none; 
+    margin: 0%;
+    padding: 0%;
+}
+/* 헤더----------------------------*/
+header{
+    height: 11vh;
+    width: 100%;
+    border-bottom: 2px solid black;
+}
+
+.logo{
+    height: 100%;
+    width: 30%;
+    margin-left: 6%;
+    display: flex;
+    align-items: center;
+    float: left;   
+}
+.logo > a{
+    color: black;
+    font-size: 300%;
+   
+}
+
+.list_box{
+    padding: 1%;
+    display: flex;
+    justify-content: space-evenly;
+    border-bottom: 2px solid black;
+}
+.type_list{
+    height: 100%;
+    width: 100%;
+    float: left;
+    display: flex;
+    justify-content: space-around;
+    
+
+}
+.type_list>span{
+    margin-left: 5%;
+    margin-right: 5%;
+    font-size: xx-large;
+    margin-top: 3%;
+    font-size: xx-large;
+}
+
+/* 메뉴 1번----------------------------*/
+#current1{
+    font-size: x-large;
+    color: black;
+}
+.menu1{
+    border:none;
+    margin-left: 10%;
+    margin-right: 3%;
+    margin-top: 1%;
+    font: "sans-serif";
+    font-size:18px;
+    }
+    
+    .menu1 ul{
+    height:100px;
+    list-style:none;
+    margin:0;
+    padding:0;
+    }
+    
+    .menu1 li{
+    float:left;
+    padding:0px;
+    
+    }
+    
+    .menu1 li a{
+    color:black;
+    display:block;
+    line-height:100px;
+    margin:0px;
+    padding:0px 25px;
+    text-align:center;
+    text-decoration:none;
+    }
+    
+    .menu1 li a:hover, .menu1 ul li:hover a{
+        text-decoration:underline;
+    }
+    
+    .menu1 li ul{
+    display:none; 
+    height:auto;
+    border:0px;
+    position:absolute;
+    width:200px;
+    z-index:200;
+    /*top:1em;
+    /*left:0;*/
+    }
+    
+    .menu1 li:hover ul{
+    display:block;
+    }
+    
+    .menu1 li li {
+    border: 1px solid black;
+    background-color: white;
+    display:block;
+    float:none;
+    margin:0px;
+    padding:0px;
+    width:135%;
+    }
+    
+    .menu1 li:hover li a{
+    background:none;
+    text-decoration-line: none;
+    }
+    
+    .menu1 li ul a{
+    display:block;
+    height:80px;
+    font-size: large;
+    margin:0px;
+    padding:0px 10px 0px 15px;
+    text-align:left;
+    }
+    
+    .menu1 li ul a:hover, .menu1 li ul li:hover a{
+    text-decoration: underline;
+    border:0px;
+    text-decoration: underline;
+    
+    }
+    
+
+.menu1:hover{
+        text-decoration: underline;
+}
+/* 메뉴 2번----------------------------*/
+.menu2{
+    border:none;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 1%;
+    font: "sans-serif";
+    font-size:18px;
+    }
+#current2{
+    font-size: x-large;
+    color: black;
+}
+    
+.menu2 ul{
+    height:100px;
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+    
+    .menu2 li a{
+    color:black;
+    display:block;
+    line-height:100px;
+    margin:0px;
+    padding:0px 25px;
+    text-align:center;
+    text-decoration:none;
+    }
+    
+    .menu2 li a:hover, .menu2 ul li:hover a{
+        text-decoration:underline;
+    }
+    
+    .menu2 li ul{
+    display:none; 
+    height:auto;
+    border:0px;
+    position:absolute;
+    width:200px;
+    z-index:140;
+    /*top:1em;
+    /*left:0;*/
+    }
+    
+    .menu2 li:hover ul{
+    display:block;
+    }
+    
+    .menu2 li li {
+    border: 1px solid black;
+    background-color: white;
+    display:block;
+    float:none;
+    margin:0px;
+    padding:0px;
+    width:135%;
+    
+    }
+    
+    .menu2 li:hover li a{
+    background:none;
+    text-decoration-line: none;
+    }
+    
+    .menu2 li ul a{
+    display:block;
+    height:80px;
+    font-size: large;
+    margin:0px;
+    padding:0px 10px 0px 15px;
+    text-align:left;
+    }
+    
+    .menu2 li ul a:hover, .menu2 li ul li:hover a{
+    
+    border:0px;
+    text-decoration: underline;
+    
+    }
+
+.menu2:hover{
+        text-decoration: underline;
+}
+
+/* 메뉴 3번----------------------------*/
+.menu3{
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 3.1%;
+    font-size: x-large;
+    color: black;
+}
+.menu3:hover{
+    text-decoration: underline;
+}
+/* 메뉴 4번----------------------------*/
+.menu4{
+    margin-right: 3%;
+    margin-top: 3.1%;
+    margin-right: 10%;
+    font-size: x-large;
+    color: black;
+}
+
+.menu4:hover{
+    text-decoration: underline;
+}
+
+
+
+
+/* 메인----------------------------*/
+main{
+    width: 100%;
+    height: 110vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+}
+.main_main{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+.APEC_box{
+    margin-top: 1%;
+    height: 20%;
+    width: 80%;
+    border: 3px solid black;
+    border-radius: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+   
+}
+.APEC_box::after{
+    content: "";
+    height: 100%;
+    width: 80%;
+    top: 0%;
+    left: 10%;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    opacity: 0.3;
+    z-index: -1;
+    background-image: url("/images/APEC기후센터.png")
+}
+
+.APEC_title{
+    display: flex;
+    justify-content: start;
+}
+.APEC_title > p{
+    font-size: xx-large;
+    margin-top: 20px;
+    margin-left: 20px;
+
+}
+.APEC_explanation{
+    height: 35%;
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+}
+.APEC_explanation > span{
+    font-size: x-large;
+    
+}
+.APEC_nav > nav{
+    display: flex;
+    justify-content: end;
+    align-items: flex-end;
+    
+}
+.APEC_nav > nav > span{
+    font-size: x-large;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+.APEC_nav > nav > a{
+    font-size: large;
+    color: black;
+}
+.APEC_nav > nav > a:hover{
+    text-decoration: underline;
+}
+.APEC_nav > nav :nth-last-child(1){
+    margin-right: 3%;
+}
+
+
+
+
+.NOAA_box{
+    margin-top: 1%;
+    height: 20%;
+    width: 80%;
+    border: 3px solid black;
+    border-radius: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    
+}
+
+.NOAA_box::after{
+    content: "";
+    height: 100%;
+    width: 80%;
+    top: 0%;
+    left: 10%;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    opacity: 0.3;
+    z-index: -1;
+    background-image: url("/images/NOAA.png")
+    
+}
+
+.NOAA_title{
+    display: flex;
+    justify-content: start;
+}
+.NOAA_title > p{
+    font-size: xx-large;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.NOAA_explanation{
+    height: 35%;
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+}
+.NOAA_explanation > span{
+    font-size: x-large;
+    
+}
+.NOAA_nav > nav{
+    display: flex;
+    justify-content: end;
+    align-items: flex-end;
+    
+}
+.NOAA_nav > nav > span{
+    font-size: x-large;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+.NOAA_nav > nav > a{
+    font-size: large;
+    color: black;
+}
+.NOAA_nav > nav > a:hover{
+    text-decoration: underline;
+}
+.NOAA_nav > nav :nth-last-child(1){
+    margin-right: 3%;
+}
+
+
+
+
+.EOSDIS_box{
+    margin-top: 1%;
+    height: 20%;
+    width: 80%;
+    border: 3px solid black;
+    border-radius: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+.EOSDIS_box::after{
+    content: "";
+    height: 100%;
+    width: 80%;
+    top: 0%;
+    left: 10%;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    opacity: 0.3;
+    z-index: -1;
+    background-image: url("/images/EOSDIS.png" )
+}
+.EOSDIS_title{
+    display: flex;
+    justify-content: start;
+}
+.EOSDIS_title > p{
+    font-size: xx-large;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.EOSDIS_explanation{
+    height: 35%;
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+}
+.EOSDIS_explanation > span{
+    font-size: x-large;
+    
+}
+.EOSDIS_nav > nav{
+    display: flex;
+    justify-content: end;
+    align-items: flex-end;
+    
+}
+.EOSDIS_nav > nav > span{
+    font-size: x-large;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+.EOSDIS_nav > nav > a{
+    font-size: large;
+    color: black;
+}
+.EOSDIS_nav > nav > a:hover{
+    text-decoration: underline;
+}
+.EOSDIS_nav > nav :nth-last-child(1){
+    margin-right: 3%;
+}
+
+
+
+
+.k-gisangcheong_box_box{
+    margin-top: 1%;
+    height: 20%;
+    width: 80%;
+    border: 3px solid black;
+    border-radius: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    
+    
+}
+
+.k-gisangcheong_box_box::after{
+    content: "";
+    height: 100%;
+    width: 80%;
+    top: 0%;
+    left: 20%;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    opacity: 0.3;
+    z-index: -1;
+    background-image: url("/images/기상청.png")
+}
+
+.k-gisangcheong_box_title{
+    display: flex;
+    justify-content: start;
+}
+.k-gisangcheong_box_title > p{
+    font-size: xx-large;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+.k-gisangcheong_box_explanation{
+    height: 35%;
+    padding: 1%;
+    display: flex;
+    justify-content: center;
+}
+.k-gisangcheong_box_explanation > span{
+    font-size: x-large;
+}
+.k-gisangcheong_box_nav > nav{
+    display: flex;
+    justify-content: end;
+    align-items: flex-end;
+}
+.k-gisangcheong_box_nav > nav > span{
+    font-size: x-large;
+    padding-left: 1%;
+    padding-right: 1%;
+}
+.k-gisangcheong_box_nav > nav > a{
+    font-size: large;
+    color: black;
+}
+.k-gisangcheong_box_nav > nav > a:hover{
+    text-decoration: underline;
+}
+.k-gisangcheong_box_nav > nav :nth-last-child(1){
+    margin-right: 3%;
+}
+
+
+
+
+/* 푸터----------------------------*/
+footer{
+    margin-top: 2%;
+    width: 100%;
+    height: 40%;
+    border-top: 4px solid black;
+    background-color: black;
+}
+
+.footer_text1{
+    color: white;
+    font-size: x-large;
+    width: 100%;
+    height: 100%;
+    margin-top: 1%;
+    margin-left: 3%;
+}
+.footer_text2{
+    color: white;
+    font-size: large;
+    width: 100%;
+    height: 100%;
+    margin-top: 0.6%;
+    margin-left: 5%;
+}
+
+.l3{
+}
+.l2{
+}
+.l1{ 
+}
+/* 미디어----------------------------*/
+@media screen and (max-width: 1600px)  {
+	.menu3{
+        display: none;
+        
+    }
+    .menu4{
+        display: none;
+    }
+    .l2{
+        display: none;
+    }
+    .l3{
+        display: none;
+    }
+    .l1{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1500px)  {
+    .slider__wrap{
+        display: none;
+    }
+    .container{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 600px)  {
+	.menu1{
+        display: none;
+        
+    }
+    .menu2{
+        display: none;
+    }
+    
+}
