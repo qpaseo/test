@@ -1,0 +1,20 @@
+{
+  "name": "firebase",
+  "version": "1.0.0",
+  "main": "src/login.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "login": "node src/login.js",
+    "student": "node src/student.js",
+    "teacher": "node src/teacher.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.1",
+    "firebase": "^10.14.1"
+  }
+}
