@@ -1,5 +1,5 @@
 // 파이어베이스 데이터베이스 접근(선생님 정보 조정)
-// 실행전에 json파일 확인
+// npm run teacher
 
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";

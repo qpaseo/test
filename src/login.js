@@ -1,5 +1,5 @@
 // 로그인과 회원가입을 함
-// 실행전에 json파일 확인
+// npm run login
 
 import { initializeApp } from "firebase/app";
 import {
