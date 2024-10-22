@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "login": "node src/login.js",
     "student": "node src/student.js",
-    "teacher": "node src/teacher.js"
+    "teacher": "node src/teacher.js",
+    "start": "http-server src"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,8 @@
   "dependencies": {
     "express": "^4.21.1",
     "firebase": "^10.14.1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
   }
 }

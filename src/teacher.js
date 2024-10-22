@@ -38,12 +38,6 @@ const teacherSnapshot = await getDocs(teacherCol);
 const teacherList = teacherSnapshot.docs.map((doc) => doc.data());
 const teacherListLen = teacherList.length;
 
-// 선생님 데이터 << 로그인시 받아와서 저장
-const teacherName = "김상숙";
-const communicationState = false;
-const location = "수학실";
-const state = "회의중";
-const teacherEmail = "qwer1234@gmail.com";
 
 // Firestore에서 선생 목록 가져오기
 async function getTeachers() {
@@ -56,11 +50,19 @@ async function getTeachers() {
   }
 }
 
-// Firestore에서 특정 선생만 가져오기
+// Firestore에서 특정 선생(글자가 들어가 있는)만 가져오기
+async function filterTeacher(text) {
+  for (var number = 0; number < teacherListLen; number++) {
+    if (teacherList[number].name.includes(text)) {
+      console.log(teacherList[number]);
+    }
+  }
+}
+
+// Firestore에서 특정 선생(특정 이메일인것)만 가져오기
 async function findTeacher(email) {
   for (var number = 0; number < teacherListLen; number++) {
     if (teacherList[number].email === email) {
-      console.log(`${teacherList[number].name} 선생님의 정보입니다.`);
       console.log(teacherList[number]);
     }
   }
@@ -91,7 +93,6 @@ async function pushTeacher(
     console.error("선생님을 추가하는데에 실패하였습니다.", error);
   }
 }
-
 
 // 선생님 연락여부 변경
 async function ChangeTeacherCommunicationState(email, communicationState) {
@@ -137,6 +138,8 @@ async function ChangeTeacherLocation(email, location) {
   }
 }
 
+
+
 //선생님 상테 변경
 async function ChangeTeacherstate(email, state) {
   const document_name = teacherEmail;
@@ -158,9 +161,19 @@ async function ChangeTeacherstate(email, state) {
   }
 }
 
+// 선생님 데이터 << 로그인시 받아와서 저장
+const teacherName = "김이언";
+const communicationState = false;
+const location = "수학실";
+const state = "회의중";
+const teacherEmail = "uiop1234@gmail.com";
+const text = "김";
+
 //선생님 불러오기
 //getTeachers();
-//선생님 찾기 (+ 찾은뒤에는 정보 가져오기 [변수에 저장하기])
+//선생님 찾기(특정 글자가 들어가 있는) (+ 찾은뒤에는 정보 가져오기 [변수에 저장하기])
+//filterTeacher(text)
+//선생님 찾기(이메일로 한 사람만) (+ 찾은뒤에는 정보 가져오기 [변수에 저장하기])
 //findTeacher(teacherEmail);
 //선생님 추가하기
 //pushTeacher(teacherName, communicationState, location, state, teacherEmail);
@@ -170,3 +183,4 @@ async function ChangeTeacherstate(email, state) {
 //ChangeTeacherLocation(teacherEmail,location);
 //선생님 상태변경
 //ChangeTeacherstate(teacherEmail, state);
+

@@ -42,23 +42,9 @@ const studentSnapshot = await getDocs(studentCol);
 const studentList = studentSnapshot.docs.map((doc) => doc.data());
 const studentListLen = studentList.length;
 
-//// 학생정보
 const studentEmail = "Lee_Kyung-min@gmail.com"; // 이메일로 구분함 (중복되면 변경됨)
 const studentName = "이경민";
 const studentWorks = {};
-
-//학생 일정 추가
-const Todo = "학습지 작성하기";
-const TodoTeacher = "강원석";
-const workStartDate = "2024/10/18";
-const workEndDate = "2024/10/20";
-
-//오늘의 날짜
-
-const toDay = new Date();
-const formattedDate = `${toDay.getFullYear()}/${
-  toDay.getMonth() + 1
-}/${toDay.getDate()}`;
 
 // 학생 생성
 async function createStudent(email, name, works) {
@@ -194,4 +180,5 @@ async function findwork(email) {
 //학생 찾기
 //findstudent(studentEmail);
 //일정 보여주기 : 날짜에 따라
-findwork(studentEmail,formattedDate);
+//findwork(studentEmail,formattedDate);
+

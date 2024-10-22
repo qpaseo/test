@@ -1,6 +1,9 @@
 // 로그인과 회원가입을 함
 // npm run login
 
+//qazcgik@gmail.com
+//qp10alzmalzm
+
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
@@ -36,7 +39,6 @@ const db = getFirestore(app);
 // 인증 초기화
 const auth = getAuth(app);
 
-//유저 데이터
 const email = "qazcgik@gmail.com";
 const password = "qp10alzmalzm";
 const name = "서현동";
@@ -111,6 +113,7 @@ function signIn(auth, email, password) {
 }
 
 // 회원가입
-//signUp(auth, email, password);
+signUp(auth, email, password);
 // 로그인
 //signIn(auth, email, password);
+
