@@ -6,10 +6,10 @@ import { AuthService } from './auth.service';
 
 // 하위 모듈
 import { TokenModule } from './token/token.module';
+import { TokenService } from './token/token.service';
 
 //다른 라이브러리
 import { Supabase } from '../db/Supabase';
-import { TokenService } from './token/token.service';
 
 @Module({
   controllers: [AuthController],

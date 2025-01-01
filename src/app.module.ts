@@ -6,6 +6,7 @@ import { Supabase } from './Supabase/db/Supabase';
 
 //다른 모듈
 import { AuthModule } from './Supabase/auth/auth.module';
+import { TodoModule } from './Supabase/Main/Todo/todo.module';
 
 // 미들웨어
 import { RateLimitMiddleware } from './Redis/Middleware/RateLimitMiddleware'; // 미들웨어에서 사용하는 함수
@@ -20,6 +21,7 @@ import { Get_User_Id } from './Redis/Middleware/Supabase/Get_User_ID'; // 미들
     }),
     RredisModule,
     AuthModule,
+    TodoModule,
   ],
   controllers: [],
   providers: [Supabase, RateLimitService, Get_User_Id],
