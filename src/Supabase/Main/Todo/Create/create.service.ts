@@ -3,7 +3,6 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { Supabase } from '../../../db/Supabase';
 import { DatabaseType } from '../../../types/SupabaseType';
 
-
 type Token = string;
 
 @Injectable()
@@ -21,7 +20,8 @@ export class CreateService {
   async createTodo(
     token: string,
     grop: string,
-    todo: string,
+    name: string,
+    state: string,
     todoStartDay: string,
     todoEndDay: string,
   ): Promise<any> {
@@ -42,7 +42,7 @@ export class CreateService {
       .from('todos')
       .select('*')
       .eq('grop', grop)
-      .eq('todo', todo)
+      .eq('todo', name)
       .eq('todoStartDay', todoStartDay)
       .eq('todoEndDay', todoEndDay);
 
@@ -51,17 +51,18 @@ export class CreateService {
     }
 
     if (email) {
-      console.log(email,grop,todo,todoStartDay,todoEndDay)
+      console.log(email, grop, name, todoStartDay, todoEndDay);
       const { data, error } = await this.supabase.from('todos').insert({
         grop: grop,
-        todo: todo,
+        todo: name,
+        state: state,
         todostartday: todoStartDay,
         todoendday: todoEndDay,
         email: email,
       });
 
       if (error) {
-        console.log(error.message)
+        console.log(error.message);
         return {
           type: 'error',
         };
@@ -70,6 +71,6 @@ export class CreateService {
       return {
         type: 'success',
       };
-    } 
+    }
   }
 }

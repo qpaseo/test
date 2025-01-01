@@ -24,18 +24,20 @@ export class CreateController {
     @Body()
     data: {
       grop: string;
-      todo: string;
+      name: string;
+      state : string;
       todoStartDay: string;
       todoEndDay: string;
     },
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
-    const { grop, todo, todoStartDay, todoEndDay } = data;
+    const { grop, name, state, todoStartDay, todoEndDay, } = data;
     const token = authorization.substring('Bearer '.length);
     return this.createService.createTodo(
       token,
       grop,
-      todo,
+      name,
+      state,
       todoStartDay,
       todoEndDay,
     );

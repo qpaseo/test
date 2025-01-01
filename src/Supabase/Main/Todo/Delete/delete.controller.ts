@@ -11,7 +11,6 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { Injectable } from '@nestjs/common';
 import { DeleteService } from './delete.service';
 
 @Controller('todolist')

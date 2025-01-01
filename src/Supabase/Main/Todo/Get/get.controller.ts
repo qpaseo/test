@@ -1,17 +1,5 @@
-import {
-  Body,
-  Headers,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Headers, Controller, Get } from '@nestjs/common';
 
-import { Injectable } from '@nestjs/common';
 import { GetService } from './get.service';
 
 @Controller('todolist')

@@ -31,6 +31,7 @@ export class GetService {
       acc[index + 1] = {
         id: item.id, 
         name: item.todo,
+        state : item.state,
         start: item.todostartday,
         end: item.todoendday,
       };
