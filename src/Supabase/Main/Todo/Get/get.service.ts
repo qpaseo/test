@@ -29,9 +29,9 @@ export class GetService {
   private transformToObject(todoData: any[]): any {
     return todoData.reduce((acc, item, index) => {
       acc[index + 1] = {
-        id: item.id, 
+        id: item.id,
         name: item.todo,
-        state : item.state,
+        state: item.state,
         start: item.todostartday,
         end: item.todoendday,
       };
@@ -52,7 +52,8 @@ export class GetService {
       };
     }
 
-    const { data: user, error: finduserError } = await this.supabase.auth.getUser(token);
+    const { data: user, error: finduserError } =
+      await this.supabase.auth.getUser(token);
 
     if (finduserError) {
       console.log('해당하는 유저가 존재하지 않습니다', token);

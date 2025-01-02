@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Supabase } from '../../../db/Supabase';
-import { DatabaseType } from '../../../types/SupabaseType';
+import { Supabase } from '../../db/Supabase';
+import { DatabaseType } from '../../types/SupabaseType';
 
 @Injectable()
 export class DeleteService {
@@ -15,7 +15,7 @@ export class DeleteService {
     this.supabase = this.supabaseService.getClient();
   }
 
-  async deleteTodo(token: string, id: string) {
+  async deleteField(token: string, id: string) {
     const { data: user, error: finduserError } =
       await this.supabase.auth.getUser(token);
 
@@ -30,7 +30,7 @@ export class DeleteService {
     const email = user?.user?.email;
 
     const { data: DeleteData, error: DeleteError } = await this.supabase
-      .from('todos')
+      .from('fields')
       .delete()
       .eq('email', email)
       .eq('id', id);

@@ -13,7 +13,7 @@ import {
 
 import { DeleteService } from './delete.service';
 
-@Controller('todolist')
+@Controller('field')
 export class DeleteController {
   constructor(private readonly deleteService: DeleteService) {}
 
@@ -21,12 +21,13 @@ export class DeleteController {
   async create(
     @Body()
     data: {
+      grop: string;
       id: string;
     },
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
     const { id } = data;
     const token = authorization.substring('Bearer '.length);
-    return this.deleteService.deleteTodo(token, id);
+    return this.deleteService.deleteField(token, id);
   }
 }

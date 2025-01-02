@@ -6,6 +6,6 @@ import { DeleteModule } from './Delete/delete.module';
 import { UpdateModule } from './Update/update.module';
 
 @Module({
-  imports: [CreateModule, GetModule, DeleteModule,UpdateModule],
+  imports: [CreateModule, GetModule, DeleteModule, UpdateModule],
 })
-export class TodoModule {}
+export class FieldModule {}

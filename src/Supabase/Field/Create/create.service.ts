@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Supabase } from '../../../db/Supabase';
-import { DatabaseType } from '../../../types/SupabaseType';
+import { Supabase } from '../../db/Supabase';
+import { DatabaseType } from '../../types/SupabaseType';
 
 @Injectable()
 export class CreateService {
@@ -15,13 +15,11 @@ export class CreateService {
     this.supabase = this.supabaseService.getClient();
   }
 
-  async createTodo(
+  async createField(
     token: string,
     grop: string,
-    name: string,
-    state: string,
-    todoStartDay: string,
-    todoEndDay: string,
+    field: string,
+    img: string,
   ): Promise<any> {
     const { data: user, error: finduserError } =
       await this.supabase.auth.getUser(token);
@@ -37,25 +35,21 @@ export class CreateService {
 
     // 중복 확인
     const { data: titleMatch, error: titleError } = await this.supabase
-      .from('todos')
+      .from('fields')
       .select('*')
       .eq('grop', grop)
-      .eq('todo', name)
-      .eq('todoStartDay', todoStartDay)
-      .eq('todoEndDay', todoEndDay);
+      .eq('todo', field);
 
     if (titleMatch && titleMatch.length > 0) {
       throw new Error('이미 존재하는 할일 입니다.');
     }
 
     if (email) {
-      console.log(email, grop, name, todoStartDay, todoEndDay);
-      const { data, error } = await this.supabase.from('todos').insert({
+      console.log(email, grop, field);
+      const { data, error } = await this.supabase.from('fields').insert({
         grop: grop,
-        todo: name,
-        state: state,
-        todostartday: todoStartDay,
-        todoendday: todoEndDay,
+        field: field,
+        img: img,
         email: email,
       });
 

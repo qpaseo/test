@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Supabase } from '../../../db/Supabase';
-import { DatabaseType } from '../../../types/SupabaseType';
+import { Supabase } from '../../db/Supabase';
+import { DatabaseType } from '../../types/SupabaseType';
 
 @Injectable()
 export class UpdateService {
@@ -15,13 +15,12 @@ export class UpdateService {
     this.supabase = this.supabaseService.getClient();
   }
 
-  async updateTodo(
+  async updateField(
     token: string,
     id: string,
     afterGrop: string,
-    afterTodo: string,
-    afterStartDay: string,
-    afterEndDay: string,
+    afterField: string,
+    img: string,
   ) {
     const { data: user, error: finduserError } =
       await this.supabase.auth.getUser(token);
@@ -35,15 +34,15 @@ export class UpdateService {
 
     const email = user?.user?.email;
 
-    // 해당하는 todo 찾기
-    const { data: toDoData, error: toDoError } = await this.supabase
-      .from('todos')
+    // 해당하는 분야 찾기
+    const { data: fieldData, error: fieldError } = await this.supabase
+      .from('fields')
       .select('*')
       .eq('email', email)
       .eq('id', id)
-      .single(); // .single()을 사용하여 단일 결과를 반환
+      .single();
 
-    if (toDoError) {
+    if (fieldError) {
       console.log('할일을 찾을 수 없습니다');
       return {
         type: 'error',
@@ -52,18 +51,17 @@ export class UpdateService {
 
     // 데이터 업데이트
     const { data: updatedData, error: updateError } = await this.supabase
-      .from('todos')
+      .from('fields')
       .update({
         grop: afterGrop,
-        todo: afterTodo,
-        todostartday: afterStartDay,
-        todoendday: afterEndDay,
+        field: afterField,
+        img: img,
       })
       .eq('email', email)
       .eq('id', id);
 
     if (updateError) {
-      console.log('할일 수정 중 오류:', updateError.message);
+      console.log('분야 수정 중 오류:', updateError.message);
       return {
         type: 'error',
       };
