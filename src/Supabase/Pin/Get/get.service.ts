@@ -19,17 +19,17 @@ export class GetService {
     return todoData.reduce((acc, item, index) => {
       acc[index + 1] = {
         id: item.id,
-        field: item.field,
-        pincount: item.pincount,
+        pin: item.field,
         img: item.img,
       };
       return acc;
     }, {});
   }
 
-  async getField(
+  async getPin(
     token: string,
     grop: string,
+    field: string,
     type: number,
     text: string,
   ): Promise<any> {
@@ -47,10 +47,11 @@ export class GetService {
     const email = user?.user?.email;
 
     const query = this.supabase
-      .from('fields')
+      .from('pins')
       .select('*')
       .eq('email', email)
-      .eq('grop', grop);
+      .eq('grop', grop)
+      .eq('field', field);
 
     // type에 따라 조건 추가
     if (type === 2) {

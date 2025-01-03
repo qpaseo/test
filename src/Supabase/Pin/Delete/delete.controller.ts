@@ -11,24 +11,23 @@ import {
   Query,
 } from '@nestjs/common';
 
-import { CreateService } from './create.service';
+import { DeleteService } from './delete.service';
 
-@Controller('field')
-export class CreateController {
-  constructor(private readonly createService: CreateService) {}
+@Controller('pin')
+export class DeleteController {
+  constructor(private readonly deleteService: DeleteService) {}
 
-  @Post('post')
+  @Delete('/delete')
   async create(
     @Body()
     data: {
       grop: string;
-      field: string;
-      img: string;
+      id: string;
     },
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
-    const { grop, field, img } = data;
+    const { id } = data;
     const token = authorization.substring('Bearer '.length);
-    return this.createService.createField(token, grop, field, img);
+    return this.deleteService.deletePin(token, id);
   }
 }

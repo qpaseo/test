@@ -13,7 +13,7 @@ import {
 
 import { CreateService } from './create.service';
 
-@Controller('field')
+@Controller('pin')
 export class CreateController {
   constructor(private readonly createService: CreateService) {}
 
@@ -23,12 +23,14 @@ export class CreateController {
     data: {
       grop: string;
       field: string;
+      pin: string;
+      link: string;
       img: string;
     },
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
-    const { grop, field, img } = data;
+    const { grop, field, pin, link, img } = data;
     const token = authorization.substring('Bearer '.length);
-    return this.createService.createField(token, grop, field, img);
+    return this.createService.createPin(token, grop, field, pin, link, img);
   }
 }

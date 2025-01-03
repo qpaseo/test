@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Supabase } from '../../db/Supabase';
 import { DatabaseType } from '../../types/SupabaseType';
-
 @Injectable()
 export class CreateService {
   private supabase: SupabaseClient<
@@ -15,10 +14,12 @@ export class CreateService {
     this.supabase = this.supabaseService.getClient();
   }
 
-  async createField(
+  async createPin(
     token: string,
     grop: string,
     field: string,
+    pin: string,
+    link: string,
     img: string,
   ): Promise<any> {
     const { data: user, error: finduserError } =
@@ -35,20 +36,25 @@ export class CreateService {
 
     // 중복 확인
     const { data: titleMatch, error: titleError } = await this.supabase
-      .from('fields')
+      .from('pins')
       .select('*')
       .eq('grop', grop)
-      .eq('field', field);
+      .eq('field', field)
+      .eq('pin', pin);
 
     if (titleMatch && titleMatch.length > 0) {
-      throw new Error('이미 존재하는 할일 입니다.');
+      return {
+        type: 'error',
+      };
     }
 
     if (email) {
       //console.log(email, grop, field);
-      const { data, error } = await this.supabase.from('fields').insert({
+      const { data, error } = await this.supabase.from('pins').insert({
         grop: grop,
         field: field,
+        pin: pin,
+        link: link,
         img: img,
         email: email,
       });

@@ -15,11 +15,13 @@ export class UpdateService {
     this.supabase = this.supabaseService.getClient();
   }
 
-  async updateField(
+  async updatePin(
     token: string,
     id: string,
     afterGrop: string,
     afterField: string,
+    afterPin: string,
+    afterPinLink: string,
     img: string,
   ) {
     const { data: user, error: finduserError } =
@@ -34,25 +36,29 @@ export class UpdateService {
 
     const email = user?.user?.email;
 
-    // 해당하는 분야 찾기
-    const { data: fieldData, error: fieldError } = await this.supabase
-      .from('fields')
+    // 해당하는 핀 찾기
+    const { data: PinData, error: PinError } = await this.supabase
+      .from('pins')
       .select('*')
       .eq('email', email)
       .eq('id', id)
       .single();
 
-    if (fieldError) {
+    if (PinError) {
       console.log('할일을 찾을 수 없습니다');
       return {
         type: 'error',
       };
     }
 
+
+
     // 업데이트 데이터 구성
-    const query: Record<string, any> = {
+    const query: Record<string, any> = { // <키 타입, 값 타입>
       grop: afterGrop,
       field: afterField,
+      pin : afterPin,
+      link : afterPinLink
     };
 
     if (img !== 'none') {
@@ -61,7 +67,7 @@ export class UpdateService {
 
     // 데이터 업데이트
     const { data: updatedData, error: updateError } = await this.supabase
-      .from('fields')
+      .from('pins')
       .update(query)
       .eq('email', email)
       .eq('id', id);
