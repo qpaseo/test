@@ -8,11 +8,15 @@ export class TokenController {
   @Get('/')
   async refreshToken(
     @Body() refreshData: { refreshToken: string },
+    @Headers('Authorization') authorization: string,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const { refreshToken } = refreshData;
-
     try {
-      const result = await this.tokenService.get_Access_Token(refreshToken);
+      const accessToken = authorization.substring('Bearer '.length);
+      const result = await this.tokenService.get_Access_Token(
+        accessToken,
+        refreshToken,
+      );
       return result;
     } catch (error) {
       throw new Error(`Token refresh failed: ${error.message}`);

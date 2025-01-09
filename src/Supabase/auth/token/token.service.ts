@@ -15,31 +15,33 @@ export class TokenService {
     this.supabase = this.supabaseService.getClient();
   }
 
-  //리프레쉬로 엑세스 발급 
-  async get_Access_Token(refreshToken: string): Promise<any> {
-    try {
+  //리프레쉬로 엑세스 발급
+  async get_Access_Token(
+    accessToken: string,
+    refreshToken: string,
+  ): Promise<any> {
+    const { data: user, error: finduserError } =
+      await this.supabase.auth.getUser(accessToken);
+
+    //유저가 없으면 => (엑세스 유효기간 지남)
+    if (finduserError) {
       const { data: refreshData, error: refreshError } =
         await this.supabase.auth.refreshSession({
           refresh_token: refreshToken,
         });
 
       if (refreshError || !refreshData?.session) {
-        throw new Error(
-          `Refresh token failed: ${refreshError?.message || 'Unknown error'}`,
-        );
+        return {
+          type: 'error',
+        };
       }
 
+      //잘 가면 리프레쉬 발금
       const { access_token } = refreshData.session;
 
       return {
-        type: 'success', 
+        type: 'success',
         accessToken: access_token,
-      };
-    } catch (error: any) {
-      console.error('Refresh Token Error:', error.message);
-      return {
-        type: 'error', // error : 이메일로 이동
-        accessToken: null,
       };
     }
   }
