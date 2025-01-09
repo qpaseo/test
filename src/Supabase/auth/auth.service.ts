@@ -16,34 +16,32 @@ export class AuthService {
   }
 
   // 회원가입
-  async signUp(
-    name: string,
-    nickname: string,
-    email: string,
-    password: string,
-  ): Promise<any> {
+  async signUp(email: string, password: string): Promise<any> {
+    console.log(email, password);
     try {
       const { data, error } = await this.supabase.auth.signUp({
         email: email,
         password: password,
-        options: {
-          data: { name: name, nickname: nickname },
-        },
       });
 
       if (error) {
         console.error('Sign-up error:', error.message);
         throw new Error(`Sign-up failed: ${error.message}`);
       }
-
-      return data;
+      return {
+        type: 'success',
+      };
     } catch (error) {
-      throw new Error(`Sign-up Error: ${error.message}`);
+      console.error(error);
+      return {
+        type: 'error',
+      };
     }
   }
 
   // 로그인
   async logIn(email: string, password: string): Promise<any> {
+    console.log(email, password);
     try {
       const { data: authData, error: authError } =
         await this.supabase.auth.signInWithPassword({
@@ -52,6 +50,7 @@ export class AuthService {
         });
 
       if (authError || !authData?.session) {
+        console.log('Supabase authError:', authError);
         throw new Error(
           `Authentication failed: ${authError?.message || 'Unknown error'}`,
         );

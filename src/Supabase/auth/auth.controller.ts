@@ -11,22 +11,17 @@ export class AuthController {
   async signUp(
     @Body()
     signUpData: {
-      name: string;
-      nickname: string;
       email: string;
       password: string;
     },
   ): Promise<ResponseStatus> {
-    const { name, nickname, email, password } = signUpData;
+    const { email, password } = signUpData;
 
     try {
-      await this.authService.signUp(name, nickname, email, password);
-      return { status: 'Success' }; // 성공 시 message는 생략
+      const result = await this.authService.signUp(email, password);
+      return result;
     } catch (error) {
-      return {
-        status: 'error',
-        message: error.message,
-      };
+      throw new Error(`Login failed: ${error.message}`);
     }
   }
 
