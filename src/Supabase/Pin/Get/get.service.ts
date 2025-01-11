@@ -20,6 +20,7 @@ export class GetService {
       acc[index + 1] = {
         id: item.id,
         pin: item.field,
+        link: item.link,
         img: item.img,
       };
       return acc;

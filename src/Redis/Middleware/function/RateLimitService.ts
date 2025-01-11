@@ -10,8 +10,8 @@ export class RateLimitService {
 
   async checkRateLimit(userID: string): Promise<boolean> {
     const key = `rate-llimit:${userID}`;
-    const limit = 10; //횟수
-    const window = 60; // 사간초
+    const limit = 20; //횟수
+    const window = 10; // 사간초
 
     const current = await this.redis.get(key);
 

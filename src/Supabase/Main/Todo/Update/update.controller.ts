@@ -11,19 +11,22 @@ export class UpdateController {
     data: {
       id: string;
       afterGrop: string;
+      state: string;
       afterTodo: string;
       afterStartDay: string;
       afterEndDay: string;
     },
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
-    const { id, afterGrop, afterTodo, afterStartDay, afterEndDay } = data;
+    const { id, afterGrop, afterTodo, state, afterStartDay, afterEndDay } =
+      data;
     const token = authorization.substring('Bearer '.length);
     return this.updateService.updateTodo(
       token,
       id,
       afterGrop,
       afterTodo,
+      state,
       afterStartDay,
       afterEndDay,
     );

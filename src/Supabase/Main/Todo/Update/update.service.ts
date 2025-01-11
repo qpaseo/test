@@ -20,6 +20,7 @@ export class UpdateService {
     id: string,
     afterGrop: string,
     afterTodo: string,
+    state: string,
     afterStartDay: string,
     afterEndDay: string,
   ) {
@@ -56,6 +57,7 @@ export class UpdateService {
       .update({
         grop: afterGrop,
         todo: afterTodo,
+        state: state,
         todostartday: afterStartDay,
         todoendday: afterEndDay,
       })

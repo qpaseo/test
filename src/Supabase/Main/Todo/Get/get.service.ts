@@ -66,16 +66,15 @@ export class GetService {
     const email = user?.user?.email;
 
     // 데이터 가져오기
-    const { data: toDoData, error: toDoError } = await this.supabase
+    const { data: toToData, error: toToError } = await this.supabase
       .from('todos')
       .select('*')
       .eq('email', email)
       .eq('grop', grop)
-      .lte('todostartday', formattedDate) // 시작일이 주어진 날짜보다 작거나 같으면
-      .gte('todoendday', formattedDate); // 종료일이 주어진 날짜보다 크거나 같으면
+      .lte('todostartday', date) // 시작일이 주어진 날짜보다 작거나 같으면
+      .gte('todoendday', date); // 종료일이 주어진 날짜보다 크거나 같으면
 
-    if (toDoError) {
-      console.error('할일을 가져오는 데 실패:', toDoError.message);
+    if (toToError) {
       return {
         type: 'error',
         todoInfo: null,
@@ -83,7 +82,7 @@ export class GetService {
     }
 
     // 변환된 데이터 반환
-    const transformedData = this.transformToObject(toDoData);
+    const transformedData = this.transformToObject(toToData);
 
     return {
       type: 'success',

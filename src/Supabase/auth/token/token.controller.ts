@@ -5,7 +5,7 @@ import { TokenService } from './token.service';
 export class TokenController {
   constructor(private readonly tokenService: TokenService) {}
 
-  @Get('/')
+  @Post('/')
   async refreshToken(
     @Body() refreshData: { refreshToken: string },
     @Headers('Authorization') authorization: string,
