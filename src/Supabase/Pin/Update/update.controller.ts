@@ -13,12 +13,12 @@ export class UpdateController {
       afterGrop: string;
       afterField: string;
       afterPin: string;
-      afterPinLink: string;
+      afterLink: string;
       img: string;
     },
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
-    const { id, afterGrop, afterField, afterPin, afterPinLink, img } = data;
+    const { id, afterGrop, afterField, afterPin, afterLink, img } = data;
     const token = authorization.substring('Bearer '.length);
     return this.updateService.updatePin(
       token,
@@ -26,7 +26,7 @@ export class UpdateController {
       afterGrop,
       afterField,
       afterPin,
-      afterPinLink,
+      afterLink,
       img,
     );
   }

@@ -5,18 +5,26 @@ import { TokenService } from './token.service';
 export class TokenController {
   constructor(private readonly tokenService: TokenService) {}
 
-  @Post('/')
-  async refreshToken(
+  @Post('/issuance')
+  async issuanceToken(
     @Body() refreshData: { refreshToken: string },
-    @Headers('Authorization') authorization: string,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  ): Promise<{ accessToken: string }> {
     const { refreshToken } = refreshData;
     try {
+      const result = await this.tokenService.get_Access_Token(refreshToken);
+      return result;
+    } catch (error) {
+      throw new Error(`Token refresh failed: ${error.message}`);
+    }
+  }
+
+  @Post('/check')
+  async checkToken(
+    @Headers('Authorization') authorization: string,
+  ): Promise<{ type: string }> {
+    try {
       const accessToken = authorization.substring('Bearer '.length);
-      const result = await this.tokenService.get_Access_Token(
-        accessToken,
-        refreshToken,
-      );
+      const result = await this.tokenService.check_Access_Token(accessToken);
       return result;
     } catch (error) {
       throw new Error(`Token refresh failed: ${error.message}`);

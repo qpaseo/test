@@ -21,7 +21,7 @@ export class UpdateService {
     afterGrop: string,
     afterField: string,
     afterPin: string,
-    afterPinLink: string,
+    afterLink: string,
     img: string,
   ) {
     const { data: user, error: finduserError } =
@@ -51,14 +51,13 @@ export class UpdateService {
       };
     }
 
-
-
     // 업데이트 데이터 구성
-    const query: Record<string, any> = { // <키 타입, 값 타입>
+    const query: Record<string, any> = {
+      // <키 타입, 값 타입>
       grop: afterGrop,
       field: afterField,
-      pin : afterPin,
-      link : afterPinLink
+      pin: afterPin,
+      link: afterLink,
     };
 
     if (img !== 'none') {

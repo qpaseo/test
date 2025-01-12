@@ -20,7 +20,7 @@ export class DeleteService {
       await this.supabase.auth.getUser(token);
 
     if (finduserError) {
-      console.log('해당하는 유저가 존재하지 않습니다', token);
+      console.log('Pin-Delete : 해당하는 유저가 존재하지 않습니다', token);
       return {
         type: 'error',
         todoInfo: null,
