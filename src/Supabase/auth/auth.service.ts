@@ -17,7 +17,7 @@ export class AuthService {
 
   // 회원가입
   async signUp(email: string, password: string): Promise<any> {
-    console.log(email, password);
+    console.log('signin : ', email, password);
     try {
       const { data, error } = await this.supabase.auth.signUp({
         email: email,
@@ -41,7 +41,7 @@ export class AuthService {
 
   // 로그인
   async logIn(email: string, password: string): Promise<any> {
-    console.log(email, password);
+    console.log('login : ', email, password);
     try {
       const { data: authData, error: authError } =
         await this.supabase.auth.signInWithPassword({

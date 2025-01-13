@@ -1,4 +1,4 @@
-import { Body, Headers, Controller, Get, Post } from '@nestjs/common';
+import { Body, Headers, Controller, Post } from '@nestjs/common';
 import { TokenService } from './token.service';
 
 @Controller('token')

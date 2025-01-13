@@ -1,4 +1,4 @@
-import { Body, Headers, Controller, Get } from '@nestjs/common';
+import { Query, Headers, Controller, Get } from '@nestjs/common';
 
 import { GetService } from './get.service';
 
@@ -8,15 +8,10 @@ export class GetController {
 
   @Get('/')
   async create(
-    @Body()
-    data: {
-      grop: string;
-      type: number;
-      text: string;
-    },
+    @Query() query: { grop: string; type: number; text: string },
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
-    const { grop, type, text } = data;
+    const { grop, type, text } = query;
     const token = authorization.substring('Bearer '.length);
     return this.getService.getField(token, grop, type, text);
   }
