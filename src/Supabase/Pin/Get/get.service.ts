@@ -70,8 +70,7 @@ export class GetService {
 
     return {
       type: 'success',
-      pinInfo:
-        Object.keys(transformedData).length > 0 ? transformedData : null,
+      pinInfo: Object.keys(transformedData).length > 0 ? transformedData : null,
     };
   }
 }

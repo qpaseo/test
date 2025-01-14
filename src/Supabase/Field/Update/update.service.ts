@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Supabase } from '../../db/Supabase';
 import { DatabaseType } from '../../types/SupabaseType';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class UpdateService {
@@ -20,16 +21,14 @@ export class UpdateService {
     id: string,
     afterGrop: string,
     afterField: string,
-    img: string,
-  ) {
+    img: Express.Multer.File,
+  ): Promise<any> {
     const { data: user, error: finduserError } =
       await this.supabase.auth.getUser(token);
 
     if (finduserError) {
       console.log('Field-update : 해당하는 유저가 존재하지 않습니다', token);
-      return {
-        type: 'error',
-      };
+      return { type: 'error' };
     }
 
     const email = user?.user?.email;
@@ -43,38 +42,51 @@ export class UpdateService {
       .single();
 
     if (fieldError) {
-      console.log('할일을 찾을 수 없습니다');
-      return {
-        type: 'error',
-      };
+      console.log('Field-update : 해당 분야를 찾을 수 없습니다');
+      return { type: 'error' };
     }
 
-    // 업데이트 데이터 구성
     const query: Record<string, any> = {
       grop: afterGrop,
       field: afterField,
     };
 
-    if (img !== 'none') {
-      query.img = img;
+    // 이미지가 업로드된 경우 처리
+    if (img) {
+      const fileName = `${randomUUID()}-${img.originalname}`;
+      const { data: fileData, error: uploadError } = await this.supabase.storage
+        .from('field-img')
+        .upload(fileName, img.buffer, { contentType: img.mimetype });
+
+      if (uploadError) {
+        console.error('File upload error:', uploadError.message);
+        return { type: 'error' };
+      }
+
+      const { data: publicData } = this.supabase.storage
+        .from('field-img')
+        .getPublicUrl(fileName);
+
+      if (!publicData?.publicUrl) {
+        console.error('Failed to generate public URL');
+        return { type: 'error' };
+      }
+
+      query.img = publicData.publicUrl;
     }
 
     // 데이터 업데이트
-    const { data: updatedData, error: updateError } = await this.supabase
+    const { error: updateError } = await this.supabase
       .from('fields')
       .update(query)
       .eq('email', email)
       .eq('id', id);
 
     if (updateError) {
-      console.log('분야 수정 중 오류:', updateError.message);
-      return {
-        type: 'error',
-      };
+      console.log('Field-update : 업데이트 중 오류 발생:', updateError.message);
+      return { type: 'error' };
     }
 
-    return {
-      type: 'success',
-    };
+    return { type: 'success' };
   }
 }

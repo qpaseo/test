@@ -36,8 +36,6 @@ export class GetService {
     const { data: user, error: finduserError } =
       await this.supabase.auth.getUser(token);
 
-    console.log(grop, type, text);
-
     if (finduserError) {
       console.error('Field-Get : 해당하는 유저가 존재하지 않습니다:', token);
       return {
