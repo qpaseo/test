@@ -53,7 +53,7 @@ export class GetService {
       .eq('grop', grop);
 
     // type에 따라 조건 추가
-    if (type === 2) {
+    if (type == 2) {
       query.ilike('field', `%${text}%`);
     }
 
