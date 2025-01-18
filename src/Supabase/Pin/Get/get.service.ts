@@ -29,7 +29,7 @@ export class GetService {
 
   async getPin(
     token: string,
-    grop: string,
+    group: string,
     field: string,
     type: number,
     text: string,
@@ -51,7 +51,7 @@ export class GetService {
       .from('pins')
       .select('*')
       .eq('email', email)
-      .eq('grop', grop)
+      .eq('group', group)
       .eq('field', field);
 
     // type에 따라 조건 추가

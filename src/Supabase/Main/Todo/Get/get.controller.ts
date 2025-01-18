@@ -8,11 +8,11 @@ export class GetController {
 
   @Get('/')
   async create(
-    @Query() query: { date: string; grop: string },
+    @Query() query: { date: string; group: string },
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
-    const { grop, date } = query;
+    const { group, date } = query;
     const token = authorization.substring('Bearer '.length);
-    return this.getService.getTodo(token, grop, date);
+    return this.getService.getTodo(token, group, date);
   }
 }

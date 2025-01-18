@@ -1,15 +1,4 @@
-import {
-  Body,
-  Headers,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Headers, Controller, Delete } from '@nestjs/common';
 
 import { DeleteService } from './delete.service';
 
@@ -21,7 +10,6 @@ export class DeleteController {
   async create(
     @Body()
     data: {
-      grop: string;
       id: string;
     },
     @Headers('Authorization') authorization: string,

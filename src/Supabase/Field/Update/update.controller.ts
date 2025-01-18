@@ -19,18 +19,18 @@ export class UpdateController {
     @Body()
     data: {
       id: string;
-      afterGrop: string;
+      afterGroup: string;
       afterField: string;
     },
     @Headers('Authorization') authorization: string,
     @UploadedFile() img: Express.Multer.File,
   ): Promise<any> {
-    const { id, afterGrop, afterField } = data;
+    const { id, afterGroup, afterField } = data;
     const token = authorization.substring('Bearer '.length);
     return this.updateService.updateField(
       token,
       id,
-      afterGrop,
+      afterGroup,
       afterField,
       img,
     );

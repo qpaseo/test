@@ -14,18 +14,18 @@ export class CreateController {
   constructor(private readonly createService: CreateService) {}
 
   @Post('post')
-  @UseInterceptors(FileInterceptor('img')) // 파일 업로드 처리
+  @UseInterceptors(FileInterceptor('img')) 
   async create(
     @Body()
     data: {
-      grop: string;
+      group: string;
       field: string;
     },
     @Headers('Authorization') authorization: string,
-    @UploadedFile() img: Express.Multer.File, // 업로드된 파일
+    @UploadedFile() img: Express.Multer.File, 
   ): Promise<any> {
-    const { grop, field } = data;
+    const { group, field } = data;
     const token = authorization.substring('Bearer '.length);
-    return this.createService.createField(token, grop, field, img);
+    return this.createService.createField(token, group, field, img);
   }
 }

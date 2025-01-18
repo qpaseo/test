@@ -18,7 +18,7 @@ export class UpdateService {
   async updateTodo(
     token: string,
     id: string,
-    afterGrop: string,
+    afterGroup: string,
     afterTodo: string,
     state: string,
     afterStartDay: string,
@@ -55,7 +55,7 @@ export class UpdateService {
     const { data: updatedData, error: updateError } = await this.supabase
       .from('todos')
       .update({
-        grop: afterGrop,
+        group: afterGroup,
         todo: afterTodo,
         state: state,
         todostartday: afterStartDay,

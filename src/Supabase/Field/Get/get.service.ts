@@ -29,7 +29,7 @@ export class GetService {
 
   async getField(
     token: string,
-    grop: string,
+    group: string,
     type: number,
     text: string,
   ): Promise<any> {
@@ -50,7 +50,7 @@ export class GetService {
       .from('fields')
       .select('*')
       .eq('email', email)
-      .eq('grop', grop);
+      .eq('group', group);
 
     // type에 따라 조건 추가
     if (type == 2) {

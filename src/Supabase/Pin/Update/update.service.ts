@@ -19,7 +19,7 @@ export class UpdateService {
   async updatePin(
     token: string,
     id: string,
-    afterGrop: string,
+    afterGroup: string,
     afterField: string,
     afterPin: string,
     afterLink: string,
@@ -50,7 +50,7 @@ export class UpdateService {
     }
 
     const query: Record<string, any> = {
-      grop: afterGrop,
+      group: afterGroup,
       field: afterField,
       pin: afterPin,
       link: afterLink,

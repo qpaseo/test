@@ -24,7 +24,7 @@ export class CreateService {
 
   async createField(
     token: string,
-    grop: string,
+    group: string,
     field: string,
     img: Express.Multer.File,
   ): Promise<any> {
@@ -44,7 +44,7 @@ export class CreateService {
     const { data: titleMatch, error: titleError } = await this.supabase
       .from('fields')
       .select('*')
-      .eq('grop', grop)
+      .eq('group', group)
       .eq('field', field);
 
     if (titleMatch && titleMatch.length > 0) {
@@ -82,7 +82,7 @@ export class CreateService {
 
     // 필드 데이터 삽입
     const { error } = await this.supabase.from('fields').insert({
-      grop,
+      group,
       field,
       img: imgUrl, // 이미지 URL 저장
       email,

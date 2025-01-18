@@ -19,7 +19,7 @@ export class UpdateService {
   async updateField(
     token: string,
     id: string,
-    afterGrop: string,
+    afterGroup: string,
     afterField: string,
     img: Express.Multer.File,
   ): Promise<any> {
@@ -47,7 +47,7 @@ export class UpdateService {
     }
 
     const query: Record<string, any> = {
-      grop: afterGrop,
+      group: afterGroup,
       field: afterField,
     };
 

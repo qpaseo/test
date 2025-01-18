@@ -39,7 +39,7 @@ export class GetService {
     }, {});
   }
 
-  async getTodo(token: string, grop: string, date: string): Promise<any> {
+  async getTodo(token: string, group: string, date: string): Promise<any> {
     // 날짜 형식 수정
     let formattedDate: string;
     try {
@@ -70,7 +70,7 @@ export class GetService {
       .from('todos')
       .select('*')
       .eq('email', email)
-      .eq('grop', grop)
+      .eq('group', group)
       .lte('todostartday', date) // 시작일이 주어진 날짜보다 작거나 같으면
       .gte('todoendday', date); // 종료일이 주어진 날짜보다 크거나 같으면
 

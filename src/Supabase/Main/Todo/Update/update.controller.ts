@@ -10,7 +10,7 @@ export class UpdateController {
     @Body()
     data: {
       id: string;
-      afterGrop: string;
+      afterGroup: string;
       state: string;
       afterTodo: string;
       afterStartDay: string;
@@ -18,13 +18,13 @@ export class UpdateController {
     },
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
-    const { id, afterGrop, afterTodo, state, afterStartDay, afterEndDay } =
+    const { id, afterGroup, afterTodo, state, afterStartDay, afterEndDay } =
       data;
     const token = authorization.substring('Bearer '.length);
     return this.updateService.updateTodo(
       token,
       id,
-      afterGrop,
+      afterGroup,
       afterTodo,
       state,
       afterStartDay,

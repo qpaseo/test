@@ -18,7 +18,7 @@ export class CreateService {
 
   async createPin(
     token: string,
-    grop: string,
+    group: string,
     field: string,
     pin: string,
     link: string,
@@ -38,7 +38,7 @@ export class CreateService {
     const { data: titleMatch, error: titleError } = await this.supabase
       .from('pins')
       .select('*')
-      .eq('grop', grop)
+      .eq('group', group)
       .eq('field', field)
       .eq('pin', pin);
 
@@ -76,7 +76,7 @@ export class CreateService {
     const fileUrl = publicUrlData.publicUrl;
 
     const { error: insertError } = await this.supabase.from('pins').insert({
-      grop,
+      group,
       field,
       pin,
       link,

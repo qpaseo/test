@@ -20,17 +20,14 @@ export class RateLimitMiddleware implements NestMiddleware {
     }
 
     try {
-      // Supabase를 활용 유저 id 겟또
       const userId = await this.get_User_Id.getUserIdFromToken(token);
 
-      // Redis 속도 제한 체크
       const isAllowed = await this.rateLimitService.checkRateLimit(userId);
 
       if (!isAllowed) {
         return res.status(429).json({ message: '과도한 요청이 발생하였습니다' });
       }
-
-      next(); // 뭐 없으면 다음으로~ (미들웨어라서 이런거 있음)
+      next();
     } catch (error) {
       return res
         .status(401)

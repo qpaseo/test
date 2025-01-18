@@ -17,7 +17,7 @@ export class CreateService {
 
   async createTodo(
     token: string,
-    grop: string,
+    group: string,
     name: string,
     state: string,
     todoStartDay: string,
@@ -39,7 +39,7 @@ export class CreateService {
     const { data: titleMatch, error: titleError } = await this.supabase
       .from('todos')
       .select('*')
-      .eq('grop', grop)
+      .eq('group', group)
       .eq('todo', name)
       .eq('todoStartDay', todoStartDay)
       .eq('todoEndDay', todoEndDay);
@@ -49,9 +49,8 @@ export class CreateService {
     }
 
     if (email) {
-      console.log(email, grop, name, todoStartDay, todoEndDay);
       const { data, error } = await this.supabase.from('todos').insert({
-        grop: grop,
+        group: group,
         todo: name,
         state: state,
         todostartday: todoStartDay,
@@ -60,7 +59,6 @@ export class CreateService {
       });
 
       if (error) {
-        console.log(error.message);
         return {
           type: 'error',
         };

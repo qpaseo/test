@@ -21,7 +21,6 @@ export class DeleteController {
   async create(
     @Body()
     data: {
-      grop: string;
       id: string;
     },
     @Headers('Authorization') authorization: string,

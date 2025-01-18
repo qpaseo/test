@@ -19,7 +19,7 @@ export class UpdateController {
     @Body()
     data: {
       id: string;
-      afterGrop: string;
+      afterGroup: string;
       afterField: string;
       afterPin: string;
       afterLink: string;
@@ -27,12 +27,12 @@ export class UpdateController {
     @Headers('Authorization') authorization: string,
     @UploadedFile() img: Express.Multer.File, // 업로드된 파일
   ): Promise<any> {
-    const { id, afterGrop, afterField, afterPin, afterLink } = data;
+    const { id, afterGroup, afterField, afterPin, afterLink } = data;
     const token = authorization.substring('Bearer '.length);
     return this.updateService.updatePin(
       token,
       id,
-      afterGrop,
+      afterGroup,
       afterField,
       afterPin,
       afterLink,

@@ -18,7 +18,7 @@ export class CreateController {
   async create(
     @Body()
     data: {
-      grop: string;
+      group: string;
       field: string;
       pin: string;
       link: string;
@@ -26,8 +26,8 @@ export class CreateController {
     @UploadedFile() img: Express.Multer.File, // 업로드된 파일
     @Headers('Authorization') authorization: string,
   ): Promise<any> {
-    const { grop, field, pin, link } = data;
+    const { group, field, pin, link } = data;
     const token = authorization.substring('Bearer '.length);
-    return this.createService.createPin(token, grop, field, pin, link, img);
+    return this.createService.createPin(token, group, field, pin, link, img);
   }
 }
