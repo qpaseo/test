@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config'; // ConfigService를 사용하여 env 변수 가져오기
-import { DatabaseType } from '../types/supabaseType'; // 타입 정의
+import { ConfigService } from '@nestjs/config';
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
+import { DatabaseType } from '../types/supabaseType';
 
 @Injectable()
 export class Supabase {
-  private supabase: SupabaseClient<
-    DatabaseType,
-    'DATABASE_URL' | 'DATABASE_KEY',
-    any
-  >;
+  private supabase: SupabaseClient<DatabaseType, 'public', any>;
 
   constructor(private configService: ConfigService) {
     const supabaseUrl = this.configService.get<string>('DATABASE_URL');
@@ -27,7 +23,7 @@ export class Supabase {
     return this.supabase;
   }
 
-  async SUPABSE_GET_USER_ID(token: string) : Promise<string>{
+  async SUPABSE_GET_USER_ID(token: string): Promise<string> {
     const { data, error } = await this.supabase.auth.getUser(token);
     if (error) {
       return `Error ${error.message}`;

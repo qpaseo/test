@@ -6,11 +6,7 @@ import { randomUUID } from 'crypto'; // UUID 생성용
 
 @Injectable()
 export class UpdateService {
-  private supabase: SupabaseClient<
-    DatabaseType,
-    'DATABASE_URL' | 'DATABASE_KEY',
-    any
-  >;
+  private supabase: SupabaseClient<DatabaseType, 'public', any>;
 
   constructor(private readonly supabaseService: Supabase) {
     this.supabase = this.supabaseService.getClient();

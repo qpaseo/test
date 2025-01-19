@@ -6,12 +6,7 @@ import { randomUUID } from 'crypto'; // UUID 생성용
 
 @Injectable()
 export class CreateService {
-  private supabase: SupabaseClient<
-    DatabaseType,
-    'DATABASE_URL' | 'DATABASE_KEY',
-    any
-  >;
-
+  private supabase: SupabaseClient<DatabaseType, 'public', any>;
   constructor(private readonly supabaseService: Supabase) {
     this.supabase = this.supabaseService.getClient();
   }
@@ -28,7 +23,6 @@ export class CreateService {
     field: string,
     img: Express.Multer.File,
   ): Promise<any> {
-
     // 유저 인증 확인
     const { data: user, error: finduserError } =
       await this.supabase.auth.getUser(token);

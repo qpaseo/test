@@ -1,4 +1,23 @@
 export interface DatabaseType {
-    DATABASE_KEY : string;
-    DATABASE_URL : string;
+  public: {
+    Tables: {
+      users: {
+        Row: {
+          id: string;
+          email: string;
+          name: string;
+        };
+        Insert: {
+          id?: string;
+          email: string;
+          name: string;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          name?: string;
+        };
+      };
+    };
+  };
 }
