@@ -13,7 +13,7 @@ async function bootstrap() {
         'https://web-umunjeong-server-m637n0dz9587ba58.sel4.cloudtype.app',
       ],
       methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
-      allowedHeaders: 'Content-Type, Authorization',
+      allowedHeaders: '*',
       preflightContinue: false,
       optionsSuccessStatus: 204,
     }),
