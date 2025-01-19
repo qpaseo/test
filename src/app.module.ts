@@ -8,7 +8,7 @@ import { Supabase } from './Supabase/db/Supabase';
 import { AuthModule } from './Supabase/auth/auth.module';
 import { TodoModule } from './Supabase/Main/Todo/todo.module';
 import { FieldModule } from './Supabase/Field/field.module';
-import { PinModule } from './Supabase/Pin/Pin.module';
+import { PinModule } from './Supabase/Pin/pin.module';
 
 // 미들웨어
 import { RateLimitMiddleware } from './Redis/Middleware/RateLimitMiddleware'; // 미들웨어에서 사용하는 함수
