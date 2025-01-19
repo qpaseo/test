@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { GetController } from './get.controller';
 import { GetService } from './get.service';
 
-import { Supabase } from 'src/Supabase/db/Supabase';
+import { Supabase } from '../../../db/Supabase';
 
 @Module({
   controllers: [GetController],
