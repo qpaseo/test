@@ -8,7 +8,7 @@ async function bootstrap() {
       'http://localhost:5173',
       'https://web-umunjeong-server-m637n0dz9587ba58.sel4.cloudtype.app',
     ],
-    methods: 'GET,POST,PUT,DELETE,PATCH',
+    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization', // 허용할 헤더들
   });
   await app.listen(process.env.PORT ?? 3000);
