@@ -28,6 +28,7 @@ async function bootstrap() {
     } else {
       next();
     }
+    console.log(req, res);
   });
 }
 
