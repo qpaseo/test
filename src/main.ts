@@ -5,10 +5,11 @@ import { Request, Response, NextFunction } from 'express';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // CORS 설정
   app.enableCors({
     origin: ['https://umunjeong.netlify.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 필드 이름만 명시
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
 
@@ -28,10 +29,10 @@ async function bootstrap() {
     } else {
       next();
     }
-    app.listen(3000);
-
     console.log(req, res);
   });
+
+  await app.listen(3000);
 }
 
 bootstrap();
