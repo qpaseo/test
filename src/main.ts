@@ -1,27 +1,30 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { Request, Response, NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // CORS 설정
   app.enableCors({
-    origin: ['http://localhost:5173', 'https://umunjeong.netlify.app'],
-    methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS', // 허용된 HTTP 메서드
-    allowedHeaders: 'Content-Type, Authorization', // 허용된 헤더
-    credentials: true, // 쿠키 전송 허용 (필요한 경우)
-    optionsSuccessStatus: 204, // OPTIONS 요청 성공 상태 코드
+    origin: ['https://umunjeong.netlify.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'], // 허용할 필드 이름만 명시
+    credentials: true,
   });
 
-  app.use((req, res, next) => {
+  // Preflight 요청 처리
+  app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.method === 'OPTIONS') {
-      res.header('Access-Control-Allow-Origin', req.headers.origin);
+      res.header('Access-Control-Allow-Origin', req.headers.origin as string);
       res.header(
         'Access-Control-Allow-Methods',
-        'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+        'GET, POST, PUT, DELETE, PATCH, OPTIONS',
       );
-      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      res.status(204).send();
+      res.header(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization', // 필드 이름만 나열
+      );
+      res.sendStatus(204); // Preflight 요청 성공 상태
     } else {
       next();
     }
