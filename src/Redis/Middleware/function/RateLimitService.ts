@@ -15,9 +15,9 @@ export class RateLimitService {
   async checkRateLimit(userID: string): Promise<boolean> {
     const key = `rate-limit:${userID}`;
     const penaltyKey = `penalty:${userID}`; // 페널티 상태를 기록할 키
-    const limit = 10; // 요청 제한 횟수
-    const window = 20; // 요청 제한 기준 시간 (초)
-    const penaltyWindow = 10; // 페널티 부여 시간 (초)
+    const limit = 30; // 요청 제한 횟수
+    const window = 10; // 요청 제한 기준 시간 (초)
+    const penaltyWindow = 10000000000; // 페널티 부여 시간 (초)
 
     // 페널티 상태 확인
     const penalty = await this.redis.get(penaltyKey);
