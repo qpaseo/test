@@ -7,7 +7,7 @@ async function bootstrap() {
 
   // CORS 설정
   app.enableCors({
-    origin: ['https://umunjeong.netlify.app', 'http://localhost:5173'],
+    origin: ['https://umunjeong.netlify.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
