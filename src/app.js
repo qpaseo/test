@@ -2,8 +2,6 @@
 //res : 서버가 클라한테 보내는 데이터
 
 const http = require("http");
-const cors = require("cors");
-const corsMiddleware = cors(); // 재사용을 위해 이렇게 사용
 
 const {
   getData,
@@ -12,29 +10,13 @@ const {
 } = require("./controllers/data/data.controller"); // 컨트롤러
 const { signin, signup } = require("./controllers/data/auth.controller"); // 컨트롤러
 
-// ----------------------미들웨어-------------------------------
-
-//corsMiddleware을 받아서 실행(적용)
-function runMiddleware(req, res, middleware) {
-  return new Promise((resolve, reject) => {
-    //Promise : 비동기적 처리에 사용되고 api요청의 상테를 확인합
-    middleware(req, res, (result) => {
-      if (result instanceof Error) {
-        return reject(result);
-      }
-      return resolve(result);
-    });
-  });
-}
-
-// -----------------------------------------------------
-
 // ----------------------서버 라우팅(컨트롤러 연결)-------------------------------
 const server = http.createServer(async (req, res) => {
-  try {
-    // CORS 미들웨어 실행
-    await runMiddleware(req, res, corsMiddleware);
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+  try {
     if (req.method === "GET") {
       const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
 
