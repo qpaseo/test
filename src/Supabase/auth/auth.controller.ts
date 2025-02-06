@@ -7,6 +7,7 @@ import { ResponseStatus } from '../types/types';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  //회원가입
   @Post('/signup')
   async signUp(
     @Body()

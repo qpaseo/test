@@ -16,7 +16,9 @@ export class RateLimitMiddleware implements NestMiddleware {
       : null;
 
     if (!token) {
-      return res.status(401).json({ message: '토큰이 없습니다, 경로 설정을 확인하여 주세요' });
+      return res
+        .status(401)
+        .json({ message: '토큰이 없습니다, 경로 설정을 확인하여 주세요' });
     }
 
     try {
@@ -25,7 +27,9 @@ export class RateLimitMiddleware implements NestMiddleware {
       const isAllowed = await this.rateLimitService.checkRateLimit(userId);
 
       if (!isAllowed) {
-        return res.status(429).json({ message: '과도한 요청이 발생하였습니다' });
+        return res
+          .status(429)
+          .json({ message: '과도한 요청이 발생하였습니다' });
       }
       next();
     } catch (error) {
