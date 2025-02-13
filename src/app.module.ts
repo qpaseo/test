@@ -2,7 +2,8 @@ import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 //supabase모듈
-import { Supabase } from './Supabase/db/Supabase';
+import { Umun_Auth_Database } from './Supabase/db/Umun_Auth_Database';
+import { Umunjeong_Database } from './Supabase/db/Umunjeong_Database';
 
 //다른 모듈
 import { AuthModule } from './Supabase/auth/auth.module';
@@ -28,7 +29,12 @@ import { Get_User_Id } from './Redis/Middleware/Supabase/Get_User_ID'; // 미들
     PinModule,
   ],
   controllers: [],
-  providers: [Supabase, RateLimitService, Get_User_Id],
+  providers: [
+    Umun_Auth_Database,
+    Umunjeong_Database,
+    RateLimitService,
+    Get_User_Id,
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

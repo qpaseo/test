@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { CreateController } from './create.controller';
 import { CreateService } from './create.service';
 
-import { Supabase } from '../../db/Supabase';
+import { Umunjeong_Database } from '../../db/Umunjeong_Database';
 
 @Module({
   controllers: [CreateController],
-  providers: [CreateService, Supabase],
+  providers: [CreateService, Umunjeong_Database],
 })
 export class CreateModule {}

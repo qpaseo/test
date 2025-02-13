@@ -3,7 +3,9 @@ import { AppModule } from './app.module';
 import { Request, Response, NextFunction } from 'express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn'],
+  });
 
   // CORS 설정
   app.enableCors({
@@ -29,7 +31,6 @@ async function bootstrap() {
     } else {
       next();
     }
-    console.log(req, res);
   });
 
   await app.listen(3000);

@@ -1,7 +1,5 @@
-import { Body, Headers, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-
-import { ResponseStatus } from '../types/types';
 
 @Controller('auth')
 export class AuthController {
@@ -15,7 +13,7 @@ export class AuthController {
       email: string;
       password: string;
     },
-  ): Promise<ResponseStatus> {
+  ): Promise<{}> {
     const { email, password } = signUpData;
 
     try {

@@ -9,11 +9,11 @@ import { TokenModule } from './token/token.module';
 import { TokenService } from './token/token.service';
 
 //다른 라이브러리
-import { Supabase } from '../db/Supabase';
+import { Umun_Auth_Database } from '../db/Umun_Auth_Database';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, Supabase, TokenService],
+  providers: [AuthService, Umun_Auth_Database, TokenService],
   imports: [TokenModule],
 })
 export class AuthModule {}

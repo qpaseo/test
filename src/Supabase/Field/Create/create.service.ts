@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Supabase } from '../../db/Supabase';
+import { Umunjeong_Database } from '../../db/Umunjeong_Database';
 import { DatabaseType } from '../../types/SupabaseType';
 import { randomUUID } from 'crypto'; // UUID 생성용
 
 @Injectable()
 export class CreateService {
   private supabase: SupabaseClient<DatabaseType, 'public', any>;
-  constructor(private readonly supabaseService: Supabase) {
+  constructor(private readonly supabaseService: Umunjeong_Database) {
     this.supabase = this.supabaseService.getClient();
   }
 

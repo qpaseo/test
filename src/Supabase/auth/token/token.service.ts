@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { Supabase } from '../../db/Supabase';
+import { Umun_Auth_Database } from '../../db/Umun_Auth_Database';
 import { DatabaseType } from '../../types/SupabaseType';
 
 @Injectable()
 export class TokenService {
   private supabase: SupabaseClient<DatabaseType, 'public', any>;
 
-  constructor(private readonly supabaseService: Supabase) {
+  constructor(private readonly supabaseService: Umun_Auth_Database) {
     this.supabase = this.supabaseService.getClient();
   }
 
