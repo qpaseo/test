@@ -15,7 +15,7 @@ export class RateLimitService {
   async checkRateLimit(userID: string): Promise<boolean> {
     const key = `rate-limit:${userID}`;
     const penaltyKey = `penalty:${userID}`;
-    const limit = 30;
+    const limit = 50;
     const window = 10;
     const penaltyWindow = 10000000000;
 

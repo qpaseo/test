@@ -10,6 +10,7 @@ import { AuthModule } from './Supabase/auth/auth.module';
 import { TodoModule } from './Supabase/Main/Todo/todo.module';
 import { FieldModule } from './Supabase/Field/field.module';
 import { PinModule } from './Supabase/Pin/pin.module';
+import { UserModule } from './Supabase/Main/User/user.module';
 
 // 미들웨어
 import { RateLimitMiddleware } from './Redis/Middleware/RateLimitMiddleware'; // 미들웨어에서 사용하는 함수
@@ -27,6 +28,7 @@ import { Get_User_Id } from './Redis/Middleware/Supabase/Get_User_ID'; // 미들
     TodoModule,
     FieldModule,
     PinModule,
+    UserModule,
   ],
   controllers: [],
   providers: [
