@@ -1,14 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Umunjeong_Database } from '../../../db/Umunjeong_Database';
+import { Umun_Auth_Database } from '@supabase/db/Umun_Auth_Database';
 import { DatabaseType } from '../../../types/SupabaseType';
 
 @Injectable()
 export class UpdateService {
-  private supabase: SupabaseClient<DatabaseType, 'public', any>;
-  constructor(private readonly supabaseService: Umunjeong_Database) {
-    this.supabase = this.supabaseService.getClient();
-  }
+  private dataDatabase: SupabaseClient<DatabaseType, 'public', any>;
+   private authDatabase: SupabaseClient<DatabaseType, 'public', any>;
+ 
+   constructor(
+     private readonly DataDatabase: Umunjeong_Database,
+     private readonly AuthDatabase: Umun_Auth_Database,
+   ) {
+     this.dataDatabase = this.DataDatabase.getClient();
+     this.authDatabase = this.AuthDatabase.getClient();
+   }
+ 
 
   async updateTodo(
     token: string,
@@ -20,7 +28,7 @@ export class UpdateService {
     afterEndDay: string,
   ) {
     const { data: user, error: finduserError } =
-      await this.supabase.auth.getUser(token);
+      await this.authDatabase.auth.getUser(token);
 
     if (finduserError) {
       console.log('해당하는 유저가 존재하지 않습니다', token);
@@ -32,7 +40,7 @@ export class UpdateService {
     const email = user?.user?.email;
 
     // 해당하는 todo 찾기
-    const { data: toDoData, error: toDoError } = await this.supabase
+    const { data: toDoData, error: toDoError } = await this.dataDatabase
       .from('todos')
       .select('*')
       .eq('email', email)
@@ -47,7 +55,7 @@ export class UpdateService {
     }
 
     // 데이터 업데이트
-    const { data: updatedData, error: updateError } = await this.supabase
+    const { data: updatedData, error: updateError } = await this.dataDatabase
       .from('todos')
       .update({
         group: afterGroup,

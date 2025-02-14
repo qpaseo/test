@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Umunjeong_Database } from '../../db/Umunjeong_Database';
+import { Umun_Auth_Database } from '../../db/Umun_Auth_Database';
 import { DatabaseType } from '../../types/SupabaseType';
 import { randomUUID } from 'crypto';
 
 @Injectable()
 export class CreateService {
-  private supabase: SupabaseClient<DatabaseType, 'public', any>;
+  private dataDatabase: SupabaseClient<DatabaseType, 'public', any>;
+  private authDatabase: SupabaseClient<DatabaseType, 'public', any>;
 
-  constructor(private readonly supabaseService: Umunjeong_Database) {
-    this.supabase = this.supabaseService.getClient();
+  constructor(
+    private readonly DataDatabase: Umunjeong_Database,
+    private readonly AuthDatabase: Umun_Auth_Database,
+  ) {
+    this.dataDatabase = this.DataDatabase.getClient();
+    this.authDatabase = this.AuthDatabase.getClient();
   }
 
   async createPin(
@@ -21,7 +27,7 @@ export class CreateService {
     img: Express.Multer.File,
   ): Promise<any> {
     const { data: user, error: finduserError } =
-      await this.supabase.auth.getUser(token);
+      await this.authDatabase.auth.getUser(token);
 
     if (finduserError || !user?.user?.email) {
       console.error('Pin-create: Invalid user or token', token);
@@ -31,7 +37,7 @@ export class CreateService {
     const email = user.user.email;
 
     // 중복 확인
-    const { data: titleMatch, error: titleError } = await this.supabase
+    const { data: titleMatch, error: titleError } = await this.dataDatabase
       .from('pins')
       .select('*')
       .eq('group', group)
@@ -48,7 +54,7 @@ export class CreateService {
     }
 
     const fileName = `${randomUUID()}-${img.originalname}`;
-    const { error: uploadError } = await this.supabase.storage
+    const { error: uploadError } = await this.dataDatabase.storage
       .from('pin-img')
       .upload(fileName, img.buffer, {
         contentType: img.mimetype,
@@ -60,7 +66,7 @@ export class CreateService {
     }
 
     // 파일 URL 가져오기
-    const { data: publicUrlData } = this.supabase.storage
+    const { data: publicUrlData } = this.dataDatabase.storage
       .from('pin-img')
       .getPublicUrl(fileName);
 
@@ -71,7 +77,7 @@ export class CreateService {
 
     const fileUrl = publicUrlData.publicUrl;
 
-    const { error: insertError } = await this.supabase.from('pins').insert({
+    const { error: insertError } = await this.dataDatabase.from('pins').insert({
       group,
       field,
       pin,

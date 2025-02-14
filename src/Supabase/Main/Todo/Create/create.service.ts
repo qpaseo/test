@@ -1,14 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Umunjeong_Database } from '../../../db/Umunjeong_Database';
+import { Umun_Auth_Database } from '@supabase/db/Umun_Auth_Database';
 import { DatabaseType } from '../../../types/SupabaseType';
 
 @Injectable()
 export class CreateService {
-  private supabase: SupabaseClient<DatabaseType, 'public', any>;
-  constructor(private readonly supabaseService: Umunjeong_Database) {
-    this.supabase = this.supabaseService.getClient();
-  }
+  private dataDatabase: SupabaseClient<DatabaseType, 'public', any>;
+   private authDatabase: SupabaseClient<DatabaseType, 'public', any>;
+ 
+   constructor(
+     private readonly DataDatabase: Umunjeong_Database,
+     private readonly AuthDatabase: Umun_Auth_Database,
+   ) {
+     this.dataDatabase = this.DataDatabase.getClient();
+     this.authDatabase = this.AuthDatabase.getClient();
+   }
+ 
 
   async createTodo(
     token: string,
@@ -19,7 +27,7 @@ export class CreateService {
     todoEndDay: string,
   ): Promise<any> {
     const { data: user, error: finduserError } =
-      await this.supabase.auth.getUser(token);
+      await this.authDatabase.auth.getUser(token);
 
     if (finduserError) {
       console.log('Todo-create : 해당하는 유저가 존재하지 않습니다', token);
@@ -31,7 +39,7 @@ export class CreateService {
     const email = user?.user?.email;
 
     // 중복 확인
-    const { data: titleMatch, error: titleError } = await this.supabase
+    const { data: titleMatch, error: titleError } = await this.dataDatabase
       .from('todos')
       .select('*')
       .eq('group', group)
@@ -44,7 +52,7 @@ export class CreateService {
     }
 
     if (email) {
-      const { data, error } = await this.supabase.from('todos').insert({
+      const { data, error } = await this.dataDatabase.from('todos').insert({
         group: group,
         todo: name,
         state: state,

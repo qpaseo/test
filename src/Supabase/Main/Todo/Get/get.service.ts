@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Umunjeong_Database } from '../../../db/Umunjeong_Database';
+import { Umun_Auth_Database } from '@supabase/db/Umun_Auth_Database';
 import { DatabaseType } from '../../../types/SupabaseType';
 import { parse, isValid, format } from 'date-fns';
 
 @Injectable()
 export class GetService {
-  private supabase: SupabaseClient<DatabaseType, 'public', any>;
+  private dataDatabase: SupabaseClient<DatabaseType, 'public', any>;
+  private authDatabase: SupabaseClient<DatabaseType, 'public', any>;
 
-  constructor(private readonly supabaseService: Umunjeong_Database) {
-    this.supabase = this.supabaseService.getClient();
+  constructor(
+    private readonly DataDatabase: Umunjeong_Database,
+    private readonly AuthDatabase: Umun_Auth_Database,
+  ) {
+    this.dataDatabase = this.DataDatabase.getClient();
+    this.authDatabase = this.AuthDatabase.getClient();
   }
 
   // 날짜 형식이 잘못되었을 경우, 올바른 형식으로 변환하는 함수
@@ -49,7 +55,7 @@ export class GetService {
     }
 
     const { data: user, error: finduserError } =
-      await this.supabase.auth.getUser(token);
+      await this.authDatabase.auth.getUser(token);
 
     if (finduserError) {
       console.log('Todo-get : 해당하는 유저가 존재하지 않습니다', token);
@@ -62,7 +68,7 @@ export class GetService {
     const email = user?.user?.email;
 
     // 데이터 가져오기
-    const { data: toToData, error: toToError } = await this.supabase
+    const { data: toToData, error: toToError } = await this.dataDatabase
       .from('todos')
       .select('*')
       .eq('email', email)

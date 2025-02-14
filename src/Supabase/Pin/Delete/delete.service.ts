@@ -1,19 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Umunjeong_Database } from '../../db/Umunjeong_Database';
+import { Umun_Auth_Database } from '../../db/Umun_Auth_Database';
 import { DatabaseType } from '../../types/SupabaseType';
 
 @Injectable()
 export class DeleteService {
-  private supabase: SupabaseClient<DatabaseType, 'public', any>;
+ private dataDatabase: SupabaseClient<DatabaseType, 'public', any>;
+  private authDatabase: SupabaseClient<DatabaseType, 'public', any>;
 
-  constructor(private readonly supabaseService: Umunjeong_Database) {
-    this.supabase = this.supabaseService.getClient();
+  constructor(
+    private readonly DataDatabase: Umunjeong_Database,
+    private readonly AuthDatabase: Umun_Auth_Database,
+  ) {
+    this.dataDatabase = this.DataDatabase.getClient();
+    this.authDatabase = this.AuthDatabase.getClient();
   }
+
 
   async deletePin(token: string, id: string) {
     const { data: user, error: finduserError } =
-      await this.supabase.auth.getUser(token);
+      await this.authDatabase.auth.getUser(token);
 
     if (finduserError) {
       console.log('Pin-Delete : 해당하는 유저가 존재하지 않습니다', token);
@@ -25,7 +32,7 @@ export class DeleteService {
 
     const email = user?.user?.email;
 
-    const { data: DeleteData, error: DeleteError } = await this.supabase
+    const { data: DeleteData, error: DeleteError } = await this.dataDatabase
       .from('pins')
       .delete()
       .eq('email', email)

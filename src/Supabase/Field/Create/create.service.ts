@@ -1,15 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Umunjeong_Database } from '../../db/Umunjeong_Database';
+import { Umun_Auth_Database } from '../../db/Umun_Auth_Database';
 import { DatabaseType } from '../../types/SupabaseType';
 import { randomUUID } from 'crypto'; // UUID 생성용
 
 @Injectable()
 export class CreateService {
-  private supabase: SupabaseClient<DatabaseType, 'public', any>;
-  constructor(private readonly supabaseService: Umunjeong_Database) {
-    this.supabase = this.supabaseService.getClient();
-  }
+  private dataDatabase: SupabaseClient<DatabaseType, 'public', any>;
+   private authDatabase: SupabaseClient<DatabaseType, 'public', any>;
+ 
+   constructor(
+     private readonly DataDatabase: Umunjeong_Database,
+     private readonly AuthDatabase: Umun_Auth_Database,
+   ) {
+     this.dataDatabase = this.DataDatabase.getClient();
+     this.authDatabase = this.AuthDatabase.getClient();
+   }
+ 
 
   // 파일명에 특수 문자를 제거하는 함수
   private sanitizeFileName(fileName: string): string {
@@ -25,7 +33,7 @@ export class CreateService {
   ): Promise<any> {
     // 유저 인증 확인
     const { data: user, error: finduserError } =
-      await this.supabase.auth.getUser(token);
+      await this.authDatabase.auth.getUser(token);
 
     if (finduserError || !user?.user?.email) {
       console.log('Field-create: 해당하는 유저가 존재하지 않습니다', token);
@@ -35,7 +43,7 @@ export class CreateService {
     const email = user.user.email;
 
     // 중복 확인
-    const { data: titleMatch, error: titleError } = await this.supabase
+    const { data: titleMatch, error: titleError } = await this.dataDatabase
       .from('fields')
       .select('*')
       .eq('group', group)
@@ -50,7 +58,7 @@ export class CreateService {
     // 이미지 파일 업로드 처리
     if (img) {
       const sanitizedFileName = `${randomUUID()}-${this.sanitizeFileName(img.originalname)}`; // 특수 문자 제거한 파일명 생성
-      const { error: uploadError } = await this.supabase.storage
+      const { error: uploadError } = await this.dataDatabase.storage
         .from('field-img') // 스토리지 버킷 이름
         .upload(sanitizedFileName, img.buffer, {
           contentType: img.mimetype,
@@ -62,7 +70,7 @@ export class CreateService {
       }
 
       // 업로드된 파일 URL 생성
-      const { data: publicUrlData } = this.supabase.storage
+      const { data: publicUrlData } = this.dataDatabase.storage
         .from('field-img')
         .getPublicUrl(sanitizedFileName);
 
@@ -75,7 +83,7 @@ export class CreateService {
     }
 
     // 필드 데이터 삽입
-    const { error } = await this.supabase.from('fields').insert({
+    const { error } = await this.dataDatabase.from('fields').insert({
       group,
       field,
       img: imgUrl, // 이미지 URL 저장

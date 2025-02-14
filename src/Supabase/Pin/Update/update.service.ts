@@ -1,16 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Umunjeong_Database } from '../../db/Umunjeong_Database';
+import { Umun_Auth_Database } from '../../db/Umun_Auth_Database';
 import { DatabaseType } from '../../types/SupabaseType';
 import { randomUUID } from 'crypto'; // UUID 생성용
 
 @Injectable()
 export class UpdateService {
-  private supabase: SupabaseClient<DatabaseType, 'public', any>;
-
-  constructor(private readonly supabaseService: Umunjeong_Database) {
-    this.supabase = this.supabaseService.getClient();
-  }
+  private dataDatabase: SupabaseClient<DatabaseType, 'public', any>;
+   private authDatabase: SupabaseClient<DatabaseType, 'public', any>;
+ 
+   constructor(
+     private readonly DataDatabase: Umunjeong_Database,
+     private readonly AuthDatabase: Umun_Auth_Database,
+   ) {
+     this.dataDatabase = this.DataDatabase.getClient();
+     this.authDatabase = this.AuthDatabase.getClient();
+   }
+ 
 
   async updatePin(
     token: string,
@@ -23,7 +30,7 @@ export class UpdateService {
   ) {
     // 유저 인증 확인
     const { data: user, error: finduserError } =
-      await this.supabase.auth.getUser(token);
+      await this.authDatabase.auth.getUser(token);
 
     if (finduserError || !user?.user?.email) {
       console.log('유효하지 않은 유저 또는 토큰', token);
@@ -33,7 +40,7 @@ export class UpdateService {
     const email = user.user.email;
 
     // 기존 핀 데이터 확인
-    const { data: PinData, error: PinError } = await this.supabase
+    const { data: PinData, error: PinError } = await this.dataDatabase
       .from('pins')
       .select('*')
       .eq('email', email)
@@ -55,7 +62,7 @@ export class UpdateService {
     // 이미지 파일이 있을 경우 처리
     if (img) {
       const fileName = `${randomUUID()}-${img.originalname}`;
-      const { error: uploadError } = await this.supabase.storage
+      const { error: uploadError } = await this.dataDatabase.storage
         .from('pin-img') // 스토리지 버킷 이름
         .upload(fileName, img.buffer, {
           contentType: img.mimetype,
@@ -67,7 +74,7 @@ export class UpdateService {
       }
 
       // 업로드된 파일 URL 생성
-      const { data: publicUrlData } = this.supabase.storage
+      const { data: publicUrlData } = this.dataDatabase.storage
         .from('pin-img')
         .getPublicUrl(fileName);
 
@@ -80,7 +87,7 @@ export class UpdateService {
     }
 
     // 데이터 업데이트
-    const { error: updateError } = await this.supabase
+    const { error: updateError } = await this.dataDatabase
       .from('pins')
       .update(query)
       .eq('email', email)
