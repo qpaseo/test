@@ -29,6 +29,7 @@ export class MoviesService {
       id: this.movies.length + 1,
       title: movieData.title,
       year: movieData.year,
+      genres: movieData.genres,
     });
   }
 
