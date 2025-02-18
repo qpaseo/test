@@ -1,3 +1,5 @@
+//유닛 테스트를 위한 파일
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { MoviesService } from './movies.service';
 import { NotFoundException } from '@nestjs/common';
@@ -62,7 +64,7 @@ describe('MoviesService', () => {
       expect(afterDelete).toBeLessThan(allMovies);
     });
 
-    it('should retutn a 404', () => {
+    it('should retutn a 404(delete)', () => {
       try {
         service.deleteOne(999);
       } catch (e) {
@@ -81,6 +83,28 @@ describe('MoviesService', () => {
       });
       const afterCreate = service.getAll().length;
       expect(afterCreate).toBeGreaterThan(beforeCreate);
+    });
+  });
+
+  describe('update', () => {
+    it('should update a movie', () => {
+      service.create({
+        title: 'Test Movie',
+        year: 2000,
+        genres: ['test'],
+      });
+
+      service.update(1, { title: 'Updated Test' });
+      const movie = service.getOne(1);
+      expect(movie.title).toEqual('Updated Test');
+    });
+
+    it('should retutn a 404 (update)', () => {
+      try {
+        service.deleteOne(999);
+      } catch (e) {
+        expect(e).toBeInstanceOf(NotFoundException);
+      }
     });
   });
 });

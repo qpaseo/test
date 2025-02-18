@@ -36,6 +36,6 @@ export class MoviesService {
   update(id: number, updateData: UpdateMovieDto) {
     const movie = this.getOne(id);
     this.deleteOne(id);
-    this.movies.push({ ...movie, ...updateData });
+    this.movies.push({ ...movie, ...updateData }); //{ ...movie, ...updateData } : 속성 병합 (updateData우선)
   }
 }

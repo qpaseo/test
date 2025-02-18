@@ -4,12 +4,13 @@ import { CreateMovieDto } from './create-movie.dto';
 
 export class UpdateMovieDto extends PartialType(CreateMovieDto) {
   @IsString()
-  @IsOptional()
   readonly title: string;
 
   @IsNumber()
+  @IsOptional()
   readonly year?: number;
-  
+
   @IsString({ each: true })
+  @IsOptional()
   readonly genres?: string[];
 }
