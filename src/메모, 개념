@@ -1,0 +1,5 @@
+배운거 : type(종류는 상황마다 검색)
+    ref : useRef<HTMLImageElement>(null);
+    event : event: MouseEvent
+
+쓸만한거 : *useNotification*(알림전달)
