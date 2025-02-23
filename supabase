@@ -1,0 +1,15 @@
+--rooms
+create table rooms (
+  room_id integer primary key,
+  people_count integer not null default 0
+);
+
+--messages
+CREATE TABLE messages (
+  id SERIAL PRIMARY KEY,
+  content TEXT NOT NULL,
+  room TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE messages ADD COLUMN user_id text;
