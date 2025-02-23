@@ -6,6 +6,7 @@ const useStore = create((set) => ({
   setColor: (color) => set(() => localStorage.setItem("color", color)),
   Plus: () => set((state) => ({ Count: state.Count + 1 })),
   Minus: () => set((state) => ({ Count: state.Count - 1 })),
+  Multiply: () => set((state) => ({ Count: state.Count * 2 })),
 }));
 
 export default useStore;

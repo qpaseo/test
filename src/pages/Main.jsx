@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import useStore from "../zustand/store";
 
-function Main() {
+function Main() { 
   const { color } = useStore();
   const mainDivRef = useRef();
 
