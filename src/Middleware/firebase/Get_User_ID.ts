@@ -1,6 +1,6 @@
 //유저의 email을 반환도
 import { Injectable } from '@nestjs/common';
-import { FirebaseService } from '../../../db/firebase.js';
+import { FirebaseService } from '../../db/firebase';
 
 @Injectable()
 export class Get_User_Id extends FirebaseService {

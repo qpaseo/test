@@ -6,6 +6,7 @@ import { RredisModule } from './Middleware/redis.module';
 import { RateLimitService } from './Middleware/function/RateLimitService';
 
 import { Get_User_Id } from './Middleware/firebase/Get_User_ID';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { Get_User_Id } from './Middleware/firebase/Get_User_ID';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    FirebaseModule,
   ],
   providers: [RateLimitService, Get_User_Id],
 })
