@@ -1,11 +1,11 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { RateLimitMiddleware } from './Middleware/RateLimitMiddleware';
-import { RredisModule } from './Middleware/redis.module';
-import { RateLimitService } from './Middleware/function/RateLimitService';
+import { RateLimitMiddleware } from './middleware/RateLimitMiddleware';
+import { RredisModule } from './middleware/middleware.module';
+import { RateLimitService } from './middleware/function/RateLimitService';
 
-import { Get_User_Id } from './Middleware/firebase/Get_User_ID';
+import { Get_User_Id } from './middleware/firebase/Get_User_ID';
 import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({

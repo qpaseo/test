@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { FirebaseService } from '../db/firebase';
-import { WritingService } from './writing.service';
-import { WritingController } from './writing.controller';
+import { WritingModule } from './writing/writing.module';
+import { ToeknModule } from './token/token.module';
 
 @Module({
-  providers: [FirebaseService, WritingService],
-  controllers: [WritingController],
+  imports: [WritingModule, ToeknModule],
+  providers: [FirebaseService],
 })
 export class FirebaseModule {}
