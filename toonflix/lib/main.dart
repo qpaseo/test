@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toonflix/widgets/Button.dart';
 
 class Player {
   String? name; //있을수도 있고 아닐수도 있고
@@ -34,7 +35,9 @@ class App extends StatelessWidget {
       home: Scaffold(
         backgroundColor: Colors.black,
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40),
+          padding: EdgeInsets.symmetric(
+            horizontal: 20,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -90,23 +93,18 @@ class App extends StatelessWidget {
                 height: 30,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xFFF2B33A),
-                          borderRadius: BorderRadius.circular(45)),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 50,
-                        ),
-                        child: Text(
-                          'Teansfer',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ))
+                  Button(
+                    text: "Teansfer",
+                    bgColor: Color(0xFFF1B33B),
+                    textColor: Colors.black,
+                  ),
+                  Button(
+                    text: "Requset",
+                    bgColor: Color(0xFF1F2123),
+                    textColor: Colors.white,
+                  ),
                 ],
               )
             ],
