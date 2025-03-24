@@ -1,21 +1,13 @@
+// middleware.module.ts (이전의 RredisModule 대신 사용)
 import { Module } from '@nestjs/common';
-import { RedisModule } from '@nestjs-modules/ioredis'; // Redis
-import { ConfigModule, ConfigService } from '@nestjs/config'; // 환경변수
+import { ConfigModule } from '@nestjs/config';
+import { RedisClientProvider } from './redis/redis';
+import { RateLimitMiddleware } from './RateLimitMiddleware';
+import { GetUserEmail } from './firebase/getUserEmail';
 
 @Module({
-  imports: [
-    //configService에 환경변수 등록
-    ConfigModule.forRoot({
-      load: [() => ({ Redis_DATABASE_URL: process.env.Redis_DATABASE_URL })],
-    }),
-
-    RedisModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        type: 'single', // single : 단일 연결 | cluster : 다수연결 | sentinel : 고가용성 연결(장애 해결을 위한거) {전부 형식이 다름}
-        url: configService.get<string>('Redis_DATABASE_URL'),
-      }),
-    }),
-  ],
+  imports: [ConfigModule], // ConfigModule을 임포트하여 환경변수를 사용할 수 있도록 함
+  providers: [RedisClientProvider, RateLimitMiddleware, GetUserEmail],
+  exports: [RedisClientProvider, RateLimitMiddleware, GetUserEmail],
 })
-export class RredisModule {}
+export class MiddlewareModule {}

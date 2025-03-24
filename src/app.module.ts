@@ -1,25 +1,22 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+// app.module.ts
+import { Module } from '@nestjs/common';
+import { Redis } from 'ioredis';
+import { RedisModule } from '@nestjs-modules/ioredis'; // Redis
 import { ConfigModule } from '@nestjs/config';
-
-import { RateLimitMiddleware } from './middleware/RateLimitMiddleware';
-import { RredisModule } from './middleware/middleware.module';
 import { RateLimitService } from './middleware/function/RateLimitService';
-
-import { Get_User_Id } from './middleware/firebase/Get_User_ID';
+import { GetUserEmail } from './middleware/firebase/getUserEmail';
 import { FirebaseModule } from './firebase/firebase.module';
+import { MiddlewareModule } from './middleware/middleware.module'; // RredisModule 사용
 
 @Module({
   imports: [
-    RredisModule,
+    MiddlewareModule, // RredisModule을 임포트
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     FirebaseModule,
+    RedisModule,
   ],
-  providers: [RateLimitService, Get_User_Id],
+  providers: [RateLimitService, GetUserEmail, Redis, RedisModule], // 필요한 provider 등록
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RateLimitMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}

@@ -11,7 +11,7 @@ export class FirebaseService {
   public readonly auth: Auth;
   public readonly storage: Storage; // Firebase Storage 추가
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(public readonly configService: ConfigService) {
     // Firebase 앱이 이미 초기화된 경우 기존 앱을 사용하도록 처리
     let app: App;
     try {

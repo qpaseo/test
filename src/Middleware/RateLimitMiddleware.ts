@@ -1,15 +1,17 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { RateLimitService } from './function/RateLimitService';
-import { Get_User_Id } from './firebase/Get_User_ID'; // Supabase id를가져오는 함수
+import { GetUserEmail } from './firebase/getUserEmail';
+import { RedisClientType } from 'redis';
 
 @Injectable()
-export class RateLimitMiddleware implements NestMiddleware {
+export class RateLimitMiddleware {
   constructor(
-    private readonly rateLimitService: RateLimitService,
-    private readonly get_User_Id: Get_User_Id,
+    @Inject('REDIS_CLIENT') private readonly redisClient: RedisClientType,
+    private readonly getUserEmail: GetUserEmail, // GetUserEmail 주입
   ) {}
 
-  async use(req: any, res: any, next: () => void) {
+  async use(req: FastifyRequest, res: FastifyReply, next: () => void) {
     const authHeader = req.headers['authorization'];
     const token = authHeader?.startsWith('Bearer ')
       ? authHeader.slice(7)
@@ -17,25 +19,28 @@ export class RateLimitMiddleware implements NestMiddleware {
 
     if (!token) {
       return res
-        .status(401)
-        .json({ message: '토큰이 없습니다, 경로 설정을 확인하여 주세요' });
+        .code(401)
+        .send({ message: '토큰이 없습니다, 경로 설정을 확인하여 주세요' });
     }
 
     try {
-      //이메일 반환
-      const userEmail = await this.get_User_Id.getUserIdFromToken(token);
-      const isAllowed = await this.rateLimitService.checkRateLimit(userEmail);
+      // GetUserEmail 인스턴스를 DI로 주입받아서 사용
+      const userEmail = await this.getUserEmail.getUserIdFromToken(token);
+
+      const rateLimitService = new RateLimitService(this.redisClient); // Redis를 RateLimitService에 전달
+
+      const isAllowed = await rateLimitService.checkRateLimit(userEmail);
 
       if (!isAllowed) {
-        return res
-          .status(429)
-          .json({ message: '과도한 요청이 발생하였습니다' });
+        return res.code(429).send({ message: '과도한 요청이 발생하였습니다' });
       }
+
+      // 요청을 허용하고 다음 처리로 이동
       next();
     } catch (error) {
       return res
-        .status(401)
-        .json({ message: '서버와의 요청 과정에서 오류 발생!' });
+        .code(401)
+        .send({ message: '서버와의 요청 과정에서 오류 발생!' });
     }
   }
 }
