@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Player {
   String? name; //있을수도 있고 아닐수도 있고
-  
+
   Player({required this.name});
 }
 
@@ -30,22 +30,40 @@ class App extends StatelessWidget {
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          shadowColor: Colors.black,
-          centerTitle: false,
-          title: Text(
-            "hello flutter!",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+        backgroundColor: Colors.black,
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 80,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Hey, Selena',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w800),
+                      ),
+                      Text(
+                        'Welcome back',
+                        style: TextStyle(
+                          color: Color.fromRGBO(255, 255, 255, 0.5),
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ],
           ),
-          backgroundColor: Colors.blueAccent,
-        ),
-        body: Center(
-          child: Text("Hello wored"),
         ),
       ),
     );
