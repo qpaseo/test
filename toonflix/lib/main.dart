@@ -9,8 +9,6 @@ class Player {
 }
 
 void main() {
-  var seo = Player(name: "seo");
-  seo.name;
   runApp(App());
 }
 
@@ -27,6 +25,10 @@ class _AppState extends State<App> {
   bool showTitle = true;
 
   void toggleTitle() {
+    //해당 위젯을 다시 빌드
+    //최소한의 구역에서만 사용
+    //StatefulWidget에서만 사용
+
     setState(() {
       showTitle = !showTitle;
     });
