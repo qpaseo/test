@@ -19,19 +19,17 @@ void main() {
 
 class App extends StatefulWidget {
   const App({super.key});
-
   @override
   State<App> createState() => _AppState();
 }
 
 class _AppState extends State<App> {
-  int counter = 0;
+  List<int> numbers = [];
 
   @override
   void onClicked() {
-    //변경된 데이터 적용(StatefulWidget, build다시 실행)
     setState(() {
-      counter += 1;
+      numbers.add(numbers.length);
     });
   }
 
@@ -48,10 +46,7 @@ class _AppState extends State<App> {
                 "clock count",
                 style: TextStyle(fontSize: 30),
               ),
-              Text(
-                counter.toString(),
-                style: TextStyle(fontSize: 30),
-              ), // 정수를 문자열로 변환하여 사용
+              for (var n in numbers) Text('$n'),
               IconButton(
                 iconSize: 40,
                 onPressed: onClicked,
