@@ -24,12 +24,11 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  List<int> numbers = [];
+  bool showTitle = true;
 
-  @override
-  void onClicked() {
+  void toggleTitle() {
     setState(() {
-      numbers.add(numbers.length);
+      showTitle = !showTitle;
     });
   }
 
@@ -49,7 +48,9 @@ class _AppState extends State<App> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              MyLargeTitle(),
+              showTitle ? MyLargeTitle() : const Text('notthing'),
+              IconButton(
+                  onPressed: toggleTitle, icon: Icon(Icons.remove_red_eye))
             ],
           ),
         ),
@@ -58,10 +59,32 @@ class _AppState extends State<App> {
   }
 }
 
-class MyLargeTitle extends StatelessWidget {
+class MyLargeTitle extends StatefulWidget {
   const MyLargeTitle({
     super.key,
   });
+
+  @override
+  State<MyLargeTitle> createState() => _MyLargeTitleState();
+}
+
+class _MyLargeTitleState extends State<MyLargeTitle> {
+  int count = 0;
+
+  //initState : state초기화
+  //build보다 먼저 있어야 함
+  //의존성 배열 없는 useEffect
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  //Widget이 정리될때 사용
+  //클린업 함수
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
