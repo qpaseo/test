@@ -14,6 +14,9 @@ void main() {
   runApp(App());
 }
 
+//StatefulWidget : 변하는 데이터가 있는 화면
+//StatelessWidget : 변하는 데이터가 없는 화면
+
 class App extends StatefulWidget {
   const App({super.key});
 
@@ -24,8 +27,12 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   int counter = 0;
 
+  @override
   void onClicked() {
-    counter += 1;
+    //변경된 데이터 적용(StatefulWidget, build다시 실행)
+    setState(() {
+      counter += 1;
+    });
   }
 
   @override
