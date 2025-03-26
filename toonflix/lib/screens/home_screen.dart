@@ -2,33 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:toonflix/models/webtoon.model.dart';
 import 'package:toonflix/services/api_services.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  List<WebtoonModel> webtoons = [];
-  bool isLoading = true;
-
-  void waitForWebToons() async {
-    webtoons = await ApiServices.getTodaysToons();
-    isLoading = false;
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    waitForWebToons();
-  }
+  Future<List<WebtoonModel>> webtoons = ApiServices.getTodaysToons();
 
   @override
   Widget build(BuildContext context) {
-    print(webtoons);
-    print(isLoading);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -46,6 +26,22 @@ class _HomeScreenState extends State<HomeScreen> {
             fontSize: 24,
           ),
         ),
+      ),
+
+      //FutureBuilder : 안에서 http 연결 가능하게 하는 위젯
+      body: FutureBuilder(
+        //가져오는 api함수
+        future: webtoons,
+
+        //api 상테, 데이터 추출 
+        //context 위젯 트리
+        //snapshot 비동기 작업 결과
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const Text("There is data!");
+          }
+          return const Text("Loading...");
+        },
       ),
     );
   }
