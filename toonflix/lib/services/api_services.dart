@@ -53,6 +53,8 @@ class ApiServices {
       }
       return episodesInstances;
     } else {
+      print(res.statusCode);
+      print(res.body);
       throw Exception("Failed to load episodes");
     }
   }

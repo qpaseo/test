@@ -23,6 +23,7 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   void initState() {
+    super.initState();
     webtoon = ApiServices.getToonById(widget.id);
     episodes = ApiServices.getLatestEpisodesById(widget.id);
   }
@@ -79,6 +80,41 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
             ],
           ),
+          const SizedBox(
+            height: 25,
+          ),
+          FutureBuilder(
+            future: webtoon,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                        snapshot.data!.about,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                          '${snapshot.data!.genre} / ${snapshot.data!.age}'),
+                    ],
+                  ),
+                );
+              }
+              return Text("...");
+            },
+          )
         ],
       ),
     );
