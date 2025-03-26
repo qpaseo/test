@@ -40,22 +40,70 @@ class HomeScreen extends StatelessWidget {
           if (snapshot.hasData) {
             //builder : 최적화를 위해 사용, 화면 밖에 있으면 메모리에서 삭제
             //separated : builder + 요소 사이에 구분자
-            return ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                var webtoon = snapshot.data![index];
-                return Text(webtoon.title);
-              },
-              separatorBuilder: (context, index) => SizedBox(
-                width: 20,
-              ),
+            return Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                ),
+                //Expanded : 남는 공간 차지하는 위젯
+                Expanded(
+                  child: makeList(snapshot),
+                ),
+              ],
             );
           }
           return Center(
             child: CircularProgressIndicator(),
           );
         },
+      ),
+    );
+  }
+
+  ListView makeList(AsyncSnapshot<List<WebtoonModel>> snapshot) {
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: snapshot.data!.length,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      itemBuilder: (context, index) {
+        var webtoon = snapshot.data![index];
+        print(webtoon.thumb);
+        return Column(
+          children: [
+            Container(
+              width: 250,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 15,
+                      offset: Offset(10, 10),
+                      color: Colors.black.withOpacity(0.3),
+                    )
+                  ]),
+              child: Image.network(
+                webtoon.thumb,
+                headers: const {
+                  'Referer': 'https://comic.naver.com',
+                },
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              webtoon.title,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        );
+      },
+      separatorBuilder: (context, index) => SizedBox(
+        width: 40,
       ),
     );
   }
