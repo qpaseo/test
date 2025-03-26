@@ -14,3 +14,8 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+# 잡다한 memo
+1. http 서버 통신 라이브러리
+2. url_launcher 클릭시 다른 페이지 뜨게 하는 라이브러리
