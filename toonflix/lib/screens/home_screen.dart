@@ -33,14 +33,28 @@ class HomeScreen extends StatelessWidget {
         //가져오는 api함수
         future: webtoons,
 
-        //api 상테, 데이터 추출 
+        //api 상테, 데이터 추출
         //context 위젯 트리
         //snapshot 비동기 작업 결과
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const Text("There is data!");
+            //builder : 최적화를 위해 사용, 화면 밖에 있으면 메모리에서 삭제
+            //separated : builder + 요소 사이에 구분자
+            return ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                var webtoon = snapshot.data![index];
+                return Text(webtoon.title);
+              },
+              separatorBuilder: (context, index) => SizedBox(
+                width: 20,
+              ),
+            );
           }
-          return const Text("Loading...");
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         },
       ),
     );
