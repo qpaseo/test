@@ -19,3 +19,4 @@ samples, guidance on mobile development, and a full API reference.
 # 잡다한 memo
 1. http 서버 통신 라이브러리
 2. url_launcher 클릭시 다른 페이지 뜨게 하는 라이브러리
+3. shared_preferences 로컬 저장소에 접근 가능하게 하는 라이브러리
