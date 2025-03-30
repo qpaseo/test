@@ -11,12 +11,27 @@ const tweets = [
   },
 ];
 
+let users = [
+  {
+    id: "1",
+    firstName: "seo",
+    lastName: "0209",
+  },
+  {
+    id: "2",
+    firstName: "sei",
+    lastName: "0208",
+  },
+];
+
 // 1. GraphQL 스키마 정의 (보내는 쿼리)
 
 const typeDefs = gql`
   type User {
     id: ID
-    username: String
+    firstName: String
+    lastName: String
+    fullName: String
   }
 
   type Tweet {
@@ -28,6 +43,7 @@ const typeDefs = gql`
   # get 요청만 여기에
   type Query {
     allTweets: [Tweet!]
+    allUsers: [User!]!
     tweet(id: ID!): Tweet
     ping: String!
   }
@@ -44,6 +60,11 @@ const resolvers = {
   Query: {
     allTweets() {
       return tweets;
+    },
+
+    allUsers() {
+      console.log("alluser called");
+      return users;
     },
 
     tweet(root, { id }) {
@@ -67,6 +88,11 @@ const resolvers = {
       }
       tweets = tweets.filter((tweet) => tweet.id !== id);
       return true;
+    },
+  },
+  User: {
+    fullName({ firstName, lastName }) { // root(불러올 당시의 user값)에서 정보 추출해서 연산
+      return `${firstName} ${lastName}`;
     },
   },
 };

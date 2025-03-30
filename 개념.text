@@ -14,3 +14,6 @@ typeDefs
 resolvers
     Query : get 요청
     Mutation : 나머지 요청
+
+
+//root : 모든 인자의 첫값 상위에서 부르는 값이 들어간다, (이 쿼리가 시작되기 전의 값)
