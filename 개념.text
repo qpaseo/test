@@ -2,3 +2,15 @@
 apollo-server 
 graphql
 nodemon -D
+
+
+// 1. GraphQL 스키마 정의 (보내는 쿼리)
+typeDefs
+    Query : get 요청
+    Mutation : 나머지 요청
+
+
+// 2. Resolvers (쿼리 처리 함수[서버가 받아 처리하는 로직])
+resolvers
+    Query : get 요청
+    Mutation : 나머지 요청
