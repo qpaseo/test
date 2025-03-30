@@ -20,8 +20,8 @@ const typeDefs = gql`
   }
 
   type Tweet {
-    id: ID!
-    text: String!
+    id: ID
+    text: String
     author: User
   }
 
@@ -46,9 +46,8 @@ const resolvers = {
       return tweets;
     },
 
-    tweet() {
-      console.log("실행됨 ");
-      return null;
+    tweet(root, { id }) {
+      return tweets.find((tweet) => tweet.id === id);
     },
 
     ping() {
