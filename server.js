@@ -1,5 +1,16 @@
 import { ApolloServer, gql } from "apollo-server";
 
+const tweets = [
+  {
+    id: "1",
+    text: "1 hello",
+  },
+  {
+    id: "2",
+    text: "2 hello",
+  },
+];
+
 // 1. GraphQL 스키마 정의 (보내는 쿼리)
 
 const typeDefs = gql`
@@ -11,14 +22,17 @@ const typeDefs = gql`
   type Tweet {
     id: ID!
     text: String!
-    author: User!
+    author: User
   }
 
+  # get 요청만 여기에
   type Query {
-    allTweets: [Tweet!]!
-    tweet(id: ID!): Tweet!
+    allTweets: [Tweet!]
+    tweet(id: ID!): Tweet
+    ping: String!
   }
 
+  # 나머지 요청은 여기에
   type Mutation {
     postTweet(text: String!, userId: ID!): Tweet!
     deleteTweet(id: ID!): Boolean!
@@ -27,7 +41,20 @@ const typeDefs = gql`
 
 // 2. Resolvers (쿼리 처리 함수[서버가 받아 처리하는 로직])
 const resolvers = {
-  Query: {},
+  Query: {
+    allTweets() {
+      return tweets;
+    },
+
+    tweet() {
+      console.log("실행됨 ");
+      return null;
+    },
+
+    ping() {
+      return "pong";
+    },
+  },
 };
 
 // 3. Apollo Server 생성 (typeDefs와 resolvers 포함)
