@@ -4,10 +4,12 @@ const tweets = [
   {
     id: "1",
     text: "1 hello",
+    userId: "2",
   },
   {
     id: "2",
     text: "2 hello",
+    userId: "1",
   },
 ];
 
@@ -50,7 +52,7 @@ const typeDefs = gql`
 
   # 나머지 요청은 여기에
   type Mutation {
-    postTweet(text: String!, userId: ID!): Tweet!
+    postTweet(text: String!, userId: ID!): Tweet
     deleteTweet(id: ID!): Boolean!
   }
 `;
@@ -73,12 +75,17 @@ const resolvers = {
   },
   Mutation: {
     postTweet(_, { text, userId }) {
-      const newTweet = {
-        id: tweets.length + 1,
-        text,
-      };
-      tweets.push(newTweet);
-      return newTweet;
+      const user = users.find((user) => user.id === userId);
+      if (user) {
+        const newTweet = {
+          id: tweets.length + 1,
+          text,
+          userId,
+        };
+        tweets.push(newTweet);
+        return newTweet;
+      }
+      return null;
     },
 
     deleteTweet(_, { id }) {
@@ -91,8 +98,15 @@ const resolvers = {
     },
   },
   User: {
-    fullName({ firstName, lastName }) { // root(불러올 당시의 user값)에서 정보 추출해서 연산
+    fullName({ firstName, lastName }) {
+      // root(불러올 당시의 user값)에서 정보 추출해서 연산
       return `${firstName} ${lastName}`;
+    },
+  },
+
+  Tweet: {
+    author({ userId }) {
+      return users.find((user) => user.id === userId);
     },
   },
 };
