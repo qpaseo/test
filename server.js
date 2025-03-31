@@ -56,7 +56,7 @@ const typeDefs = gql`
     tweet(id: ID!): Tweet
     ping: String!
     allMovies: [Movie!]!
-    movie(id: String!): Movie
+    movie(id: ID): Movie
   }
 
   # 나머지 요청은 여기에
