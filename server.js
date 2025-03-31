@@ -33,13 +33,19 @@ const typeDefs = gql`
     id: ID
     firstName: String
     lastName: String
+    """
+    user fullName  firstName + lastName
+    """
     fullName: String
   }
 
+  """
+  Tweet obejct type
+  """
   type Tweet {
-    id: ID
-    text: String
-    author: User
+    id: ID!
+    text: String!
+    author: User!
   }
 
   # get 요청만 여기에
