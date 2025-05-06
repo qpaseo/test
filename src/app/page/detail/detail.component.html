@@ -1,0 +1,8 @@
+<div>
+  <h2>Todo 상세</h2>
+  <label>이름: <input [(ngModel)]="name" /></label><br />
+  <label>내용: <textarea [(ngModel)]="content"></textarea></label><br />
+  <label>완료 여부: <input type="checkbox" [(ngModel)]="completed" /></label
+  ><br />
+  <button (click)="save()">확인</button>
+</div>
