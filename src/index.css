@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 24 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+
+    --border: 214.3 31.8% 91.4%;
+    --ring: 221 83% 53%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+.aws-theme {
+  --accent: 32 100% 50%;
+}
+
+.azure-theme {
+  --accent: 207 100% 42%;
+}
+
+.gcp-theme {
+  --accent: 8 86% 53%;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slider customization */
+input[type="range"] {
+  @apply h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  @apply h-5 w-5 appearance-none rounded-full bg-blue-500 shadow-md transition-all duration-150;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  @apply ring-2 ring-blue-500 ring-offset-2;
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  @apply scale-110;
+}
+
+.card {
+  @apply relative overflow-hidden rounded-xl bg-white p-6 shadow-md transition-all duration-300 hover:shadow-lg;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card:before {
+  content: "";
+  @apply absolute bottom-0 left-0 h-1 w-full rounded-b-xl transition-all duration-300;
+}
+
+.aws-card:before {
+  @apply bg-orange-500;
+}
+
+.azure-card:before {
+  @apply bg-blue-600;
+}
+
+.gcp-card:before {
+  @apply bg-red-500;
+}
+
+.firebase-card:before {
+  @apply bg-orange-500;
+}
+
+.supabase-card:before {
+  @apply bg-green-500;
+}
