@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Cloud, Server } from "lucide-react";
+import { Cloud } from "lucide-react";
 import CostSlider from "../components/CostSlider";
 import CostToggle from "../components/CostToggle";
 import ResourceSelection from "../components/ResourceSelection";
@@ -20,6 +20,7 @@ const AwsCalculator = () => {
   const [storageCost, setStorageCost] = useState(0);
   const [additionalCost, setAdditionalCost] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
+  const [totalCostKRW, setTotalCostKRW] = useState(0);
 
   // Handle toggle for additional services
   const toggleService = (serviceId: string) => {
@@ -55,6 +56,12 @@ const AwsCalculator = () => {
     setStorageCost(storageCostValue);
     setAdditionalCost(servicesCostValue);
     setTotalCost(computeCostValue + storageCostValue + servicesCostValue);
+
+    // Convert total cost to KRW (assuming 1 USD = 1300 KRW as a placeholder)
+    const exchangeRate = 1300;
+    const totalCostKRW =
+      (computeCostValue + storageCostValue + servicesCostValue) * exchangeRate;
+    setTotalCostKRW(totalCostKRW);
   }, [
     selectedInstance,
     selectedStorage,
