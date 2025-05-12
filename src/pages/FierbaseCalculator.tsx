@@ -59,7 +59,10 @@ const FirebaseCalculator = () => {
         </div>
         <h1 className="mb-2 text-3xl font-bold">Firebase Cost Calculator</h1>
         <p className="text-gray-600">
-          Estimate your Firebase development costs based on usage
+          Estimate your Firebase development costs based on usage{" "}
+          <a className="underline" href="https://firebase.google.com/">
+            (Document)
+          </a>
         </p>
       </div>
 

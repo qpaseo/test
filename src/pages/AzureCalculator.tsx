@@ -76,7 +76,10 @@ const AzureCalculator = () => {
         </div>
         <h1 className="mb-2 text-3xl font-bold">Azure Cost Calculator</h1>
         <p className="text-gray-600">
-          Estimate your Microsoft Azure development costs
+          Estimate your Microsoft Azure development costs{" "}
+          <a className="underline" href="https://azure.microsoft.com/">
+            (Document)
+          </a>
         </p>
       </div>
 

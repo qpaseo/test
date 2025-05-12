@@ -7,7 +7,6 @@ import CostSummary from "../components/CostSummary";
 import { instances, storageOptions, additionalServices } from "../data/awsData";
 
 const AwsCalculator = () => {
-  // State for calculator inputs
   const [selectedInstance, setSelectedInstance] = useState(instances[0].id);
   const [selectedStorage, setSelectedStorage] = useState(storageOptions[0].id);
   const [instanceCount, setInstanceCount] = useState(1);
@@ -15,14 +14,12 @@ const AwsCalculator = () => {
   const [uptime, setUptime] = useState(100);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  // State for calculated costs
   const [computeCost, setComputeCost] = useState(0);
   const [storageCost, setStorageCost] = useState(0);
   const [additionalCost, setAdditionalCost] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
   const [totalCostKRW, setTotalCostKRW] = useState(0);
 
-  // Handle toggle for additional services
   const toggleService = (serviceId: string) => {
     setSelectedServices((prev) =>
       prev.includes(serviceId)
@@ -31,33 +28,26 @@ const AwsCalculator = () => {
     );
   };
 
-  // Calculate costs whenever inputs change
   useEffect(() => {
-    // Get selected instance and storage details
     const instance = instances.find((i) => i.id === selectedInstance)!;
     const storage = storageOptions.find((s) => s.id === selectedStorage)!;
 
-    // Calculate compute cost: price per hour * number of instances * hours in month * uptime percentage
     const hourlyInstanceCost = instance.pricePerUnit * instanceCount;
-    const hoursInMonth = 730; // Average hours in a month (365 * 24 / 12)
+    const hoursInMonth = 730;
     const computeCostValue = hourlyInstanceCost * hoursInMonth * (uptime / 100);
 
-    // Calculate storage cost: price per GB * storage size
     const storageCostValue = storage.pricePerGB * storageSize;
 
-    // Calculate additional services cost
     const servicesCostValue = selectedServices.reduce((total, serviceId) => {
       const service = additionalServices.find((s) => s.id === serviceId);
       return total + (service ? service.price : 0);
     }, 0);
 
-    // Update state with calculated values
     setComputeCost(computeCostValue);
     setStorageCost(storageCostValue);
     setAdditionalCost(servicesCostValue);
     setTotalCost(computeCostValue + storageCostValue + servicesCostValue);
 
-    // Convert total cost to KRW (assuming 1 USD = 1300 KRW as a placeholder)
     const exchangeRate = 1300;
     const totalCostKRW =
       (computeCostValue + storageCostValue + servicesCostValue) * exchangeRate;
@@ -79,7 +69,10 @@ const AwsCalculator = () => {
         </div>
         <h1 className="mb-2 text-3xl font-bold">AWS Cost Calculator</h1>
         <p className="text-gray-600">
-          Estimate your Amazon Web Services development costs
+          Estimate your Amazon Web Services development costs{" "}
+          <a className="underline" href="https://docs.aws.amazon.com/">
+            (Document)
+          </a>
         </p>
       </div>
 

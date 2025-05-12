@@ -80,7 +80,10 @@ const GcpCalculator = () => {
           Google Cloud Cost Calculator
         </h1>
         <p className="text-gray-600">
-          Estimate your Google Cloud Platform development costs
+          Estimate your Google Cloud Platform development costs{" "}
+          <a className="underline" href="https://cloud.google.com/">
+            (Document)
+          </a>
         </p>
       </div>
 

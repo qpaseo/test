@@ -59,7 +59,10 @@ const SupabaseCalculator = () => {
         </div>
         <h1 className="mb-2 text-3xl font-bold">Supabase Cost Calculator</h1>
         <p className="text-gray-600">
-          Estimate your Supabase project costs based on usage
+          Estimate your Supabase project costs based on usage{" "}
+          <a className="underline" href="https://supabase.com/">
+            (Document)
+          </a>
         </p>
       </div>
 
