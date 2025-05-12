@@ -1,0 +1,52 @@
+export default function AboutUsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      {children}
+      &copy; Next.js is great!
+    </>
+  );
+}
+
+//-------------------------------------------------------------------------------------------------
+
+//특정 페이지에서만 레이아웃 적용 가능
+// app/
+// ├── layout.tsx                 // 루트 레이아웃
+// ├── (with-layout)/
+// │   ├── layout.tsx             // 특정 그룹 레이아웃
+// │   └── dashboard/
+// │       └── page.tsx           // 레이아웃이 적용될 페이지
+// ├── (no-layout)/
+// │   └── login/
+// │       └── page.tsx           // 레이아웃이 적용되지 않을 페이지
+
+// app/layout.tsx
+// export default function RootLayout({ children }: { children: React.ReactNode }) {
+//   return (
+//     <html lang="ko">
+//       <body>
+//         {children}
+//       </body>
+//     </html>
+//   );
+// }
+
+// app/(with-layout)/layout.tsx
+// import Sidebar from "@/components/Sidebar";
+
+// export default function WithLayout({
+//   children,
+// }: {
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <div className="flex">
+//       <Sidebar />
+//       <main className="flex-grow">{children}</main>
+//     </div>
+//   );
+// }
