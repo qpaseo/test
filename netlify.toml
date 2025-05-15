@@ -1,0 +1,6 @@
+[functions]
+  node_bundler = "esbuild"  # ESBuild 사용
+
+[functions."update-profile"]
+  included_files = ["types/**"]         # 사용자 정의 타입 파일 (선택)
+  external_node_modules = ["busboy"]    # 외부 모듈 번들에 포함
