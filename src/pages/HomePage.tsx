@@ -14,7 +14,7 @@ const HomePage = () => {
           빠르게 계산해보세요.
         </p>
         <p className="mx-auto max-w-3xl text-sm text-gray-500">
-          (단 무료단위의 계산은 지원하지 않습니다)
+          (정확한 계산이 아니거나 변동될수 있습니다, 참고용으로만 사용하세요)
         </p>
       </section>
 

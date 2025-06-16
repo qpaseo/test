@@ -76,9 +76,15 @@ const AzureCalculator = () => {
         </div>
         <h1 className="mb-2 text-3xl font-bold">Azure Cost Calculator</h1>
         <p className="text-gray-600">
-          Estimate your Microsoft Azure development costs{" "}
+          Azure의 개발 비용을 확인하여 보세요{" "}
           <a className="underline" href="https://azure.microsoft.com/">
-            (Document)
+            (서비스 문서)
+          </a>
+          <a
+            className="underline"
+            href="https://azure.microsoft.com/ko-kr/pricing/calculator/?cdn=disable"
+          >
+            (비용문서)
           </a>
         </p>
       </div>
@@ -86,7 +92,7 @@ const AzureCalculator = () => {
       <div className="grid gap-8 md:grid-cols-2">
         <div className="space-y-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <div>
-            <h2 className="mb-4 text-xl font-semibold">Virtual Machines</h2>
+            <h2 className="mb-4 text-xl font-semibold">가상 머신</h2>
             <ResourceSelection
               resources={virtualMachines}
               selectedResource={selectedVM}
@@ -95,7 +101,7 @@ const AzureCalculator = () => {
 
             <CostSlider
               id="vmCount"
-              label="Number of VMs"
+              label="가상 머신 수"
               min={1}
               max={10}
               step={1}
@@ -116,11 +122,11 @@ const AzureCalculator = () => {
           </div>
 
           <div>
-            <h2 className="mb-4 text-xl font-semibold">Storage</h2>
+            <h2 className="mb-4 text-xl font-semibold">저장소</h2>
 
             <CostSlider
               id="storageSize"
-              label="Storage Size"
+              label="저장소 크기"
               min={10}
               max={1000}
               step={10}
@@ -131,7 +137,7 @@ const AzureCalculator = () => {
           </div>
 
           <div>
-            <h2 className="mb-4 text-xl font-semibold">Additional Services</h2>
+            <h2 className="mb-4 text-xl font-semibold">추가 서비스</h2>
             {additionalServices.map((service) => (
               <CostToggle
                 key={service.id}
@@ -149,19 +155,19 @@ const AzureCalculator = () => {
         <div>
           <CostSummary
             items={[
-              { name: "Virtual Machines", cost: computeCost },
-              { name: "Storage", cost: storageCost },
-              { name: "Additional Services", cost: additionalCost },
+              { name: "가상머신", cost: computeCost },
+              { name: "저장소", cost: storageCost },
+              { name: "추가 서비스", cost: additionalCost },
             ]}
             total={totalCost}
           />
 
           <div className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h3 className="mb-4 text-lg font-medium">Your Configuration</h3>
+            <h3 className="mb-4 text-lg font-medium">선택한 구성</h3>
 
             <div className="space-y-4">
               <div>
-                <h4 className="text-sm font-medium text-gray-500">VM Type</h4>
+                <h4 className="text-sm font-medium text-gray-500">VM 유형</h4>
                 <p className="font-medium">
                   {virtualMachines.find((vm) => vm.id === selectedVM)?.name}
                 </p>

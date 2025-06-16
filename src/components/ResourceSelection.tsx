@@ -2,7 +2,9 @@ interface Resource {
   id: string;
   name: string;
   description: string;
-  pricePerUnit: number;
+  pricePerUnit?: number;
+  pricePerGB?: number;
+  price?: number;
 }
 
 interface ResourceSelectionProps {
@@ -27,8 +29,8 @@ const ResourceSelection = ({
             key={resource.id}
             className={`cursor-pointer rounded-lg border p-4 transition-all ${
               selectedResource === resource.id
-                ? 'border-blue-500 bg-blue-50 shadow-sm'
-                : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'
+                ? "border-blue-500 bg-blue-50 shadow-sm"
+                : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
             }`}
             onClick={() => onSelect(resource.id)}
           >
@@ -38,9 +40,7 @@ const ResourceSelection = ({
                 ${resource.pricePerUnit}/hr
               </div>
             </div>
-            <p className="mt-1 text-xs text-gray-500">
-              {resource.description}
-            </p>
+            <p className="mt-1 text-xs text-gray-500">{resource.description}</p>
           </div>
         ))}
       </div>

@@ -69,9 +69,12 @@ const AwsCalculator = () => {
         </div>
         <h1 className="mb-2 text-3xl font-bold">AWS Cost Calculator</h1>
         <p className="text-gray-600">
-          Estimate your Amazon Web Services development costs{" "}
+          AWS의 개발 비용을 확인하여 보세요{" "}
           <a className="underline" href="https://docs.aws.amazon.com/">
-            (Document)
+            (서비스 문서)
+          </a>
+          <a className="underline" href="https://calculator.aws/#/">
+            (비용문서)
           </a>
         </p>
       </div>
@@ -79,7 +82,7 @@ const AwsCalculator = () => {
       <div className="grid gap-8 md:grid-cols-2">
         <div className="space-y-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <div>
-            <h2 className="mb-4 text-xl font-semibold">EC2 Compute</h2>
+            <h2 className="mb-4 text-xl font-semibold">EC2 컴퓨트</h2>
             <ResourceSelection
               resources={instances}
               selectedResource={selectedInstance}
@@ -88,7 +91,7 @@ const AwsCalculator = () => {
 
             <CostSlider
               id="instanceCount"
-              label="Number of Instances"
+              label="인스턴스 수"
               min={1}
               max={10}
               step={1}
@@ -109,11 +112,11 @@ const AwsCalculator = () => {
           </div>
 
           <div>
-            <h2 className="mb-4 text-xl font-semibold">EBS Storage</h2>
+            <h2 className="mb-4 text-xl font-semibold">EBS 저장소</h2>
 
             <CostSlider
               id="storageSize"
-              label="Storage Size"
+              label="저장소 크기"
               min={10}
               max={1000}
               step={10}
@@ -124,7 +127,7 @@ const AwsCalculator = () => {
           </div>
 
           <div>
-            <h2 className="mb-4 text-xl font-semibold">Additional Services</h2>
+            <h2 className="mb-4 text-xl font-semibold">추가 서비스</h2>
             {additionalServices.map((service) => (
               <CostToggle
                 key={service.id}
@@ -142,20 +145,20 @@ const AwsCalculator = () => {
         <div>
           <CostSummary
             items={[
-              { name: "EC2 Compute", cost: computeCost },
-              { name: "EBS Storage", cost: storageCost },
-              { name: "Additional Services", cost: additionalCost },
+              { name: "EC2 컴퓨팅", cost: computeCost },
+              { name: "EBS 저장소", cost: storageCost },
+              { name: "추가 서비스", cost: additionalCost },
             ]}
             total={totalCost}
           />
 
           <div className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h3 className="mb-4 text-lg font-medium">Your Configuration</h3>
+            <h3 className="mb-4 text-lg font-medium">선택한 구성</h3>
 
             <div className="space-y-4">
               <div>
                 <h4 className="text-sm font-medium text-gray-500">
-                  Instance Type
+                  인스턴스 유형
                 </h4>
                 <p className="font-medium">
                   {instances.find((i) => i.id === selectedInstance)?.name}

@@ -12,7 +12,7 @@ interface CostSummaryProps {
 const CostSummary = ({ items, total, currency = "$" }: CostSummaryProps) => {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-      <h3 className="mb-4 text-lg font-medium">Cost Summary</h3>
+      <h3 className="mb-4 text-lg font-medium">비용</h3>
 
       <div className="mb-4 space-y-2">
         {items.map((item, index) => (

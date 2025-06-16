@@ -49,7 +49,13 @@ const FirebaseCalculator = () => {
     setStorageCost(storageCostValue);
     setFeatureCost(featuresCostValue);
     setTotalCost(planCostValue + storageCostValue + featuresCostValue);
-  }, [selectedPlan, selectedStorage, storageSize, selectedFeatures]);
+  }, [
+    selectedPlan,
+    selectedStorage,
+    storageSize,
+    selectedFeatures,
+    activeUsers,
+  ]); // Added activeUsers to dependencies
 
   return (
     <div className="firebase-theme">
@@ -69,7 +75,7 @@ const FirebaseCalculator = () => {
       <div className="grid gap-8 md:grid-cols-2">
         <div className="space-y-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <div>
-            <h2 className="mb-4 text-xl font-semibold">Plan</h2>
+            <h2 className="mb-4 text-xl font-semibold">플랜</h2>
             <ResourceSelection
               resources={firebasePlans}
               selectedResource={selectedPlan}
@@ -79,7 +85,11 @@ const FirebaseCalculator = () => {
 
           <div>
             <h2 className="mb-4 text-xl font-semibold">Storage</h2>
-
+            <ResourceSelection // Added ResourceSelection for Storage Type
+              resources={firebaseStorageOptions}
+              selectedResource={selectedStorage}
+              onSelect={setSelectedStorage}
+            />
             <CostSlider
               id="storageSize"
               label="Storage Size"
@@ -125,12 +135,69 @@ const FirebaseCalculator = () => {
         <div>
           <CostSummary
             items={[
-              { name: "Plan", cost: planCost },
-              { name: "Storage", cost: storageCost },
-              { name: "Optional Features", cost: featureCost },
+              { name: "플랜", cost: planCost },
+              { name: "저장소", cost: storageCost },
+              { name: "추가 서비스", cost: featureCost },
             ]}
             total={totalCost}
           />
+
+          {/* Configuration Summary Section - Adapted for Firebase */}
+          <div className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h3 className="mb-4 text-lg font-medium">선택한 구성</h3>
+
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-sm font-medium text-gray-500">
+                  선택된 플랜
+                </h4>
+                <p className="font-medium">
+                  {firebasePlans.find((p) => p.id === selectedPlan)?.name}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium text-gray-500">
+                  저장소 타입
+                </h4>
+                <p className="font-medium">
+                  {
+                    firebaseStorageOptions.find((s) => s.id === selectedStorage)
+                      ?.name
+                  }
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium text-gray-500">
+                  저장소 크기
+                </h4>
+                <p className="font-medium">{storageSize} GB</p>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-medium text-gray-500">
+                  월간 활성 사용자
+                </h4>
+                <p className="font-medium">{activeUsers} users</p>
+              </div>
+
+              {selectedFeatures.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500">
+                    Optional Features
+                  </h4>
+                  <ul className="list-inside list-disc">
+                    {selectedFeatures.map((featureId) => (
+                      <li key={featureId} className="font-medium">
+                        {firebaseFeatures.find((f) => f.id === featureId)?.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
