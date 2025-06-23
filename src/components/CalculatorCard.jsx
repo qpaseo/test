@@ -1,13 +1,4 @@
-import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-
-interface CalculatorCardProps {
-  title: string;
-  description: string;
-  icon: ReactNode;
-  path: string;
-  className?: string;
-}
 
 const CalculatorCard = ({
   title,
@@ -15,7 +6,7 @@ const CalculatorCard = ({
   icon,
   path,
   className,
-}: CalculatorCardProps) => {
+}) => {
   return (
     <Link to={path} className={`card group ${className}`}>
       <div className="mb-4 flex items-center justify-center rounded-full bg-white p-3">

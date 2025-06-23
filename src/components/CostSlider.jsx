@@ -1,16 +1,3 @@
-import { ChangeEvent } from 'react';
-
-interface CostSliderProps {
-  id: string;
-  label: string;
-  min: number;
-  max: number;
-  step: number;
-  value: number;
-  onChange: (value: number) => void;
-  unit?: string;
-}
-
 const CostSlider = ({
   id,
   label,
@@ -19,9 +6,9 @@ const CostSlider = ({
   step,
   value,
   onChange,
-  unit = '',
-}: CostSliderProps) => {
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  unit = "",
+}) => {
+  const handleChange = (e) => {
     onChange(Number(e.target.value));
   };
 
@@ -32,7 +19,8 @@ const CostSlider = ({
           {label}
         </label>
         <span className="text-sm font-medium text-blue-600">
-          {value}{unit}
+          {value}
+          {unit}
         </span>
       </div>
       <input
@@ -46,8 +34,14 @@ const CostSlider = ({
         className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200"
       />
       <div className="mt-1 flex justify-between text-xs text-gray-500">
-        <span>{min}{unit}</span>
-        <span>{max}{unit}</span>
+        <span>
+          {min}
+          {unit}
+        </span>
+        <span>
+          {max}
+          {unit}
+        </span>
       </div>
     </div>
   );

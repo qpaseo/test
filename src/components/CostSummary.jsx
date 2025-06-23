@@ -1,15 +1,4 @@
-interface CostItem {
-  name: string;
-  cost: number;
-}
-
-interface CostSummaryProps {
-  items: CostItem[];
-  total: number;
-  currency?: string;
-}
-
-const CostSummary = ({ items, total, currency = "$" }: CostSummaryProps) => {
+const CostSummary = ({ items, total, currency = "$" }) => {
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
       <h3 className="mb-4 text-lg font-medium">비용</h3>

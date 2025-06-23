@@ -1,34 +1,26 @@
 import { useState, useEffect } from "react";
-import { Database } from "lucide-react";
+import { Cloud } from "lucide-react";
 import CostSlider from "../components/CostSlider";
 import CostToggle from "../components/CostToggle";
 import ResourceSelection from "../components/ResourceSelection";
 import CostSummary from "../components/CostSummary";
-import {
-  computeInstances,
-  storageOptions,
-  additionalServices,
-} from "../data/gcpData";
+import { instances, storageOptions, additionalServices } from "../data/awsData";
 
-const GcpCalculator = () => {
-  // State for calculator inputs
-  const [selectedInstance, setSelectedInstance] = useState(
-    computeInstances[0].id
-  );
+const AwsCalculator = () => {
+  const [selectedInstance, setSelectedInstance] = useState(instances[0].id);
   const [selectedStorage, setSelectedStorage] = useState(storageOptions[0].id);
   const [instanceCount, setInstanceCount] = useState(1);
   const [storageSize, setStorageSize] = useState(50);
   const [uptime, setUptime] = useState(100);
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [selectedServices, setSelectedServices] = useState([]);
 
-  // State for calculated costs
   const [computeCost, setComputeCost] = useState(0);
   const [storageCost, setStorageCost] = useState(0);
   const [additionalCost, setAdditionalCost] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
+  const [totalCostKRW, setTotalCostKRW] = useState(0);
 
-  // Handle toggle for additional services
-  const toggleService = (serviceId: string) => {
+  const toggleService = (serviceId) => {
     setSelectedServices((prev) =>
       prev.includes(serviceId)
         ? prev.filter((id) => id !== serviceId)
@@ -36,31 +28,30 @@ const GcpCalculator = () => {
     );
   };
 
-  // Calculate costs whenever inputs change
   useEffect(() => {
-    // Get selected instance and storage details
-    const instance = computeInstances.find((i) => i.id === selectedInstance)!;
-    const storage = storageOptions.find((s) => s.id === selectedStorage)!;
+    const instance = instances.find((i) => i.id === selectedInstance);
+    const storage = storageOptions.find((s) => s.id === selectedStorage);
 
-    // Calculate compute cost: price per hour * number of instances * hours in month * uptime percentage
     const hourlyInstanceCost = instance.pricePerUnit * instanceCount;
-    const hoursInMonth = 730; // Average hours in a month (365 * 24 / 12)
+    const hoursInMonth = 730;
     const computeCostValue = hourlyInstanceCost * hoursInMonth * (uptime / 100);
 
-    // Calculate storage cost: price per GB * storage size
     const storageCostValue = storage.pricePerGB * storageSize;
 
-    // Calculate additional services cost
     const servicesCostValue = selectedServices.reduce((total, serviceId) => {
       const service = additionalServices.find((s) => s.id === serviceId);
       return total + (service ? service.price : 0);
     }, 0);
 
-    // Update state with calculated values
     setComputeCost(computeCostValue);
     setStorageCost(storageCostValue);
     setAdditionalCost(servicesCostValue);
     setTotalCost(computeCostValue + storageCostValue + servicesCostValue);
+
+    const exchangeRate = 1300;
+    const totalCostKRW =
+      (computeCostValue + storageCostValue + servicesCostValue) * exchangeRate;
+    setTotalCostKRW(totalCostKRW);
   }, [
     selectedInstance,
     selectedStorage,
@@ -71,23 +62,18 @@ const GcpCalculator = () => {
   ]);
 
   return (
-    <div className="gcp-theme">
+    <div className="aws-theme">
       <div className="mb-8 text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
-          <Database className="h-8 w-8 text-red-500" />
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
+          <Cloud className="h-8 w-8 text-orange-500" />
         </div>
-        <h1 className="mb-2 text-3xl font-bold">
-          Google Cloud Cost Calculator
-        </h1>
+        <h1 className="mb-2 text-3xl font-bold">AWS Cost Calculator</h1>
         <p className="text-gray-600">
-          Google Cloud의 개발 비용을 확인하여 보세요{" "}
-          <a className="underline" href="https://cloud.google.com/">
+          AWS의 개발 비용을 확인하여 보세요{" "}
+          <a className="underline" href="https://docs.aws.amazon.com/">
             (서비스 문서)
           </a>
-          <a
-            className="underline"
-            href="https://cloud.google.com/products/calculator?hl=ko"
-          >
+          <a className="underline" href="https://calculator.aws/#/">
             (비용문서)
           </a>
         </p>
@@ -96,9 +82,9 @@ const GcpCalculator = () => {
       <div className="grid gap-8 md:grid-cols-2">
         <div className="space-y-8 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <div>
-            <h2 className="mb-4 text-xl font-semibold">컴퓨트 엔진</h2>
+            <h2 className="mb-4 text-xl font-semibold">EC2 컴퓨트</h2>
             <ResourceSelection
-              resources={computeInstances}
+              resources={instances}
               selectedResource={selectedInstance}
               onSelect={setSelectedInstance}
             />
@@ -126,7 +112,7 @@ const GcpCalculator = () => {
           </div>
 
           <div>
-            <h2 className="mb-4 text-xl font-semibold">저장소</h2>
+            <h2 className="mb-4 text-xl font-semibold">EBS 저장소</h2>
 
             <CostSlider
               id="storageSize"
@@ -159,8 +145,8 @@ const GcpCalculator = () => {
         <div>
           <CostSummary
             items={[
-              { name: "컴퓨트 엔진", cost: computeCost },
-              { name: "저장소", cost: storageCost },
+              { name: "EC2 컴퓨팅", cost: computeCost },
+              { name: "EBS 저장소", cost: storageCost },
               { name: "추가 서비스", cost: additionalCost },
             ]}
             total={totalCost}
@@ -175,10 +161,7 @@ const GcpCalculator = () => {
                   인스턴스 유형
                 </h4>
                 <p className="font-medium">
-                  {
-                    computeInstances.find((i) => i.id === selectedInstance)
-                      ?.name
-                  }
+                  {instances.find((i) => i.id === selectedInstance)?.name}
                 </p>
               </div>
 
@@ -205,7 +188,7 @@ const GcpCalculator = () => {
 
               <div>
                 <h4 className="text-sm font-medium text-gray-500">
-                  저장소 크기
+                  Storage Size
                 </h4>
                 <p className="font-medium">{storageSize} GB</p>
               </div>
@@ -213,7 +196,7 @@ const GcpCalculator = () => {
               {selectedServices.length > 0 && (
                 <div>
                   <h4 className="text-sm font-medium text-gray-500">
-                    추가 서비스
+                    Additional Services
                   </h4>
                   <ul className="list-inside list-disc">
                     {selectedServices.map((serviceId) => (
@@ -235,4 +218,4 @@ const GcpCalculator = () => {
   );
 };
 
-export default GcpCalculator;
+export default AwsCalculator;

@@ -1,31 +1,30 @@
 import { useState, useEffect } from "react";
-import { Zap } from "lucide-react"; // Flame은 사용되지 않지만, Zap은 사용됩니다.
+import { Flame } from "lucide-react";
 import CostSlider from "../components/CostSlider";
 import CostToggle from "../components/CostToggle";
 import ResourceSelection from "../components/ResourceSelection";
 import CostSummary from "../components/CostSummary";
 import {
-  supabasePlans,
-  supabaseStorageOptions, // 저장소 타입 선택을 위해 추가
-  supabaseFeatures,
-} from "../data/supabaseData";
+  firebasePlans,
+  firebaseStorageOptions,
+  firebaseFeatures,
+} from "../data/firebaseData";
 
-const SupabaseCalculator = () => {
-  const [selectedPlan, setSelectedPlan] = useState(supabasePlans[0].id);
+const FirebaseCalculator = () => {
+  const [selectedPlan, setSelectedPlan] = useState(firebasePlans[0].id);
   const [selectedStorage, setSelectedStorage] = useState(
-    // 저장소 타입 상태 추가
-    supabaseStorageOptions[0].id
+    firebaseStorageOptions[0].id
   );
   const [storageSize, setStorageSize] = useState(5); // GB
   const [activeUsers, setActiveUsers] = useState(1000);
-  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   const [planCost, setPlanCost] = useState(0);
   const [storageCost, setStorageCost] = useState(0);
   const [featureCost, setFeatureCost] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
 
-  const toggleFeature = (featureId: string) => {
+  const toggleFeature = (featureId) => {
     setSelectedFeatures((prev) =>
       prev.includes(featureId)
         ? prev.filter((id) => id !== featureId)
@@ -34,15 +33,15 @@ const SupabaseCalculator = () => {
   };
 
   useEffect(() => {
-    const plan = supabasePlans.find((p) => p.id === selectedPlan)!;
-    const storage = supabaseStorageOptions.find(
+    const plan = firebasePlans.find((p) => p.id === selectedPlan);
+    const storage = firebaseStorageOptions.find(
       (s) => s.id === selectedStorage
-    )!;
+    );
 
     const planCostValue = plan.pricePerUnit;
     const storageCostValue = storage.pricePerGB * storageSize;
     const featuresCostValue = selectedFeatures.reduce((total, featureId) => {
-      const feature = supabaseFeatures.find((f) => f.id === featureId);
+      const feature = firebaseFeatures.find((f) => f.id === featureId);
       return total + (feature ? feature.price : 0);
     }, 0);
 
@@ -54,24 +53,21 @@ const SupabaseCalculator = () => {
     selectedPlan,
     selectedStorage,
     storageSize,
-    activeUsers,
     selectedFeatures,
-  ]); // activeUsers 의존성 추가
+    activeUsers,
+  ]);
 
   return (
-    <div className="supabase-theme">
+    <div className="firebase-theme">
       <div className="mb-8 text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-          <Zap className="h-8 w-8 text-green-600" />
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
+          <Flame className="h-8 w-8 text-orange-500" />
         </div>
-        <h1 className="mb-2 text-3xl font-bold">Supabase 비용 계산기</h1>
+        <h1 className="mb-2 text-3xl font-bold">Firebase Cost Calculator</h1>
         <p className="text-gray-600">
-          Supabase의 개발 비용을 확인하여 보세요{" "}
-          <a className="underline" href="https://supabase.com/">
-            (서비스 문서)
-          </a>
-          <a className="underline" href="https://supabase.com/pricing">
-            (비용 문서)
+          Estimate your Firebase development costs based on usage{" "}
+          <a className="underline" href="https://firebase.google.com/">
+            (Document)
           </a>
         </p>
       </div>
@@ -81,23 +77,22 @@ const SupabaseCalculator = () => {
           <div>
             <h2 className="mb-4 text-xl font-semibold">플랜</h2>
             <ResourceSelection
-              resources={supabasePlans}
+              resources={firebasePlans}
               selectedResource={selectedPlan}
               onSelect={setSelectedPlan}
             />
           </div>
 
           <div>
-            <h2 className="mb-4 text-xl font-semibold">저장소</h2>
-            {/* 저장소 타입 선택 UI 추가 */}
+            <h2 className="mb-4 text-xl font-semibold">Storage</h2>
             <ResourceSelection
-              resources={supabaseStorageOptions}
+              resources={firebaseStorageOptions}
               selectedResource={selectedStorage}
               onSelect={setSelectedStorage}
             />
             <CostSlider
               id="storageSize"
-              label="저장소 크기"
+              label="Storage Size"
               min={1}
               max={100}
               step={1}
@@ -108,10 +103,10 @@ const SupabaseCalculator = () => {
           </div>
 
           <div>
-            <h2 className="mb-4 text-xl font-semibold">월간 활성 사용자</h2>
+            <h2 className="mb-4 text-xl font-semibold">Monthly Active Users</h2>
             <CostSlider
               id="activeUsers"
-              label="활성 사용자"
+              label="Active Users"
               min={100}
               max={100000}
               step={100}
@@ -122,8 +117,8 @@ const SupabaseCalculator = () => {
           </div>
 
           <div>
-            <h2 className="mb-4 text-xl font-semibold">추가 기능</h2>
-            {supabaseFeatures.map((feature) => (
+            <h2 className="mb-4 text-xl font-semibold">Optional Features</h2>
+            {firebaseFeatures.map((feature) => (
               <CostToggle
                 key={feature.id}
                 id={feature.id}
@@ -147,7 +142,6 @@ const SupabaseCalculator = () => {
             total={totalCost}
           />
 
-          {/* Configuration Summary Section - Supabase에 맞게 조정 */}
           <div className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="mb-4 text-lg font-medium">선택한 구성</h3>
 
@@ -157,7 +151,7 @@ const SupabaseCalculator = () => {
                   선택된 플랜
                 </h4>
                 <p className="font-medium">
-                  {supabasePlans.find((p) => p.id === selectedPlan)?.name}
+                  {firebasePlans.find((p) => p.id === selectedPlan)?.name}
                 </p>
               </div>
 
@@ -167,7 +161,7 @@ const SupabaseCalculator = () => {
                 </h4>
                 <p className="font-medium">
                   {
-                    supabaseStorageOptions.find((s) => s.id === selectedStorage)
+                    firebaseStorageOptions.find((s) => s.id === selectedStorage)
                       ?.name
                   }
                 </p>
@@ -184,18 +178,18 @@ const SupabaseCalculator = () => {
                 <h4 className="text-sm font-medium text-gray-500">
                   월간 활성 사용자
                 </h4>
-                <p className="font-medium">{activeUsers} 명</p>
+                <p className="font-medium">{activeUsers} users</p>
               </div>
 
               {selectedFeatures.length > 0 && (
                 <div>
                   <h4 className="text-sm font-medium text-gray-500">
-                    추가 기능
+                    Optional Features
                   </h4>
                   <ul className="list-inside list-disc">
                     {selectedFeatures.map((featureId) => (
                       <li key={featureId} className="font-medium">
-                        {supabaseFeatures.find((f) => f.id === featureId)?.name}
+                        {firebaseFeatures.find((f) => f.id === featureId)?.name}
                       </li>
                     ))}
                   </ul>
@@ -209,4 +203,4 @@ const SupabaseCalculator = () => {
   );
 };
 
-export default SupabaseCalculator;
+export default FirebaseCalculator;

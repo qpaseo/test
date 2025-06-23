@@ -1,25 +1,4 @@
-export interface FirebasePlan {
-  id: string;
-  name: string;
-  description: string;
-  pricePerUnit: number;
-}
-
-export interface FirebaseStorage {
-  id: string;
-  name: string;
-  description: string;
-  pricePerGB: number;
-}
-
-export interface FirebaseFeature {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-}
-
-export const firebasePlans: FirebasePlan[] = [
+export const firebasePlans = [
   {
     id: "blaze",
     name: "Blaze Plan (종량제)",
@@ -28,7 +7,7 @@ export const firebasePlans: FirebasePlan[] = [
   },
 ];
 
-export const firebaseStorageOptions: FirebaseStorage[] = [
+export const firebaseStorageOptions = [
   {
     id: "standard",
     name: "Cloud Storage Standard",
@@ -43,7 +22,7 @@ export const firebaseStorageOptions: FirebaseStorage[] = [
   },
 ];
 
-export const firebaseFeatures: FirebaseFeature[] = [
+export const firebaseFeatures = [
   {
     id: "auth",
     name: "Firebase Authentication",

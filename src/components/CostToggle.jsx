@@ -1,23 +1,5 @@
-import { ChangeEvent } from 'react';
-
-interface CostToggleProps {
-  id: string;
-  label: string;
-  description?: string;
-  isChecked: boolean;
-  onChange: (checked: boolean) => void;
-  price: number;
-}
-
-const CostToggle = ({
-  id,
-  label,
-  description,
-  isChecked,
-  onChange,
-  price,
-}: CostToggleProps) => {
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+const CostToggle = ({ id, label, description, isChecked, onChange, price }) => {
+  const handleChange = (e) => {
     onChange(e.target.checked);
   };
 
@@ -25,8 +7,8 @@ const CostToggle = ({
     <div
       className={`mb-4 cursor-pointer rounded-lg border p-4 transition-all ${
         isChecked
-          ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'
+          ? "border-blue-500 bg-blue-50"
+          : "border-gray-200 hover:border-blue-300 hover:bg-blue-50/50"
       }`}
       onClick={() => onChange(!isChecked)}
     >

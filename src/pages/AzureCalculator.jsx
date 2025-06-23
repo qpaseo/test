@@ -8,25 +8,22 @@ import {
   virtualMachines,
   storageOptions,
   additionalServices,
-} from "../data/azureData";
+} from "../data/azureData.js";
 
 const AzureCalculator = () => {
-  // State for calculator inputs
   const [selectedVM, setSelectedVM] = useState(virtualMachines[0].id);
   const [selectedStorage, setSelectedStorage] = useState(storageOptions[0].id);
   const [vmCount, setVMCount] = useState(1);
   const [storageSize, setStorageSize] = useState(50);
   const [uptime, setUptime] = useState(100);
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [selectedServices, setSelectedServices] = useState([]);
 
-  // State for calculated costs
   const [computeCost, setComputeCost] = useState(0);
   const [storageCost, setStorageCost] = useState(0);
   const [additionalCost, setAdditionalCost] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
 
-  // Handle toggle for additional services
-  const toggleService = (serviceId: string) => {
+  const toggleService = (serviceId) => {
     setSelectedServices((prev) =>
       prev.includes(serviceId)
         ? prev.filter((id) => id !== serviceId)
@@ -34,27 +31,21 @@ const AzureCalculator = () => {
     );
   };
 
-  // Calculate costs whenever inputs change
   useEffect(() => {
-    // Get selected VM and storage details
-    const vm = virtualMachines.find((vm) => vm.id === selectedVM)!;
-    const storage = storageOptions.find((s) => s.id === selectedStorage)!;
+    const vm = virtualMachines.find((vm) => vm.id === selectedVM);
+    const storage = storageOptions.find((s) => s.id === selectedStorage);
 
-    // Calculate compute cost: price per hour * number of VMs * hours in month * uptime percentage
     const hourlyVMCost = vm.pricePerUnit * vmCount;
-    const hoursInMonth = 730; // Average hours in a month (365 * 24 / 12)
+    const hoursInMonth = 730;
     const computeCostValue = hourlyVMCost * hoursInMonth * (uptime / 100);
 
-    // Calculate storage cost: price per GB * storage size
     const storageCostValue = storage.pricePerGB * storageSize;
 
-    // Calculate additional services cost
     const servicesCostValue = selectedServices.reduce((total, serviceId) => {
       const service = additionalServices.find((s) => s.id === serviceId);
       return total + (service ? service.price : 0);
     }, 0);
 
-    // Update state with calculated values
     setComputeCost(computeCostValue);
     setStorageCost(storageCostValue);
     setAdditionalCost(servicesCostValue);

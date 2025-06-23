@@ -1,23 +1,4 @@
-interface Resource {
-  id: string;
-  name: string;
-  description: string;
-  pricePerUnit?: number;
-  pricePerGB?: number;
-  price?: number;
-}
-
-interface ResourceSelectionProps {
-  resources: Resource[];
-  selectedResource: string;
-  onSelect: (id: string) => void;
-}
-
-const ResourceSelection = ({
-  resources,
-  selectedResource,
-  onSelect,
-}: ResourceSelectionProps) => {
+const ResourceSelection = ({ resources, selectedResource, onSelect }) => {
   return (
     <div className="mb-6">
       <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -37,7 +18,13 @@ const ResourceSelection = ({
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium">{resource.name}</h3>
               <div className="text-sm font-semibold text-blue-600">
-                ${resource.pricePerUnit}/hr
+                {resource.pricePerUnit !== undefined
+                  ? `$${resource.pricePerUnit}/hr`
+                  : resource.pricePerGB !== undefined
+                  ? `$${resource.pricePerGB}/GB`
+                  : resource.price !== undefined
+                  ? `$${resource.price}`
+                  : ""}
               </div>
             </div>
             <p className="mt-1 text-xs text-gray-500">{resource.description}</p>

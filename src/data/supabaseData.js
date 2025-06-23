@@ -1,25 +1,4 @@
-export interface SupabasePlan {
-  id: string;
-  name: string;
-  description: string;
-  pricePerUnit: number;
-}
-
-export interface SupabaseStorage {
-  id: string;
-  name: string;
-  description: string;
-  pricePerGB: number;
-}
-
-export interface SupabaseFeature {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-}
-
-export const supabasePlans: SupabasePlan[] = [
+export const supabasePlans = [
   {
     id: "pro",
     name: "Pro Plan",
@@ -34,7 +13,7 @@ export const supabasePlans: SupabasePlan[] = [
   },
 ];
 
-export const supabaseStorageOptions: SupabaseStorage[] = [
+export const supabaseStorageOptions = [
   {
     id: "standard",
     name: "Standard Storage",
@@ -49,7 +28,7 @@ export const supabaseStorageOptions: SupabaseStorage[] = [
   },
 ];
 
-export const supabaseFeatures: SupabaseFeature[] = [
+export const supabaseFeatures = [
   {
     id: "auth",
     name: "Supabase Auth",

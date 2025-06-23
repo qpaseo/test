@@ -1,25 +1,4 @@
-export interface InstanceType {
-  id: string;
-  name: string;
-  description: string;
-  pricePerUnit: number;
-}
-
-export interface StorageType {
-  id: string;
-  name: string;
-  description: string;
-  pricePerGB: number;
-}
-
-export interface AdditionalService {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-}
-
-export const instances: InstanceType[] = [
+export const instances = [
   {
     id: "t2.micro",
     name: "t2.micro (1vCPU, 1GB RAM)",
@@ -58,7 +37,7 @@ export const instances: InstanceType[] = [
   },
 ];
 
-export const storageOptions: StorageType[] = [
+export const storageOptions = [
   {
     id: "gp2",
     name: "General Purpose SSD (gp2)",
@@ -85,7 +64,7 @@ export const storageOptions: StorageType[] = [
   },
 ];
 
-export const additionalServices: AdditionalService[] = [
+export const additionalServices = [
   {
     id: "loadBalancer",
     name: "Elastic Load Balancer",

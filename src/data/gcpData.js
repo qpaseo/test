@@ -1,25 +1,4 @@
-export interface ComputeInstance {
-  id: string;
-  name: string;
-  description: string;
-  pricePerUnit: number;
-}
-
-export interface StorageType {
-  id: string;
-  name: string;
-  description: string;
-  pricePerGB: number;
-}
-
-export interface AdditionalService {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-}
-
-export const computeInstances: ComputeInstance[] = [
+export const computeInstances = [
   {
     id: "e2-micro",
     name: "E2 Micro (2vCPU, 1GB RAM)",
@@ -58,7 +37,7 @@ export const computeInstances: ComputeInstance[] = [
   },
 ];
 
-export const storageOptions: StorageType[] = [
+export const storageOptions = [
   {
     id: "standard",
     name: "Standard Persistent Disk",
@@ -85,7 +64,7 @@ export const storageOptions: StorageType[] = [
   },
 ];
 
-export const additionalServices: AdditionalService[] = [
+export const additionalServices = [
   {
     id: "load_balancing",
     name: "Cloud Load Balancing",

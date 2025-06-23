@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout";
-import HomePage from "./pages/HomePage.js";
-import AwsCalculator from "./pages/AwsCalculator";
-import AzureCalculator from "./pages/AzureCalculator";
-import GcpCalculator from "./pages/GcpCalculator.js";
-import FirebaseCalculator from "./pages/FierbaseCalculator.js";
-import SupabaseCalculator from "./pages/SupabaseCalculator";
+import Layout from "./components/Layout.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import AwsCalculator from "./pages/AwsCalculator.jsx";
+import AzureCalculator from "./pages/AzureCalculator.jsx";
+import GcpCalculator from "./pages/GcpCalculator.jsx";
+import FirebaseCalculator from "./pages/FierbaseCalculator.jsx";
+import SupabaseCalculator from "./pages/SupabaseCalculator.jsx";
 
 function App() {
   return (

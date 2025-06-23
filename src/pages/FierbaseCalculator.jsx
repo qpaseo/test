@@ -17,14 +17,14 @@ const FirebaseCalculator = () => {
   );
   const [storageSize, setStorageSize] = useState(5); // GB
   const [activeUsers, setActiveUsers] = useState(1000);
-  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
 
   const [planCost, setPlanCost] = useState(0);
   const [storageCost, setStorageCost] = useState(0);
   const [featureCost, setFeatureCost] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
 
-  const toggleFeature = (featureId: string) => {
+  const toggleFeature = (featureId) => {
     setSelectedFeatures((prev) =>
       prev.includes(featureId)
         ? prev.filter((id) => id !== featureId)
@@ -33,10 +33,10 @@ const FirebaseCalculator = () => {
   };
 
   useEffect(() => {
-    const plan = firebasePlans.find((p) => p.id === selectedPlan)!;
+    const plan = firebasePlans.find((p) => p.id === selectedPlan);
     const storage = firebaseStorageOptions.find(
       (s) => s.id === selectedStorage
-    )!;
+    );
 
     const planCostValue = plan.pricePerUnit;
     const storageCostValue = storage.pricePerGB * storageSize;
@@ -55,7 +55,7 @@ const FirebaseCalculator = () => {
     storageSize,
     selectedFeatures,
     activeUsers,
-  ]); // Added activeUsers to dependencies
+  ]);
 
   return (
     <div className="firebase-theme">
@@ -85,7 +85,7 @@ const FirebaseCalculator = () => {
 
           <div>
             <h2 className="mb-4 text-xl font-semibold">Storage</h2>
-            <ResourceSelection // Added ResourceSelection for 저장소 타입
+            <ResourceSelection
               resources={firebaseStorageOptions}
               selectedResource={selectedStorage}
               onSelect={setSelectedStorage}
@@ -142,7 +142,6 @@ const FirebaseCalculator = () => {
             total={totalCost}
           />
 
-          {/* Configuration Summary Section - Adapted for Firebase */}
           <div className="mt-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
             <h3 className="mb-4 text-lg font-medium">선택한 구성</h3>
 
