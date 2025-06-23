@@ -167,19 +167,19 @@ const AwsCalculator = () => {
 
               <div>
                 <h4 className="text-sm font-medium text-gray-500">
-                  Instance Count
+                  인스턴스 수
                 </h4>
                 <p className="font-medium">{instanceCount}</p>
               </div>
 
               <div>
-                <h4 className="text-sm font-medium text-gray-500">Uptime</h4>
+                <h4 className="text-sm font-medium text-gray-500">가동 시간</h4>
                 <p className="font-medium">{uptime}%</p>
               </div>
 
               <div>
                 <h4 className="text-sm font-medium text-gray-500">
-                  Storage Type
+                  저장소 타입
                 </h4>
                 <p className="font-medium">
                   {storageOptions.find((s) => s.id === selectedStorage)?.name}

@@ -28,18 +28,14 @@ const CostSummary = ({ items, total, currency = "$" }: CostSummaryProps) => {
 
       <div className="border-t border-gray-200 pt-4">
         <div className="flex items-center justify-between">
-          <span className="text-base font-medium">
-            Estimated Monthly Cost (USD)
-          </span>
+          <span className="text-base font-medium">예상 월 비용 (USD)</span>
           <span className="text-xl font-semibold text-blue-600">
             {currency}
             {total.toFixed(2)}
           </span>
         </div>
         <div className="flex items-center justify-between mt-2">
-          <span className="text-base font-medium">
-            Estimated Monthly Cost (KRW)
-          </span>
+          <span className="text-base font-medium">예상 월 비용 (KRW)</span>
           <span className="text-xl font-semibold text-blue-600">
             ₩{(total * 1300).toLocaleString()}
           </span>
@@ -47,7 +43,7 @@ const CostSummary = ({ items, total, currency = "$" }: CostSummaryProps) => {
       </div>
 
       <p className="mt-4 text-xs text-gray-500">
-        * Prices are estimates and may vary based on actual usage and current
+        * 가격은 추정치이며 실제 사용량과 현재 가격에 따라 달라질 수 있습니다.
         pricing.
       </p>
     </div>

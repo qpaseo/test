@@ -85,7 +85,7 @@ const FirebaseCalculator = () => {
 
           <div>
             <h2 className="mb-4 text-xl font-semibold">Storage</h2>
-            <ResourceSelection // Added ResourceSelection for Storage Type
+            <ResourceSelection // Added ResourceSelection for 저장소 타입
               resources={firebaseStorageOptions}
               selectedResource={selectedStorage}
               onSelect={setSelectedStorage}
