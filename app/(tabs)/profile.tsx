@@ -8,7 +8,18 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { User, Settings, Moon, Sun, Instagram, Shield, LogOut, Bell, CircleHelp as HelpCircle, Star } from 'lucide-react-native';
+import {
+  User,
+  Settings,
+  Moon,
+  Sun,
+  Instagram,
+  Shield,
+  LogOut,
+  Bell,
+  CircleHelp as HelpCircle,
+  Star,
+} from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ProfileScreen() {
@@ -17,25 +28,25 @@ export default function ProfileScreen() {
   const [pushNotifications, setPushNotifications] = useState(true);
 
   const handleLogout = () => {
-    Alert.alert(
-      '로그아웃',
-      '정말 로그아웃하시겠습니까?',
-      [
-        { text: '취소', style: 'cancel' },
-        { text: '로그아웃', style: 'destructive', onPress: () => {
+    Alert.alert('로그아웃', '정말 로그아웃하시겠습니까?', [
+      { text: '취소', style: 'cancel' },
+      {
+        text: '로그아웃',
+        style: 'destructive',
+        onPress: () => {
           // 실제 구현에서는 Firebase Auth 로그아웃 처리
           console.log('로그아웃 처리');
-        }}
-      ]
-    );
+        },
+      },
+    ]);
   };
 
-  const SettingItem = ({ 
-    icon, 
-    title, 
-    subtitle, 
-    rightComponent, 
-    onPress 
+  const SettingItem = ({
+    icon,
+    title,
+    subtitle,
+    rightComponent,
+    onPress,
   }: {
     icon: React.ReactNode;
     title: string;
@@ -45,9 +56,7 @@ export default function ProfileScreen() {
   }) => (
     <TouchableOpacity style={styles.settingItem} onPress={onPress}>
       <View style={styles.settingLeft}>
-        <View style={styles.settingIcon}>
-          {icon}
-        </View>
+        <View style={styles.settingIcon}>{icon}</View>
         <View style={styles.settingText}>
           <Text style={styles.settingTitle}>{title}</Text>
           {subtitle && <Text style={styles.settingSubtitle}>{subtitle}</Text>}
@@ -60,10 +69,7 @@ export default function ProfileScreen() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* Header */}
-      <LinearGradient
-        colors={['#3B82F6', '#1D4ED8']}
-        style={styles.header}
-      >
+      <LinearGradient colors={['#3B82F6', '#1D4ED8']} style={styles.header}>
         <View style={styles.profileInfo}>
           <View style={styles.avatar}>
             <User size={32} color="#FFFFFF" />
@@ -94,12 +100,18 @@ export default function ProfileScreen() {
       {/* Settings */}
       <View style={styles.settingsContainer}>
         <Text style={styles.sectionTitle}>앱 설정</Text>
-        
+
         <View style={styles.settingsGroup}>
           <SettingItem
-            icon={isDarkMode ? <Moon size={20} color="#3B82F6" /> : <Sun size={20} color="#3B82F6" />}
+            icon={
+              isDarkMode ? (
+                <Moon size={20} color="#3B82F6" />
+              ) : (
+                <Sun size={20} color="#3B82F6" />
+              )
+            }
             title="다크 모드"
-            subtitle={isDarkMode ? "어두운 테마 사용 중" : "밝은 테마 사용 중"}
+            subtitle={isDarkMode ? '어두운 테마 사용 중' : '밝은 테마 사용 중'}
             rightComponent={
               <Switch
                 value={isDarkMode}
@@ -109,7 +121,7 @@ export default function ProfileScreen() {
               />
             }
           />
-          
+
           <SettingItem
             icon={<Instagram size={20} color="#3B82F6" />}
             title="Instagram 자동 공유"
@@ -123,7 +135,7 @@ export default function ProfileScreen() {
               />
             }
           />
-          
+
           <SettingItem
             icon={<Bell size={20} color="#3B82F6" />}
             title="푸시 알림"
@@ -140,25 +152,32 @@ export default function ProfileScreen() {
         </View>
 
         <Text style={styles.sectionTitle}>개인정보 보호</Text>
-        
+
         <View style={styles.settingsGroup}>
           <SettingItem
             icon={<Shield size={20} color="#3B82F6" />}
             title="개인정보 처리방침"
             subtitle="데이터 처리 및 보호 정책 확인"
-            onPress={() => Alert.alert('개인정보 처리방침', '개인정보 처리방침 페이지로 이동합니다.')}
+            onPress={() =>
+              Alert.alert(
+                '개인정보 처리방침',
+                '개인정보 처리방침 페이지로 이동합니다.'
+              )
+            }
           />
-          
+
           <SettingItem
             icon={<Settings size={20} color="#3B82F6" />}
             title="데이터 관리"
             subtitle="저장된 데이터 확인 및 삭제"
-            onPress={() => Alert.alert('데이터 관리', '데이터 관리 페이지로 이동합니다.')}
+            onPress={() =>
+              Alert.alert('데이터 관리', '데이터 관리 페이지로 이동합니다.')
+            }
           />
         </View>
 
         <Text style={styles.sectionTitle}>지원</Text>
-        
+
         <View style={styles.settingsGroup}>
           <SettingItem
             icon={<HelpCircle size={20} color="#3B82F6" />}
@@ -166,7 +185,7 @@ export default function ProfileScreen() {
             subtitle="앱 사용법 및 FAQ"
             onPress={() => Alert.alert('도움말', '도움말 페이지로 이동합니다.')}
           />
-          
+
           <SettingItem
             icon={<Star size={20} color="#3B82F6" />}
             title="앱 평가하기"

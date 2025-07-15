@@ -21,14 +21,13 @@ export default function TabLayout() {
           fontSize: 12,
           fontWeight: '600',
         },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
           title: '홈',
-          tabBarIcon: ({ size, color }) => (
-            <Home size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color }) => <Home size={size} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -36,12 +35,17 @@ export default function TabLayout() {
         options={{
           title: '스캔',
           tabBarIcon: ({ size, color }) => (
-            <View style={{
-              backgroundColor: color === '#3B82F6' ? '#3B82F6' : '#E5E7EB',
-              borderRadius: 20,
-              padding: 8,
-            }}>
-              <Camera size={size} color={color === '#3B82F6' ? '#FFFFFF' : '#9CA3AF'} />
+            <View
+              style={{
+                backgroundColor: color === '#3B82F6' ? '#3B82F6' : '#E5E7EB',
+                borderRadius: 20,
+                padding: 8,
+              }}
+            >
+              <Camera
+                size={size}
+                color={color === '#3B82F6' ? '#FFFFFF' : '#9CA3AF'}
+              />
             </View>
           ),
         }}
@@ -50,9 +54,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: '프로필',
-          tabBarIcon: ({ size, color }) => (
-            <User size={size} color={color} />
-          ),
+          tabBarIcon: ({ size, color }) => <User size={size} color={color} />,
         }}
       />
     </Tabs>
