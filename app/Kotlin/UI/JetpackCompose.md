@@ -53,3 +53,55 @@ fun GreetingPreview() {
 ```
 
 이처럼 Jetpack Compose는 재사용 가능한 함수(Composable)를 조합하여 UI를 구축하므로, 코드의 모듈성과 테스트 용이성이 향상됩니다.
+
+---
+
+## 주요 Modifier 속성 (상세)
+
+`Modifier`는 Composable의 모양, 동작, 접근성 등을 꾸미기 위한 속성들의 집합입니다. 점(`.`)을 이용해 체인 형태로 조합할 수 있습니다.
+
+### 크기 및 공간 (Size & Spacing)
+- `padding()`: 내부 여백을 추가합니다. (전체, 또는 각 방향 지정 가능)
+- `size()`: 고정된 가로, 세로 크기를 지정합니다.
+- `width()`, `height()`: 가로 또는 세로 크기만 지정합니다.
+- `defaultMinSize()`: 최소 크기를 지정하여, 콘텐츠가 없어도 해당 크기를 보장합니다.
+- `fillMaxWidth()`, `fillMaxHeight()`, `fillMaxSize()`: 부모가 허용한 최대 너비, 높이, 또는 전체 크기를 채웁니다. (비율 지정 가능, 예: `fillMaxWidth(0.75f)`)
+- `wrapContentWidth()`, `wrapContentHeight()`, `wrapContentSize()`: 콘텐츠 크기에 맞게 너비, 높이, 또는 전체 크기를 조절합니다.
+
+### 모양 및 배경 (Shape & Background)
+- `background()`: 배경색, 브러시, 모양(Shape)을 지정합니다.
+- `border()`: 테두리를 추가합니다. (두께, 색상, 모양 지정 가능)
+- `clip()`: Composable을 특정 모양(예: `CircleShape`, `RoundedCornerShape`)으로 잘라냅니다.
+- `shadow()`: 그림자 효과를 줍니다. (elevation, 모양, 투명도 등 설정 가능)
+
+### 동작 및 상호작용 (Interaction)
+- `clickable()`: 클릭 및 탭 이벤트를 처리합니다.
+- `combinedClickable()`: 일반 클릭, 길게 누르기, 더블 클릭을 한 번에 처리합니다.
+- `draggable()`: 한 방향(가로 또는 세로)으로 드래그 가능하게 만듭니다.
+- `scrollable()`: 스크롤 동작을 제어합니다. (주로 `LazyColumn` 등에서 내부적으로 사용)
+- `pointerInput()`: 터치, 포인터 관련 저수준(low-level) 이벤트를 직접 다룰 때 사용합니다.
+- `focusable()`: 포커스를 받을 수 있도록 설정합니다. (키보드 입력 등)
+
+### 레이아웃 배치 (Layout)
+- `weight()`: `Row`나 `Column` 내에서 자식 요소가 차지하는 공간의 비율을 결정합니다. (부모 의존적)
+- `align()`: `Box`, `Row`, `Column` 내에서 자식의 정렬 위치를 지정합니다. (부모 의존적)
+- `zIndex()`: `Box`와 같이 겹칠 수 있는 레이아웃 내에서 자식들의 Z축 순서를 지정합니다. (숫자가 높을수록 위에 보임)
+- `offset()`: 원래 위치에서 지정된 값(x, y)만큼 뷰를 이동시킵니다.
+- `onGloballyPositioned()`: 전역 좌표계에서 Composable의 최종 위치와 크기를 얻어올 때 사용합니다.
+
+### 그래픽 및 그리기 (Graphics & Drawing)
+- `alpha()`: Composable과 그 자식들의 투명도를 조절합니다.
+- `graphicsLayer()`: 투명도(`alpha`), 회전(`rotationX/Y/Z`), 크기(`scaleX/Y`), 그림자(`shadowElevation`) 등 저수준 그래픽 속성을 효율적으로 변경합니다. 애니메이션에 유용합니다.
+- `drawBehind()`: Composable의 콘텐츠가 그려지기 **전(뒤)**에 `DrawScope`를 이용해 직접 그립니다.
+- `drawWithContent()`: 콘텐츠를 포함하여 그리기 과정을 직접 제어합니다. 콘텐츠를 먼저 그리거나 나중에 그릴 수 있습니다.
+- `drawWithCache()`: 그리기 객체들을 캐싱하여 리컴포지션 시 성능을 최적화할 때 사용합니다.
+
+### 의미 정보 (Semantics)
+- `semantics()`: 접근성(Accessibility) 서비스나 테스트에서 사용할 UI 요소의 의미 정보를 추가하거나 병합합니다. (예: `contentDescription`)
+
+---
+
+## 공식 문서
+
+- **공식 사이트:** [https://developer.android.com/jetpack/compose](https://developer.android.com/jetpack/compose)
+- **Modifier 목록:** [https://developer.android.com/jetpack/compose/modifiers-list](https://developer.android.com/jetpack/compose/modifiers-list)
