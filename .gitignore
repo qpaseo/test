@@ -25,3 +25,5 @@ dist-ssr
 .bolt
 
 test.md
+
+src/util/gemini/gemini-example.ts

@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import { useAuth } from '../contexts/AuthContext';
-import { ArrowLeft } from 'lucide-react';
+import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../lib/firebase";
+import { useAuth } from "../contexts/AuthContext";
+import { ArrowLeft } from "lucide-react";
 
 interface CreateStateProps {
   onBack: () => void;
@@ -12,44 +14,53 @@ interface CreateStateProps {
 export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
   const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    info: '',
+    name: "",
+    description: "",
+    info: "",
     isMain: false,
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentUser) return;
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      await addDoc(collection(db, 'user_states'), {
-        user_id: currentUser.uid,
-        user_state_name: formData.name,
-        user_state_description: formData.description,
-        user_state_info: formData.info,
-        user_state_is_main: formData.isMain,
-        created_at: new Date().toISOString(),
-      });
+      await toast.promise(
+        addDoc(collection(db, "user_states"), {
+          user_id: currentUser.uid,
+          user_state_name: formData.name,
+          user_state_description: formData.description,
+          user_state_info: formData.info,
+          user_state_is_main: formData.isMain,
+          created_at: new Date().toISOString(),
+        }),
+        {
+          pending: "상태 생성 중... ",
+          success: "상태가 생성되었습니다!",
+          error: "상태 생성에 실패했습니다.",
+        }
+      );
 
       onSuccess();
     } catch (err) {
-      setError('상태 생성에 실패했습니다.');
+      setError("상태 생성에 실패했습니다.");
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type } = e.target;
 
-    if (type === 'checkbox') {
+    if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData({ ...formData, [name]: checked });
     } else {
@@ -68,7 +79,9 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
       </button>
 
       <div className="bg-white rounded-2xl shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">새 상태 만들기</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          새 상태 만들기
+        </h2>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -78,7 +91,10 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               상태 이름
             </label>
             <input
@@ -94,7 +110,10 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               상태 설명
             </label>
             <textarea
@@ -110,7 +129,10 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
           </div>
 
           <div>
-            <label htmlFor="info" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="info"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               추천 기준
             </label>
             <textarea
@@ -134,7 +156,10 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
               onChange={handleChange}
               className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-2 focus:ring-orange-500"
             />
-            <label htmlFor="isMain" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="isMain"
+              className="text-sm font-medium text-gray-700"
+            >
               이 상태를 메인 상태로 설정
             </label>
           </div>
@@ -152,11 +177,12 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
               disabled={loading}
               className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? '생성 중...' : '생성하기'}
+              {loading ? "생성 중..." : "생성하기"}
             </button>
           </div>
         </form>
       </div>
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </div>
   );
 }

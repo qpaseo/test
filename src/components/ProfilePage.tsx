@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { useAuth } from "../contexts/AuthContext";
@@ -49,12 +51,19 @@ export default function ProfilePage() {
     setMessage("");
 
     try {
-      await updateDoc(doc(db, "users", currentUser.uid), {
-        name: formData.name,
-        food_types: formData.foodTypes,
-        food_categories: formData.foodCategories,
-        updated_at: new Date().toISOString(),
-      });
+      await toast.promise(
+        updateDoc(doc(db, "users", currentUser.uid), {
+          name: formData.name,
+          food_types: formData.foodTypes,
+          food_categories: formData.foodCategories,
+          updated_at: new Date().toISOString(),
+        }),
+        {
+          pending: "프로필 업데이트 중...",
+          success: "프로필이 업데이트되었습니다!",
+          error: "프로필 업데이트에 실패했습니다.",
+        }
+      );
 
       setMessage("프로필이 성공적으로 업데이트되었습니다.");
     } catch (error) {
@@ -159,6 +168,7 @@ export default function ProfilePage() {
           </button>
         </form>
       </div>
+      <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </div>
   );
 }

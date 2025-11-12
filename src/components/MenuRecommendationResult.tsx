@@ -1,13 +1,16 @@
-import { ArrowLeft, Copy, Check } from 'lucide-react';
-import { useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { ArrowLeft, Copy, Check } from "lucide-react";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 interface MenuRecommendationResultProps {
   result: string;
   onBack: () => void;
 }
 
-export default function MenuRecommendationResult({ result, onBack }: MenuRecommendationResultProps) {
+export default function MenuRecommendationResult({
+  result,
+  onBack,
+}: MenuRecommendationResultProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -47,10 +50,8 @@ export default function MenuRecommendationResult({ result, onBack }: MenuRecomme
           </button>
         </div>
 
-        <div className="prose prose-sm max-w-none bg-gray-50 p-6 rounded-lg">
-          <ReactMarkdown className="text-gray-800">
-            {result}
-          </ReactMarkdown>
+        <div className="prose prose-sm max-w-none bg-gray-50 p-6 rounded-lg text-gray-800">
+          <ReactMarkdown>{result}</ReactMarkdown>
         </div>
 
         <button

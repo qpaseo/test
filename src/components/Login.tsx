@@ -1,27 +1,27 @@
-import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../lib/firebase';
-import { LogIn } from 'lucide-react';
+import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../lib/firebase";
+import { LogIn } from "lucide-react";
 
 interface LoginProps {
   onSwitchToSignup: () => void;
 }
 
 export default function Login({ onSwitchToSignup }: LoginProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
+      setError("로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -37,8 +37,12 @@ export default function Login({ onSwitchToSignup }: LoginProps) {
           </div>
         </div>
 
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">WSET</h1>
-        <p className="text-center text-gray-600 mb-8">오늘의 당신의 식단을 추천해드릴게요!</p>
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
+          WSET
+        </h1>
+        <p className="text-center text-gray-600 mb-8">
+          오늘의 당신의 식단을 추천해드릴게요!
+        </p>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
@@ -48,7 +52,10 @@ export default function Login({ onSwitchToSignup }: LoginProps) {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               이메일
             </label>
             <input
@@ -63,7 +70,10 @@ export default function Login({ onSwitchToSignup }: LoginProps) {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               비밀번호
             </label>
             <input
@@ -82,7 +92,7 @@ export default function Login({ onSwitchToSignup }: LoginProps) {
             disabled={loading}
             className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? '로그인 중...' : '로그인'}
+            {loading ? "로그인 중..." : "로그인"}
           </button>
         </form>
 
