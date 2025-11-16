@@ -13,6 +13,7 @@ export default function ProfilePage() {
     name: "",
     foodTypes: "",
     foodCategories: "",
+    language: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -27,13 +28,16 @@ export default function ProfilePage() {
 
     try {
       const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+
       if (userDoc.exists()) {
         const data = userDoc.data();
+
         setFormData({
           email: data.email || "",
           name: data.name || "",
-          foodTypes: data.food_types || "",
-          foodCategories: data.food_categories || "",
+          foodTypes: data.user_food_types || "",
+          foodCategories: data.user_food_categories || "",
+          language: data.user_language || "",
         });
       }
     } catch (error) {
@@ -54,8 +58,9 @@ export default function ProfilePage() {
       await toast.promise(
         updateDoc(doc(db, "users", currentUser.uid), {
           name: formData.name,
-          food_types: formData.foodTypes,
-          food_categories: formData.foodCategories,
+          user_food_types: formData.foodTypes,
+          user_food_categories: formData.foodCategories,
+          user_language: formData.language,
           updated_at: new Date().toISOString(),
         }),
         {
@@ -155,6 +160,27 @@ export default function ProfilePage() {
               <option value="한식">한식</option>
               <option value="양식">양식</option>
               <option value="중식">중식</option>
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="foodCategories"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              언어
+            </label>
+            <select
+              id="language"
+              name="language"
+              value={formData.language}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+              required
+            >
+              <option value="">선택해주세요</option>
+              <option value="ko">한국어</option>
+              <option value="en">영어</option>
             </select>
           </div>
 

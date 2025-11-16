@@ -53,6 +53,7 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
         user_gender: formData.gender,
         user_food_types: formData.foodTypes,
         user_food_categories: formData.foodCategories,
+        user_language: "ko",
         created_at: new Date().toISOString(),
       });
 
