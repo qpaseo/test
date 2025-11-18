@@ -1,8 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./i18n"; // ✅ App보다 먼저 import (매우 중요!)
-import App from "./App.tsx";
+import * as React from "react";
+import * as ReactDOM from "react-dom/client";
 import "./index.css";
+import "./i18n";
+
+import App from "./App.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
