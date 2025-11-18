@@ -1,4 +1,3 @@
-// ✅ common 객체 제거 - 직접 export
 const ko = {
   appTitle: "나의 앱",
   welcome: "환영합니다",
@@ -97,6 +96,28 @@ const ko = {
     updateError: "프로필 업데이트에 실패했습니다.",
     successMessage: "프로필이 성공적으로 업데이트되었습니다.",
     errorMessage: "프로필 업데이트에 실패했습니다.",
+  },
+  menuRecommendationForm: {
+    back: "돌아가기",
+    title: "식단 추천받기",
+    stateLabel: "상태 선택",
+    statePlaceholder: "선택해주세요",
+    stateMainSuffix: " (메인)",
+    additionalRequestLabel: "추가 요청사항",
+    additionalRequestPlaceholder: "예: 오늘은 매운 음식을 주로 먹고 싶어",
+    scopeLabel: "추천 범위",
+    scopeOptions: {
+      breakfast: "아침",
+      lunch: "점심",
+      dinner: "저녁",
+      fullDay: "전부",
+    },
+    cancelButton: "취소",
+    submitButton: "추천받기",
+    submitting: "추천 중...",
+    stateNotFound: "선택한 상태 문서를 찾을 수 없습니다",
+    userProfileNotFound: "사용자 프로필을 찾을 수 없습니다",
+    recommendationFailed: "추천 생성 실패",
   },
 };
 

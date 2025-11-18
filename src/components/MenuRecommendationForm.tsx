@@ -21,6 +21,7 @@ import {
   GeminiGetDietRecommendationInput,
   GeminiGetFoodNameInput,
 } from "../types/gemini";
+import { useTranslation } from "react-i18next";
 
 interface MenuRecommendationFormProps {
   onBack: () => void;
@@ -32,6 +33,7 @@ export default function MenuRecommendationForm({
   onSuccess,
 }: MenuRecommendationFormProps) {
   const { currentUser } = useAuth();
+  const { t } = useTranslation();
   const [states, setStates] = useState<UserState[]>([]);
   const [mainState, setMainState] = useState<UserState | null>(null);
   const [formData, setFormData] = useState({
@@ -92,8 +94,11 @@ export default function MenuRecommendationForm({
       const stateRef = doc(db, "user_states", formData.stateId);
       const stateSnap = await getDoc(stateRef);
       if (!stateSnap.exists()) {
-        console.warn("선택한 상태 문서를 찾을 수 없습니다:", formData.stateId);
-        throw new Error("상태 문서를 찾을 수 없습니다");
+        console.warn(
+          t("menuRecommendationForm.stateNotFound"),
+          formData.stateId
+        );
+        throw new Error(t("menuRecommendationForm.stateNotFound"));
       }
       const stateData = stateSnap.data() as any;
       const { user_state_description, user_state_info, user_state_name } =
@@ -102,7 +107,7 @@ export default function MenuRecommendationForm({
       // 2) 사용자 프로필 조회
       const userSnap = await getDoc(doc(db, "users", currentUser.uid));
       if (!userSnap.exists()) {
-        throw new Error("사용자 프로필을 찾을 수 없습니다");
+        throw new Error(t("menuRecommendationForm.userProfileNotFound"));
       }
       const userData = userSnap.data() as any;
       const userFoodCategories =
@@ -153,10 +158,10 @@ export default function MenuRecommendationForm({
       const today = new Date();
       const yyyyMmDd = today.toISOString().slice(0, 10);
       const scopeKoMap: Record<string, string> = {
-        full_day: "전부",
-        breakfast: "아침",
-        lunch: "점심",
-        dinner: "저녁",
+        full_day: t("menuRecommendationForm.scopeOptions.fullDay"),
+        breakfast: t("menuRecommendationForm.scopeOptions.breakfast"),
+        lunch: t("menuRecommendationForm.scopeOptions.lunch"),
+        dinner: t("menuRecommendationForm.scopeOptions.dinner"),
       };
       const scopeKo = scopeKoMap[formData.scope] ?? formData.scope;
       const dietName = `${yyyyMmDd} - ${user_state_name} - ${scopeKo}`;
@@ -166,13 +171,12 @@ export default function MenuRecommendationForm({
         diet_content: menuResult,
         diet_name: dietName,
         diet_create_date: today.toISOString(),
-        // 호환성을 위해 created_date도 함께 저장 (MainPage가 참조)
         created_date: today.toISOString(),
       });
 
       onSuccess(menuResult);
     } catch (error) {
-      console.error("추천 생성 실패:", error);
+      console.error(t("menuRecommendationForm.recommendationFailed"), error);
     } finally {
       setSubmitting(false);
     }
@@ -202,7 +206,7 @@ export default function MenuRecommendationForm({
         className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 transition"
       >
         <ArrowLeft className="w-5 h-5" />
-        <span className="font-medium">돌아가기</span>
+        <span className="font-medium">{t("menuRecommendationForm.back")}</span>
       </button>
 
       <div className="bg-white rounded-2xl shadow-lg p-8">
@@ -210,7 +214,9 @@ export default function MenuRecommendationForm({
           <div className="bg-orange-500 p-3 rounded-full">
             <Sparkles className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800">식단 추천받기</h2>
+          <h2 className="text-2xl font-bold text-gray-800">
+            {t("menuRecommendationForm.title")}
+          </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -219,7 +225,7 @@ export default function MenuRecommendationForm({
               htmlFor="stateId"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              상태 선택
+              {t("menuRecommendationForm.stateLabel")}
             </label>
             <select
               id="stateId"
@@ -229,11 +235,15 @@ export default function MenuRecommendationForm({
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
               required
             >
-              <option value="">선택해주세요</option>
+              <option value="">
+                {t("menuRecommendationForm.statePlaceholder")}
+              </option>
               {states.map((state) => (
                 <option key={state.user_state_id} value={state.user_state_id}>
                   {state.user_state_name}
-                  {state.user_state_is_main ? " (메인)" : ""}
+                  {state.user_state_is_main
+                    ? t("menuRecommendationForm.stateMainSuffix")
+                    : ""}
                 </option>
               ))}
             </select>
@@ -244,7 +254,7 @@ export default function MenuRecommendationForm({
               htmlFor="additionalRequest"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              추가 요청사항
+              {t("menuRecommendationForm.additionalRequestLabel")}
             </label>
             <textarea
               id="additionalRequest"
@@ -253,21 +263,35 @@ export default function MenuRecommendationForm({
               onChange={handleChange}
               rows={3}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition resize-none"
-              placeholder="예: 오늘은 매운 음식을 주로 먹고 싶어"
+              placeholder={t(
+                "menuRecommendationForm.additionalRequestPlaceholder"
+              )}
             />
           </div>
 
           <div className="bg-gray-50 p-4 rounded-lg">
             <label className="block text-sm font-medium text-gray-700 mb-4">
-              추천 범위
+              {t("menuRecommendationForm.scopeLabel")}
             </label>
 
             <div className="grid grid-cols-2 gap-3">
               {[
-                { value: "breakfast", label: "아침" },
-                { value: "lunch", label: "점심" },
-                { value: "dinner", label: "저녁" },
-                { value: "full_day", label: "전부" },
+                {
+                  value: "breakfast",
+                  label: t("menuRecommendationForm.scopeOptions.breakfast"),
+                },
+                {
+                  value: "lunch",
+                  label: t("menuRecommendationForm.scopeOptions.lunch"),
+                },
+                {
+                  value: "dinner",
+                  label: t("menuRecommendationForm.scopeOptions.dinner"),
+                },
+                {
+                  value: "full_day",
+                  label: t("menuRecommendationForm.scopeOptions.fullDay"),
+                },
               ].map((opt) => (
                 <label key={opt.value} className="flex items-center gap-2">
                   <input
@@ -292,7 +316,7 @@ export default function MenuRecommendationForm({
               onClick={onBack}
               className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 rounded-lg transition"
             >
-              취소
+              {t("menuRecommendationForm.cancelButton")}
             </button>
             <button
               type="submit"
@@ -300,7 +324,9 @@ export default function MenuRecommendationForm({
               className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <Sparkles className="w-5 h-5" />
-              {submitting ? "추천 중..." : "추천받기"}
+              {submitting
+                ? t("menuRecommendationForm.submitting")
+                : t("menuRecommendationForm.submitButton")}
             </button>
           </div>
         </form>

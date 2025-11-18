@@ -19,43 +19,6 @@ export default function MainPage() {
   const [selectedRec, setSelectedRec] = useState<Diet | null>(null);
   const [loading, setLoading] = useState(true);
   const { t, i18n } = useTranslation();
-  useEffect(() => {
-    console.log("=== 번역 디버깅 ===");
-    console.log("현재 언어:", i18n.language);
-    console.log("사용 가능한 언어들:", i18n.languages);
-
-    // 번역 리소스 확인
-    console.log("EN resources:", i18n.getResourceBundle("en", "translation"));
-    console.log("KO resources:", i18n.getResourceBundle("ko", "translation"));
-
-    // 특정 키 확인
-    console.log(
-      "mainPage.title (en):",
-      i18n.t("mainPage.title", { lng: "en" })
-    );
-    console.log(
-      "mainPage.title (ko):",
-      i18n.t("mainPage.title", { lng: "ko" })
-    );
-
-    // 현재 언어로 번역
-    console.log("t('mainPage.title'):", t("mainPage.title"));
-  }, [i18n.language]);
-
-  useEffect(() => {
-    const handleLanguageChange = () => {
-      console.log("🔥 Language changed event in MainPage:", i18n.language);
-    };
-
-    i18n.on("languageChanged", handleLanguageChange);
-
-    return () => {
-      i18n.off("languageChanged", handleLanguageChange);
-    };
-  }, [i18n]);
-
-  console.log("MainPage render - current language:", i18n.language);
-  console.log("MainPage render - title:", t("mainPage.title"));
 
   useEffect(() => {
     loadRecommendations();

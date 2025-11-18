@@ -27,10 +27,7 @@ i18n.use(initReactI18next).init({
 
 // Sync i18n language with Firebase users.{uid}.user_language
 onAuthStateChanged(auth, async (user) => {
-  console.log("🔄 Auth state changed:", user?.uid);
-
   if (!user) {
-    console.log("🔄 No user, setting to English");
     await i18n.changeLanguage("en");
     return;
   }
@@ -44,28 +41,19 @@ onAuthStateChanged(auth, async (user) => {
       | "ko"
       | null;
 
-    console.log("🌍 Firebase language:", lang);
-    console.log("🌍 Current i18n language:", i18n.language);
-
-    // ✅ 중복 체크 제거 - 무조건 변경
     if (lang) {
       await i18n.changeLanguage(lang);
-      console.log("✅ Language changed to:", lang);
     }
   } catch (e) {
-    console.error("❌ 언어 설정 로드 실패:", e);
+    console.error("언어 설정 로드 실패:", e);
   }
 
   // Subscribe to future updates to user_language
   onSnapshot(userRef, async (s) => {
     const l = (s.data() as any)?.user_language as "en" | "ko" | undefined;
-    console.log("🔔 Firebase update detected, language:", l);
-    console.log("🔔 Current i18n language:", i18n.language);
 
-    // ✅ 중복 체크 제거 - 무조건 변경
     if (l) {
       await i18n.changeLanguage(l);
-      console.log("✅ Language changed via snapshot to:", l);
     }
   });
 });

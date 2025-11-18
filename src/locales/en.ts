@@ -1,4 +1,3 @@
-// ✅ common 객체를 직접 export
 const en = {
   appTitle: "My App",
   welcome: "Welcome",
@@ -70,39 +69,49 @@ const en = {
     foodCategories: "Preferred Food Category",
     language: "Language",
     selectPlaceholder: "Please select",
-
-    // 식재료 옵션
     foodTypesOptions: {
       seafood: "Seafood",
       meat: "Meat",
       vegetable: "Vegetables",
     },
-
-    // 음식 카테고리 옵션
     foodCategoriesOptions: {
       korean: "Korean",
       western: "Western",
       chinese: "Chinese",
     },
-
-    // 언어 옵션
     languageOptions: {
       korean: "한국어",
       english: "English",
     },
-
-    // 버튼
     saveButton: "Save Changes",
     saving: "Saving...",
-
-    // 토스트 메시지
     updatePending: "Updating profile...",
     updateSuccess: "Profile updated successfully!",
     updateError: "Failed to update profile.",
-
-    // 성공 메시지
     successMessage: "Profile updated successfully.",
     errorMessage: "Failed to update profile.",
+  },
+  menuRecommendationForm: {
+    back: "Back",
+    title: "Get Meal Recommendation",
+    stateLabel: "Select State",
+    statePlaceholder: "Please select",
+    stateMainSuffix: " (Main)",
+    additionalRequestLabel: "Additional Requests",
+    additionalRequestPlaceholder: "e.g., I want to eat spicy food today",
+    scopeLabel: "Recommendation Range",
+    scopeOptions: {
+      breakfast: "Breakfast",
+      lunch: "Lunch",
+      dinner: "Dinner",
+      fullDay: "Full Day",
+    },
+    cancelButton: "Cancel",
+    submitButton: "Get Recommendation",
+    submitting: "Generating...",
+    stateNotFound: "Selected state not found",
+    userProfileNotFound: "User profile not found",
+    recommendationFailed: "Failed to generate recommendation",
   },
 };
 
