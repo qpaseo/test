@@ -15,8 +15,10 @@ import { db } from "../lib/firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { UserState } from "../types";
 import CreateState from "./CreateState";
+import { useTranslation } from "react-i18next";
 
 export default function StatesPage() {
+  const { t } = useTranslation();
   const { currentUser } = useAuth();
   const [states, setStates] = useState<UserState[]>([]);
   const [mainState, setMainState] = useState<UserState | null>(null);
@@ -44,16 +46,14 @@ export default function StatesPage() {
         where("user_id", "==", currentUser.uid)
       );
       const querySnapshot = await getDocs(q);
-      console.log("querySnapshot", querySnapshot.docs);
 
       const loadedStates: UserState[] = [];
-      querySnapshot.docs.forEach((doc) => {
-        const data = doc.data() as UserState;
-        console.log("data", data);
-        loadedStates.push({ ...data, user_state_id: doc.id });
+      querySnapshot.docs.forEach((docItem) => {
+        const data = docItem.data() as UserState;
+        loadedStates.push({ ...data, user_state_id: docItem.id });
 
         if (data.user_state_is_main) {
-          setMainState({ ...data, user_state_id: doc.id });
+          setMainState({ ...data, user_state_id: docItem.id });
         }
       });
 
@@ -80,27 +80,28 @@ export default function StatesPage() {
           user_state_is_main: true,
         }),
         {
-          pending: "메인 상태 변경 중...",
-          success: "메인 상태가 변경되었습니다!",
-          error: "메인 상태 변경에 실패했습니다.",
+          pending: t("statesPage.toast.main.pending"),
+          success: t("statesPage.toast.main.success"),
+          error: t("statesPage.toast.main.error"),
         }
       );
 
       await loadStates();
     } catch (error) {
       console.error("메인 상태 설정 실패:", error);
-      toast.error("메인 상태 변경에 실패했습니다.");
+      toast.error(t("statesPage.toast.main.error"));
     }
   };
 
   const handleDelete = async (stateId: string) => {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
+    if (!confirm(t("statesPage.confirm.delete"))) return;
 
     try {
       await deleteDoc(doc(db, "user_states", stateId));
       await loadStates();
     } catch (error) {
       console.error("상태 삭제 실패:", error);
+      toast.error(t("statesPage.toast.delete.error"));
     }
   };
 
@@ -128,6 +129,7 @@ export default function StatesPage() {
 
   const saveEdit = async () => {
     if (!editId) return;
+
     try {
       setSaving(true);
       await toast.promise(
@@ -137,16 +139,17 @@ export default function StatesPage() {
           user_state_info: editForm.user_state_info,
         }),
         {
-          pending: "상태 수정 중...",
-          success: "상태가 수정되었습니다!",
-          error: "상태 수정에 실패했습니다.",
+          pending: t("statesPage.toast.edit.pending"),
+          success: t("statesPage.toast.edit.success"),
+          error: t("statesPage.toast.edit.error"),
         }
       );
+
       await loadStates();
       closeEdit();
     } catch (error) {
       console.error("상태 수정 실패:", error);
-      toast.error("상태 수정에 실패했습니다.");
+      toast.error(t("statesPage.toast.edit.error"));
     } finally {
       setSaving(false);
     }
@@ -167,11 +170,14 @@ export default function StatesPage() {
   return (
     <>
       <div className="space-y-6">
+        {/* Main State */}
         {mainState && (
           <div className="bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl shadow-lg p-8 text-white">
             <div className="flex items-center gap-2 mb-3">
               <Star className="w-6 h-6 fill-current" />
-              <span className="text-sm font-medium">메인 상태</span>
+              <span className="text-sm font-medium">
+                {t("statesPage.mainState")}
+              </span>
             </div>
             <h2 className="text-3xl font-bold mb-2">
               {mainState.user_state_name}
@@ -185,29 +191,33 @@ export default function StatesPage() {
           </div>
         )}
 
+        {/* Header */}
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-bold text-gray-800">내 상태 목록</h3>
+          <h3 className="text-xl font-bold text-gray-800">
+            {t("statesPage.stateList")}
+          </h3>
           <button
             onClick={() => setShowCreateForm(true)}
             className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-2 rounded-lg transition"
           >
             <Plus className="w-5 h-5" />
-            상태 추가
+            {t("statesPage.addState")}
           </button>
         </div>
 
+        {/* Loading */}
         {loading ? (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-orange-500 border-t-transparent"></div>
           </div>
         ) : states.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-            <p className="text-gray-500 mb-4">아직 등록된 상태가 없습니다</p>
+            <p className="text-gray-500 mb-4">{t("statesPage.emptyList")}</p>
             <button
               onClick={() => setShowCreateForm(true)}
               className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition"
             >
-              첫 상태 만들기
+              {t("statesPage.createFirst")}
             </button>
           </div>
         ) : (
@@ -227,6 +237,7 @@ export default function StatesPage() {
                         <Star className="w-5 h-5 text-orange-500 fill-current" />
                       )}
                     </div>
+
                     <p className="text-gray-600 mb-2">
                       {state.user_state_description}
                     </p>
@@ -240,7 +251,7 @@ export default function StatesPage() {
                       <button
                         onClick={() => handleSetMain(state.user_state_id)}
                         className="p-2 text-gray-400 hover:text-orange-500 transition"
-                        title="메인으로 설정"
+                        title={t("statesPage.tooltip.setMain")}
                       >
                         <Star className="w-5 h-5" />
                       </button>
@@ -248,14 +259,14 @@ export default function StatesPage() {
                     <button
                       onClick={() => openEdit(state)}
                       className="p-2 text-gray-400 hover:text-blue-500 transition"
-                      title="수정"
+                      title={t("statesPage.tooltip.edit")}
                     >
                       <Edit2 className="w-5 h-5" />
                     </button>
                     <button
                       onClick={() => handleDelete(state.user_state_id)}
                       className="p-2 text-gray-400 hover:text-red-500 transition"
-                      title="삭제"
+                      title={t("statesPage.tooltip.delete")}
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -267,6 +278,7 @@ export default function StatesPage() {
         )}
       </div>
 
+      {/* Edit Modal */}
       {editOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
@@ -274,23 +286,27 @@ export default function StatesPage() {
             onClick={closeEdit}
           ></div>
           <div className="relative bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">상태 수정</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-4">
+              {t("statesPage.editTitle")}
+            </h3>
+
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  이름
+                  {t("statesPage.fields.name")}
                 </label>
                 <input
                   name="user_state_name"
                   value={editForm.user_state_name}
                   onChange={handleEditChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  placeholder="상태 이름"
+                  placeholder={t("statesPage.placeholder.name") || ""}
                 />
               </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  설명
+                  {t("statesPage.fields.description")}
                 </label>
                 <textarea
                   name="user_state_description"
@@ -298,12 +314,13 @@ export default function StatesPage() {
                   onChange={handleEditChange}
                   rows={2}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  placeholder="설명"
+                  placeholder={t("statesPage.placeholder.description") || ""}
                 />
               </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  추가 정보
+                  {t("statesPage.fields.info")}
                 </label>
                 <textarea
                   name="user_state_info"
@@ -311,28 +328,30 @@ export default function StatesPage() {
                   onChange={handleEditChange}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  placeholder="추가 정보"
+                  placeholder={t("statesPage.placeholder.info") || ""}
                 />
               </div>
             </div>
+
             <div className="mt-6 flex justify-end gap-2">
               <button
                 onClick={closeEdit}
                 className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md"
               >
-                취소
+                {t("statesPage.cancel")}
               </button>
               <button
                 onClick={saveEdit}
                 disabled={saving}
                 className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-md disabled:opacity-50"
               >
-                저장
+                {t("statesPage.save")}
               </button>
             </div>
           </div>
         </div>
       )}
+
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </>
   );

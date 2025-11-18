@@ -5,6 +5,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { ArrowLeft } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface CreateStateProps {
   onBack: () => void;
@@ -13,12 +14,15 @@ interface CreateStateProps {
 
 export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
   const { currentUser } = useAuth();
+  const { t } = useTranslation();
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     info: "",
     isMain: false,
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -40,15 +44,15 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
           created_at: new Date().toISOString(),
         }),
         {
-          pending: "상태 생성 중... ",
-          success: "상태가 생성되었습니다!",
-          error: "상태 생성에 실패했습니다.",
+          pending: t("statesPage.create.pending"),
+          success: t("statesPage.create.success"),
+          error: t("statesPage.create.error"),
         }
       );
 
       onSuccess();
     } catch (err) {
-      setError("상태 생성에 실패했습니다.");
+      setError(t("statesPage.create.error"));
       console.error(err);
     } finally {
       setLoading(false);
@@ -75,12 +79,12 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
         className="flex items-center gap-2 text-gray-600 hover:text-gray-800 mb-6 transition"
       >
         <ArrowLeft className="w-5 h-5" />
-        <span className="font-medium">돌아가기</span>
+        <span className="font-medium">{t("mainPage.back")}</span>
       </button>
 
       <div className="bg-white rounded-2xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
-          새 상태 만들기
+          {t("statesPage.addState")}
         </h2>
 
         {error && (
@@ -90,12 +94,13 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* 상태 이름 */}
           <div>
             <label
               htmlFor="name"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              상태 이름
+              {t("form.name")}
             </label>
             <input
               id="name"
@@ -104,17 +109,18 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
               value={formData.name}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
-              placeholder="예: 다이어트"
+              placeholder={t("placeholder.name")}
               required
             />
           </div>
 
+          {/* 상태 설명 */}
           <div>
             <label
               htmlFor="description"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              상태 설명
+              {t("form.description")}
             </label>
             <textarea
               id="description"
@@ -123,17 +129,18 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
               onChange={handleChange}
               rows={3}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition resize-none"
-              placeholder="예: 체중 감량을 위한 다이어트"
+              placeholder={t("placeholder.description")}
               required
             />
           </div>
 
+          {/* 추천 기준 */}
           <div>
             <label
               htmlFor="info"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              추천 기준
+              {t("form.info")}
             </label>
             <textarea
               id="info"
@@ -142,11 +149,12 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
               onChange={handleChange}
               rows={3}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition resize-none"
-              placeholder="예: 칼로리가 적고 영양소가 많은 음식 위주로"
+              placeholder={t("placeholder.info")}
               required
             />
           </div>
 
+          {/* 메인 상태 설정 */}
           <div className="flex items-center gap-3">
             <input
               id="isMain"
@@ -160,28 +168,32 @@ export default function CreateState({ onBack, onSuccess }: CreateStateProps) {
               htmlFor="isMain"
               className="text-sm font-medium text-gray-700"
             >
-              이 상태를 메인 상태로 설정
+              {t("form.setMain")}
             </label>
           </div>
 
+          {/* 버튼 */}
           <div className="flex gap-4 pt-4">
             <button
               type="button"
               onClick={onBack}
               className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 rounded-lg transition"
             >
-              취소
+              {t("statesPage.cancel")}
             </button>
             <button
               type="submit"
               disabled={loading}
               className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "생성 중..." : "생성하기"}
+              {loading
+                ? t("statesPage.create.loading")
+                : t("statesPage.addState")}
             </button>
           </div>
         </form>
       </div>
+
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     </div>
   );
