@@ -26,35 +26,4 @@ public interface DietJpaRepo extends JpaRepository<Dist, Long> {
      */
     List<Dist> findAllByOrderByCreatedAtDesc();
 
-    /**
-     * 특정 상태(dietStateName)의 식단만 조회
-     */
-    List<Dist> findAllByDietStateNameOrderByCreatedAtDesc(String dietStateName);
-
-    /**
-     * 특정 기간 내의 식단 조회
-     */
-    @Query("SELECT d FROM Dist d WHERE d.createdAt BETWEEN :startDate AND :endDate ORDER BY d.createdAt DESC")
-    List<Dist> findAllByDateRange(@Param("startDate") LocalDateTime startDate,
-                                  @Param("endDate") LocalDateTime endDate);
-
-    /**
-     * 최근 N개의 식단 조회
-     */
-    List<Dist> findTop10ByOrderByCreatedAtDesc();
-
-    /**
-     * content가 null이 아닌 완료된 식단만 조회
-     */
-    List<Dist> findAllByContentIsNotNullOrderByCreatedAtDesc();
-
-    /**
-     * 특정 dietName의 식단 조회
-     */
-    List<Dist> findAllByDietNameOrderByCreatedAtDesc(String dietName);
-
-    /**
-     * dietId 존재 여부 확인
-     */
-    boolean existsByDietId(Long dietId);
 }

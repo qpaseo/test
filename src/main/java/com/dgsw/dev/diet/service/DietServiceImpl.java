@@ -26,27 +26,26 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class DietService {
+public class DietServiceImpl implements DietService {
 
     private final DietJpaRepo dietJpaRepo;
-    private final DietAIService dietAIService; // AI 서비스 (별도 작성 필요)
+//    private final StateJpaRepo stateJpaRepo;   구현되면 넣을 예정
+    private final GeminiService geminiAIService;
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
      * 메인화면 - 유저의 식단 조회
      */
+    @Override
     public DietListResponse getDietList(DietListRequest request) {
         try {
-            // order 검증
             SortOrder sortOrder = validateAndParseSortOrder(request.getOrder());
 
-            // 정렬에 따라 조회
             List<Dist> diets = sortOrder == SortOrder.ASC
                     ? dietJpaRepo.findAllByOrderByCreatedAtAsc()
                     : dietJpaRepo.findAllByOrderByCreatedAtDesc();
 
-            // DTO 변환
             List<DietListItem> dietListItems = diets.stream()
                     .map(this::convertToDietListItem)
                     .collect(Collectors.toList());
@@ -67,56 +66,93 @@ public class DietService {
     /**
      * 메인화면 - 식단정보 상세조회
      */
+    @Override
     public DietDetailResponse getDietDetail(DietDetailRequest request) {
         try {
-            // dietId 검증
             if (request.getDietId() == null) {
                 throw new InvalidDietRequestException("id가 정상적으로 입력되지 않았습니다");
             }
 
-            // 식단 조회
             Dist diet = dietJpaRepo.findByDietId(request.getDietId())
                     .orElseThrow(() -> new DietNotFoundException(request.getDietId()));
 
-            // DTO 변환
             return convertToDietDetailResponse(diet);
 
         } catch (DietNotFoundException | InvalidDietRequestException e) {
             throw e;
         } catch (Exception e) {
             log.error("Failed to retrieve diet detail for dietId: {}", request.getDietId(), e);
-            throw new DietServerException("서버 내부 오류로 인하여 에 실패하였습니다.");
+            throw new DietServerException("서버 내부 오류로 인하여 조회에 실패하였습니다.");
         }
     }
 
     /**
-     * 식단 추천 받기 - 식단 추천
+     * 식단 추천 생성 (아직 State 부분에 개발되지 않아 오류 있음)
      */
+    @Override
     @Transactional
     public DietRecommendationResponse createDietRecommendation(DietRecommendationRequest request) {
         try {
-            // 요청값 검증
             validateDietRecommendationRequest(request);
 
-            // AI 서비스 호출하여 식단 추천 받기
-            String aiRecommendation = dietAIService.getRecommendation(
-                    request.getStateId(),
+            // 1. State 정보 조회
+            State state = stateJpaRepo.findByUserStateId(String.valueOf(request.getStateId()))
+                    .orElseThrow(() -> new InvalidDietRequestException("상태 정보를 찾을 수 없습니다."));
+
+            log.info("State 조회 완료 - name: {}, description: {}",
+                    state.getUserStateName(), state.getUserStateDescription());
+
+            // TODO: User 정보 조회 (현재는 임시 값 사용)
+            String userFoodCategories = "한식, 양식";
+            String userFoodTypes = "담백한 음식";
+            String userGender = "남성";
+            Integer userAge = 25;
+
+            // 2. Gemini API 1단계: 식재료 추천
+            String ingredientName = geminiAIService.getFoodName(
+                    userFoodCategories,
+                    userFoodTypes,
+                    userGender,
+                    userAge,
+                    state.getUserStateName(),
+                    state.getUserStateDescription(),
+                    state.getUserStateStandard(),
                     request.getRequest(),
                     request.getRecommendedRange()
             );
 
-            // 식단 엔티티 생성 및 저장
+            log.info("추천된 식재료: {}", ingredientName);
+
+            // 3. Gemini API 2단계: 식단 추천
+            String dietRecommendation = geminiAIService.getDietRecommendation(
+                    userFoodCategories,
+                    userFoodTypes,
+                    userGender,
+                    userAge,
+                    state.getUserStateName(),
+                    state.getUserStateDescription(),
+                    state.getUserStateStandard(),
+                    request.getRequest(),
+                    request.getRecommendedRange(),
+                    ingredientName
+            );
+
+            log.info("식단 추천 완료");
+
+            // 4. DB 저장
             Dist diet = Dist.builder()
-                    .dietStateName(getStateNameById(request.getStateId()))
+                    .dietStateName(state.getUserStateName())
                     .request(request.getRequest())
-                    .content(aiRecommendation)
+                    .content(dietRecommendation)
                     .dietName(request.getRecommendedRange())
+                    .dietContent(ingredientName)
                     .build();
 
             dietJpaRepo.save(diet);
 
+            // 5. 응답 반환
             return DietRecommendationResponse.builder()
-                    .message(aiRecommendation)
+                    .message(dietRecommendation)
                     .build();
 
         } catch (InvalidDietRequestException e) {
@@ -124,7 +160,6 @@ public class DietService {
         } catch (Exception e) {
             log.error("Failed to create diet recommendation", e);
 
-            // AI 서비스 관련 오류인지 확인
             if (e.getMessage() != null && e.getMessage().contains("AI")) {
                 throw new DietServerException("ai 오류로 인하여 식단 추천에 실패하였습니다.");
             }
@@ -133,53 +168,33 @@ public class DietService {
         }
     }
 
-    // === Private Helper Methods ===
 
     /**
-     * SortOrder 검증 및 파싱
+     * 정렬 순서 문자열을 SortOrder Enum으로 변환
+     * order가 null이거나 빈 값이면 기본값(DESC) 반환
      */
     private SortOrder validateAndParseSortOrder(String order) {
         if (order == null || order.trim().isEmpty()) {
-            return SortOrder.DESC; // 기본값: 내림차순
+            return SortOrder.DESC;
         }
         return SortOrder.fromCode(order);
     }
 
     /**
-     * DietRecommendationRequest 검증
+     * 식단 추천 요청 데이터 유효성 검증
+     * stateId, request, recommendedRange 필수 값 체크
      */
     private void validateDietRecommendationRequest(DietRecommendationRequest request) {
-        if (request.getStateId() == null) {
-            throw new InvalidDietRequestException("생성에 필요한 값이 정상적으로 입력되지 않았습니다");
-        }
-        if (request.getRequest() == null || request.getRequest().trim().isEmpty()) {
-            throw new InvalidDietRequestException("생성에 필요한 값이 정상적으로 입력되지 않았습니다");
-        }
-        if (request.getRecommendedRange() == null || request.getRecommendedRange().trim().isEmpty()) {
+        if (request.getStateId() == null ||
+                request.getRequest() == null || request.getRequest().trim().isEmpty() ||
+                request.getRecommendedRange() == null || request.getRecommendedRange().trim().isEmpty()) {
             throw new InvalidDietRequestException("생성에 필요한 값이 정상적으로 입력되지 않았습니다");
         }
     }
 
     /**
-     * StateId로 StateName 조회 (임시 구현)
-     * TODO: State 테이블이 별도로 있다면 조회 로직 수정 필요
-     */
-    private String getStateNameById(Long stateId) {
-        // 임시로 하드코딩, 실제로는 State 테이블에서 조회해야 함
-        switch (stateId.intValue()) {
-            case 1:
-                return "다이어트";
-            case 2:
-                return "벌크업";
-            case 3:
-                return "유지";
-            default:
-                return "일반";
-        }
-    }
-
-    /**
-     * Dist -> DietListItem 변환
+     * Dist 엔티티를 DietListItem DTO로 변환
+     * 식단 목록 조회 응답용
      */
     private DietListItem convertToDietListItem(Dist diet) {
         return DietListItem.builder()
@@ -192,7 +207,8 @@ public class DietService {
     }
 
     /**
-     * Dist -> DietDetailResponse 변환
+     * Dist 엔티티를 DietDetailResponse DTO로 변환
+     * 식단 상세 조회 응답용
      */
     private DietDetailResponse convertToDietDetailResponse(Dist diet) {
         return DietDetailResponse.builder()
