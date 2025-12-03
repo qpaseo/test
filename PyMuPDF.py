@@ -173,7 +173,7 @@ def print_preview(result):
 # 4. 실행 구간
 # ---------------------------------------------------
 if __name__ == "__main__":
-    PDF_PATH = "./(무) ABL THE드림종신보험II(해약환급금 일부지급형)2409 1종(간편심사형) 1형 평준형.pdf"
+    PDF_PATH = "./pdf/1.pdf"
 
     result = extract_insurance_pdf_parallel(PDF_PATH)
     save_results(result)
