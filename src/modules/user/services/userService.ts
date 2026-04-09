@@ -1,12 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
-import {
-  UserRepository,
-  CreateUserInput,
-} from "../repositories/userRepository";
+import { UserRepository } from "../repositories/userRepository";
 import { UserMemoryRepository } from "../repositories/userMemoryRepository";
 import { AppError, ErrorCode } from "../../../common/errors/AppError";
 import { UserMemoryContent } from "../types/entity/user-memory.entity";
-import { User } from "../types/entity/user.entity";
+import { UserInfoResponse } from "../types/dto/response/user-info.response";
+import { CreateUserInput } from "../types/internal";
 
 export class UserService {
   /**
@@ -19,7 +17,7 @@ export class UserService {
   /**
    * ID로 유저 조회
    */
-  static async getUserById(userId: string): Promise<User> {
+  static async getUserById(userId: string): Promise<UserInfoResponse> {
     const userRow = await UserRepository.findById(userId);
 
     if (!userRow) {
@@ -31,17 +29,16 @@ export class UserService {
     }
 
     return {
-      id: userRow.id,
+      userId: userRow.id,
       name: userRow.name,
       email: userRow.email,
-      password: userRow.password,
-      has_loan: userRow.has_loan,
-      has_stock: userRow.has_stock,
-      recent_plan_date: userRow.recent_plan_date
+      hasLoan: userRow.has_loan,
+      hasStock: userRow.has_stock,
+      recentPlanDate: userRow.recent_plan_date
         ? new Date(userRow.recent_plan_date)
         : null,
-      created_at: new Date(userRow.created_at),
-      updated_at: new Date(userRow.updated_at),
+      createdAt: new Date(userRow.created_at),
+      updatedAt: new Date(userRow.updated_at),
     };
   }
   /**

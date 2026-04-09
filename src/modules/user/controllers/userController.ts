@@ -1,51 +1,68 @@
 import { Response } from "express";
 
 import { AppError, ErrorCode } from "../../../common/errors/AppError";
-import { ApiResponse, UserInfoResponse } from "../../auth/types";
 import { UserService } from "../services/userService";
+import { UserInfoResponse } from "../types/dto/response/user-info.response";
+import { ApiResponse, AuthRequest } from "../../types/dto/response/basic.response";
+import { UserDashboardResponse } from "../types/dto/response/user-dashboard.response";
+import { FinancialService } from "../../financial/services/FinancialService";
+import { ChatService } from "../../chat/services/chatService";
+import { FinancialChatService } from "../../chat/services/financialChatService";
 
 export class UserController {
   /**
    * 사용자 정보 조회
    * GET /user
    */
-  static async getUserInfo(userId: string): Promise<UserInfoResponse> {
-    const user = await UserService.getUserById(userId);
+  static async getUserInfo(
+    req: AuthRequest,
+    res: Response<ApiResponse<UserInfoResponse>>,
+  ): Promise<void> {
+    try {
+      if (!req.userId) {
+        throw AppError.fromCode(ErrorCode.UNAUTHORIZED);
+      }
 
-    return {
-      userId: user.id,
-      email: user.email,
-      name: user.name,
-      hasLoan: user.has_loan,
-      hasStock: user.has_stock,
-      recentPlanDate: user.recent_plan_date,
-      createdAt: user.created_at,
-      updatedAt: user.updated_at,
-    };
+      const result = await UserService.getUserById(req.userId);
+
+      res.status(200).json({
+        success: true,
+        code: "GET_USER_INFO_SUCCESS",
+        message: "사용자 정보 조회가 완료되었습니다",
+        data: result,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      handleAuthError(error, res);
+    }
   }
 
   /**
    * 메인화면 정보 조회
    * GET /user/main
    */
-  //   static async getUserDashboard(
-  //     userId: string,
-  //   ): Promise<UserDashboardResponse> {
-  //     const [goals, finances, chats] = await Promise.all([
-  //       FinancialService.getGoals(userId),
-  //       FinancialService.getMonthlyFinances(userId),
-  //       Financia.getChatRooms(userId),
-  //     ]);
+  static async getUserDashboard(
+    userId: string,
+  ): Promise<UserDashboardResponse> {
+    const [goals, finances, financialChats, ragChats] = await Promise.all([
+      FinancialService.getGoals(userId),
+      FinancialService.getMonthlyFinances(userId),
+      FinancialChatService.getFinancialChatRooms(userId),
+      ChatService.getRagChatRooms(userId),
+    ]);
 
-  //     return {
-  //       onboardingGoals: goals.onboarding,
-  //       financialPlansGoals: goals.financial,
-  //       monthlyFinances: finances,
-  //       chatRooms: chats,
-  //     };
-  //   }
-  // }
+    return {
+      onboardingGoals: goals.onboarding,
+      financialPlansGoals: goals.financial,
+      monthlyFinances: finances,
+      chatRooms: {
+        financialStatementChats: financialChats,
+        chats: ragChats,
+      },
+    };
+  }
 }
+
 /**
  * 에러 처리 헬퍼
  */

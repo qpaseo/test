@@ -1,11 +1,21 @@
 import { RowDataPacket } from "mysql2";
 
-export interface ChatRoom extends RowDataPacket {
+export interface ChatRoomRow extends RowDataPacket {
   id: string;
   memory_count: number;
   name: string;
   description: string | null;
   user_id: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ChatRoom {
+  id: string;
+  memoryCount: number;
+  name: string;
+  description: string | null;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

@@ -1,5 +1,4 @@
 import { Response } from "express";
-import { AuthRequest, ApiResponse } from "../types/index";
 import { AuthService } from "../services/authService";
 import {
   SignUpRequestSchema,
@@ -13,6 +12,10 @@ import {
   refreshAccessToken,
   verifyRefreshToken,
 } from "../../../common/utils/tokenManager";
+import {
+  ApiResponse,
+  AuthRequest,
+} from "../../types/dto/response/basic.response";
 
 /**
  * Auth Controller

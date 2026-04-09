@@ -1,6 +1,6 @@
 import { UserRepository } from "../../user/repositories/userRepository";
 import { SignUpRequest, LoginRequest } from "../validators/authValidator";
-import { LoginResponse, SignUpResponse, UserInfoResponse } from "../types";
+import { LoginResponse, SignUpResponse } from "../types";
 import {
   hashPassword,
   validatePasswordFormatStrict,
@@ -14,7 +14,8 @@ import {
 } from "../../../common/utils/tokenManager";
 import { UserService } from "../../user/services/userService";
 import { FinancialService } from "../../financial/services/FinancialService";
-import { FinancialChatRoomRepository } from "../../financial/repositories/financialChatRoomRepository";
+import { FinancialChatRoomRepository } from "../../chat/repositories/financialChatRepository";
+import { UserInfoResponse } from "../../user/types/dto/response/user-info.response";
 
 /**
  * Auth Service

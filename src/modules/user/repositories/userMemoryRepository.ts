@@ -1,6 +1,5 @@
 import { uuidv4 } from "zod";
 import {
-  UserMemory,
   UserMemoryContent,
   UserMemoryRow,
 } from "../types/entity/user-memory.entity";
@@ -36,7 +35,7 @@ export class UserMemoryRepository {
   /**
    * User Memory 조회
    */
-  static async getUserMemory(userId: string): Promise<UserMemory | null> {
+  static async getUserMemory(userId: string): Promise<UserMemoryRow | null> {
     try {
       const pool = getDatabase();
 
@@ -50,16 +49,7 @@ export class UserMemoryRepository {
         return null;
       }
 
-      const row = rows[0];
-
-      // 반환 시 content를 파싱하여 UserMemory 인터페이스 형식에 맞춥니다.
-      return {
-        id: row.id,
-        user_id: row.user_id,
-        content: JSON.parse(row.content) as UserMemoryContent, // JSON 파싱 후 타입 캐스팅
-        created_at: row.created_at,
-        updated_at: row.updated_at,
-      };
+      return rows.length > 0 ? rows[0] : null;
     } catch (error) {
       throw AppError.fromCode(ErrorCode.INTERNAL_SERVER_ERROR, {
         originalError: error,

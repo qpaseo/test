@@ -1,7 +1,10 @@
 import { Response, NextFunction } from "express";
 import { verifyToken } from "../utils/tokenManager";
 import { AppError, ErrorCode } from "../errors/AppError";
-import { ApiResponse, AuthRequest } from "../../auth/types";
+import {
+  ApiResponse,
+  AuthRequest,
+} from "../../modules/types/dto/response/basic.response";
 
 /**
  * 인증 미들웨어

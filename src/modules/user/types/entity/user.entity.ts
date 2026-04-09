@@ -13,15 +13,16 @@ export interface UserRow extends RowDataPacket {
   updated_at: string;
 }
 
+//서비스에서 변환
 export interface User {
   id: string;
   name: string;
   email: string;
   password: string;
-  has_loan: boolean;
-  has_stock: boolean;
+  hasLoan: boolean;
+  hasStock: boolean;
 
-  recent_plan_date: Date | null;
-  created_at: Date;
-  updated_at: Date;
+  recentPlanDate: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }

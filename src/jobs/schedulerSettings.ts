@@ -1,7 +1,7 @@
 // services/schedulerService.ts
 
 import { RowDataPacket } from "mysql2";
-import { getDatabase } from "../config/db";
+import { getDatabase } from "../config/db/db";
 import { SchedulerSettings } from "../config/db/types/schedulerSettings";
 
 /**

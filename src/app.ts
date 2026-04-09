@@ -5,9 +5,9 @@ import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger/swaggerSpec";
 import { ENV } from "./config/env";
-import authRoutes from "./auth/routes/authRoutes";
 import { AppError, ErrorCode } from "./common/errors/AppError";
-import { ApiResponse } from "./auth/types/index";
+import authRoutes from "./modules/auth/routes/authRoutes";
+import { ApiResponse } from "./modules/types/dto/response/basic.response";
 
 const app: Application = express();
 

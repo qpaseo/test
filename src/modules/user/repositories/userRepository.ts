@@ -5,18 +5,8 @@
 import { AppError, ErrorCode } from "../../../common/errors/AppError";
 import { getDatabase } from "../../../config/db/db";
 import { UserRow } from "../types/entity/user.entity";
+import { CreateUserInput } from "./types";
 
-/**
- * 사용자 생성 입력값
- */
-export interface CreateUserInput {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  has_loan: boolean;
-  has_stock: boolean;
-}
 
 /**
  * User Repository

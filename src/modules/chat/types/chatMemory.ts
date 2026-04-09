@@ -1,11 +1,21 @@
 import { RowDataPacket } from "mysql2/promise";
 
-export interface ChatMemory extends RowDataPacket {
+export interface ChatMemoryRow extends RowDataPacket {
   id: string;
   chat_room_id: string;
   content: string;
   start_index: number;
   end_index: number;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ChatMemory {
+  id: string;
+  chatRoomId: string;
+  content: string;
+  startIndex: number;
+  endIndex: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

@@ -1,8 +1,11 @@
 import { uuidv4 } from "zod";
 import { getDatabase } from "../../../config/db/db";
-import { FinancialGoal } from "../types/financialGoal";
+import { FinancialGoalRow } from "../types/financialGoal";
 import { AppError, ErrorCode } from "../../../common/errors/AppError";
-import { FinancialStatement } from "../types/financialStatement";
+import {
+  FinancialStatement,
+  FinancialStatementRow,
+} from "../types/financialStatement";
 
 /**
  * Financial Info Repository
@@ -15,7 +18,7 @@ export class FinancialRepository {
     userId: string,
     targetAmount: number,
     monthlyContribution: number,
-  ): Promise<FinancialGoal> {
+  ): Promise<FinancialGoalRow> {
     try {
       const pool = getDatabase();
       const id = uuidv4();
@@ -126,17 +129,45 @@ export class FinancialRepository {
   }
 
   /**
-   * Financial Goal 조회
+   * Financial Goal(유저 목표) 조회
    */
-  static async getFinancialGoal(userId: string): Promise<FinancialGoal | null> {
+  static async findGoalsByUserId(
+    userId: string,
+  ): Promise<FinancialGoalRow | null> {
     try {
       const pool = getDatabase();
       const [rows] = await pool.query<any[]>(
-        "SELECT * FROM financial_goals WHERE user_id = ? AND name = ? LIMIT 1",
-        [userId, "기본계획"],
+        `SELECT * FROM financial_goals WHERE 
+        user_id = ? ORDER BY created_at DESC`,
+        [userId],
       );
 
       return rows.length > 0 ? rows[0] : null;
+    } catch (error) {
+      throw AppError.fromCode(ErrorCode.INTERNAL_SERVER_ERROR, {
+        originalError: error,
+      });
+    }
+  }
+
+  /**
+   * monthly_finances(월간 재정 상황) 조회
+   */
+  static async findMonthlyFinancesByUserId(userId: string) {
+    try {
+      const pool = getDatabase();
+
+      const [rows] = await pool.query<any[]>(
+        `
+    SELECT *
+    FROM monthly_finances
+    WHERE user_id = ?
+    ORDER BY created_at ASC
+    `,
+        [userId],
+      );
+
+      return rows;
     } catch (error) {
       throw AppError.fromCode(ErrorCode.INTERNAL_SERVER_ERROR, {
         originalError: error,
@@ -149,7 +180,7 @@ export class FinancialRepository {
    */
   static async getFinancialStatement(
     userId: string,
-  ): Promise<FinancialStatement | null> {
+  ): Promise<FinancialStatementRow | null> {
     try {
       const pool = getDatabase();
       const [rows] = await pool.query<any[]>(

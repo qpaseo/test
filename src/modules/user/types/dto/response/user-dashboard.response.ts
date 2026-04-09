@@ -2,6 +2,9 @@
 // Response Types
 // ============================================
 
+import { GetChatRoomsResponse } from "../../../../chat/types/dto/response/chat-rooms.response";
+import { FinancialChatRoomsResponse } from "../../../../chat/types/dto/response/financial-chat-rooms.response";
+
 /**
  * 3.1.1 목표 진척도 (온보딩 질문)
  * 3.1.2 목표 진척도 (재무설계)
@@ -29,29 +32,6 @@ export interface MonthlyFinanceItem {
 }
 
 /**
- * 3.1.4 재무설계표 채팅방
- */
-export interface FinancialStatementChatRoom {
-  id: string;
-  name: string;
-  description: string | null;
-  createdAt: string;
-  updatedAt: string | null;
-}
-
-/**
- * 3.1.4 일반 채팅방 (RAG 기반)
- */
-export interface RAGChatRoom {
-  id: string;
-  name: string;
-  description: string | null;
-  memoryCount: number;
-  createdAt: string;
-  updatedAt: string | null;
-}
-
-/**
  * 유저 대시보드 화면 응답
  */
 export interface UserDashboardResponse {
@@ -67,9 +47,8 @@ export interface UserDashboardResponse {
   // 3.1.4 채팅 목록
   chatRooms: {
     // 재무설계표 채팅 (최근 생성 순)
-    financialStatementChats: FinancialStatementChatRoom[];
+    financialStatementChats: FinancialChatRoomsResponse[];
 
-    // RAG 기반 채팅 (최근 생성 순)
-    ragChats: RAGChatRoom[];
+    chats: GetChatRoomsResponse[];
   };
 }

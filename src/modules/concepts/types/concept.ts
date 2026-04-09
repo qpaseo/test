@@ -1,13 +1,24 @@
 import { RowDataPacket } from "mysql2";
 
-export interface Concept extends RowDataPacket {
+//db 타입
+export interface ConceptRow extends RowDataPacket {
   concept_id: string;
   name: string;
   description: string | null;
   content: string;
-  // JSON 구조 정의: 키는 숫자(문자열 형태), 값은 문자열
-  category: { [key: string]: string } | null;
+  category: string | null;
   document_url: string | null;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Concept {
+  conceptId: string;
+  name: string;
+  description: string | null;
+  content: string;
+  category: { [key: string]: string } | null;
+  documentUrl: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 }

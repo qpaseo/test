@@ -1,4 +1,4 @@
-import { getDatabase } from "../../config/db";
+import { getDatabase } from "../../config/db/db";
 import {
   FinancialStatement,
   ExpenseItem,
@@ -32,19 +32,19 @@ export async function runMonthlyFinancesUpdate(date: Date) {
 
     const latestFS: FinancialStatement = {
       id: "", // 여기선 ID 필요 없으므로 빈 문자열
-      user_id: user.user_id,
-      net_monthly_income: fsRows[0].net_monthly_income,
-      monthly_fixed_expenses: fsRows[0].monthly_fixed_expenses
+      userId: user.user_id,
+      netMonthlyIncome: fsRows[0].net_monthly_income,
+      monthlyFixedExpenses: fsRows[0].monthly_fixed_expenses
         ? (JSON.parse(fsRows[0].monthly_fixed_expenses) as ExpenseItem[])
         : null,
-      monthly_savings_investment: null,
-      created_at: new Date(),
-      updated_at: null,
+      monthlySavingsInvestment: null,
+      createdAt: new Date(),
+      updatedAt: null,
     };
 
     // 3) 월별 고정 지출 합산
     const totalExpense =
-      latestFS.monthly_fixed_expenses?.reduce(
+      latestFS.monthlyFixedExpenses?.reduce(
         (sum, item) => sum + Number(item.money),
         0,
       ) || 0;
@@ -55,10 +55,10 @@ export async function runMonthlyFinancesUpdate(date: Date) {
        (id, user_id, year, month, income, expense, created_at, updated_at)
        VALUES (UUID(), ?, ?, ?, ?, ?, NOW(), NOW())`,
       [
-        latestFS.user_id,
+        latestFS.userId,
         date.getFullYear(),
         date.getMonth() + 1,
-        Number(latestFS.net_monthly_income),
+        Number(latestFS.netMonthlyIncome),
         totalExpense,
       ],
     );
