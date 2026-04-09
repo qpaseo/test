@@ -1,13 +1,14 @@
-import express, { Application, Request, Response, NextFunction } from "express";
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger/swaggerSpec";
 import { ENV } from "./config/env";
-import { AppError, ErrorCode } from "./common/errors/AppError";
+import { ErrorCode } from "./common/errors/AppError";
 import authRoutes from "./modules/auth/routes/authRoutes";
 import { ApiResponse } from "./modules/types/dto/response/basic.response";
+import userRouter from "./modules/user/routes/userRoutes";
 
 const app: Application = express();
 
@@ -32,15 +33,7 @@ if (ENV.SWAGGER_ENABLED) {
 
 // ============= 라우팅 =============
 app.use("/auth", authRoutes);
-
-// ============= 헬스 체크 =============
-app.get("/health", (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    message: "Server is running",
-    timestamp: new Date().toISOString(),
-  });
-});
+app.use("/user", userRouter);
 
 // ============= 404 핸들러 =============
 app.use((req: Request, res: Response) => {
@@ -51,36 +44,5 @@ app.use((req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
   } as ApiResponse);
 });
-
-// ============= 글로벌 에러 핸들러 =============
-app.use(
-  (
-    error: Error | AppError,
-    req: Request,
-    res: Response<ApiResponse>,
-    next: NextFunction,
-  ) => {
-    console.error("Global error handler:", error);
-
-    if (error instanceof AppError) {
-      res.status(error.statusCode).json({
-        success: false,
-        code: error.code,
-        message: error.message,
-        details: error.details,
-        timestamp: new Date().toISOString(),
-      });
-      return;
-    }
-
-    // 예상치 못한 에러
-    res.status(500).json({
-      success: false,
-      code: ErrorCode.INTERNAL_SERVER_ERROR,
-      message: "내부 서버 오류가 발생했습니다",
-      timestamp: new Date().toISOString(),
-    });
-  },
-);
 
 export default app;

@@ -222,7 +222,7 @@ export const authSchemas = {
           name: { type: "string" },
           hasLoan: { type: "boolean" },
           hasStock: { type: "boolean" },
-          recentPlanDate: { type: ["string", "null"] },
+          recentPlanDate: { type: "string" },
           createdAt: { type: "string" },
           updatedAt: { type: "string" },
         },
