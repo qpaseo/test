@@ -2,7 +2,7 @@ import { getDatabase } from "../../config/db";
 import {
   FinancialStatement,
   ExpenseItem,
-} from "../../modules/types/financialStatement";
+} from "../../modules/financial/types/financialStatement";
 import { RowDataPacket } from "mysql2/promise";
 
 /**
