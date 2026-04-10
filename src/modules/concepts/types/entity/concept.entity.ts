@@ -20,5 +20,5 @@ export interface Concept {
   category: { [key: string]: string } | null;
   documentUrl: string | null;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }

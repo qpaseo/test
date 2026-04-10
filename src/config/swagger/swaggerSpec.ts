@@ -1,5 +1,10 @@
 import { swaggerBase } from "./swaggerBase";
 import { authPaths, authSchemas } from "../../modules/auth/swaggerAuthPaths";
+import { userPaths, userSchemas } from "../../modules/user/swaggerUserPaths";
+import {
+  conceptsPaths,
+  conceptsSchemas,
+} from "../../modules/concepts/swaggerConceptsPaths";
 
 // 다른 모듈 추가 예시
 // import { userPaths, userSchemas } from "../../user/swaggerUserPaths";
@@ -10,7 +15,9 @@ export const swaggerSpec = {
   // 기존 paths에 다른 모듈 paths 합치기
   paths: {
     ...swaggerBase.paths,
-    ...authPaths, // Auth 컨트롤러
+    ...authPaths,
+    ...userPaths,
+    ...conceptsPaths,
     // ...userPaths,         // User 모듈 추가 시
     // ...conceptPaths,      // Concept 모듈 추가 시
   },
@@ -19,7 +26,9 @@ export const swaggerSpec = {
     // 기존 schemas에 다른 모듈 schemas 합치기
     schemas: {
       ...swaggerBase.components.schemas,
-      ...authSchemas, // Auth 컨트롤러
+      ...authSchemas,
+      ...userSchemas,
+      ...conceptsSchemas,
       // ...userSchemas,     // User 모듈 추가 시
       // ...conceptSchemas,  // Concept 모듈 추가 시
     },

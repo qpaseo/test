@@ -3,7 +3,7 @@ import { verifyToken } from "../utils/tokenManager";
 import { AppError, ErrorCode } from "../errors/AppError";
 import {
   ApiResponse,
-  AuthRequest,
+  AuthenticatedRequest,
 } from "../../modules/types/dto/response/basic.response";
 
 /**
@@ -11,7 +11,7 @@ import {
  * 액세스 토큰 검증 및 사용자 정보 추출
  */
 export const authMiddleware = (
-  req: AuthRequest,
+  req: AuthenticatedRequest,
   res: Response<ApiResponse>,
   next: NextFunction,
 ): void => {
@@ -73,7 +73,7 @@ export const authMiddleware = (
  * 토큰이 있으면 검증하고, 없어도 진행
  */
 export const optionalAuthMiddleware = (
-  req: AuthRequest,
+  req: AuthenticatedRequest,
   res: Response<ApiResponse>,
   next: NextFunction,
 ): void => {

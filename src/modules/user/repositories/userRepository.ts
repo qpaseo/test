@@ -5,7 +5,7 @@
 import { AppError, ErrorCode } from "../../../common/errors/AppError";
 import { getDatabase } from "../../../config/db/db";
 import { UserRow } from "../types/entity/user.entity";
-import { CreateUserInput } from "./types";
+import { CreateUserInput } from "../types/internal";
 
 
 /**

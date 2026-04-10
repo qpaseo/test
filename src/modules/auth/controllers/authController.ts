@@ -13,7 +13,7 @@ import {
 } from "../../../common/utils/tokenManager";
 import {
   ApiResponse,
-  AuthRequest,
+  AuthenticatedRequest,
 } from "../../types/dto/response/basic.response";
 import { handleAuthError } from "../../../common/errors/HandleAuthError";
 
@@ -26,7 +26,7 @@ export class AuthController {
    * POST /auth/sign-up
    */
   static async signUp(
-    req: AuthRequest,
+    req: AuthenticatedRequest,
     res: Response<ApiResponse>,
   ): Promise<void> {
     try {
@@ -53,7 +53,7 @@ export class AuthController {
    * POST /auth/login
    */
   static async login(
-    req: AuthRequest,
+    req: AuthenticatedRequest,
     res: Response<ApiResponse>,
   ): Promise<void> {
     try {
@@ -80,7 +80,7 @@ export class AuthController {
    * POST /auth/refresh
    */
   static async refreshToken(
-    req: AuthRequest,
+    req: AuthenticatedRequest,
     res: Response<ApiResponse>,
   ): Promise<void> {
     try {
@@ -115,7 +115,7 @@ export class AuthController {
    * POST /auth/logout
    */
   static async logout(
-    req: AuthRequest,
+    req: AuthenticatedRequest,
     res: Response<ApiResponse>,
   ): Promise<void> {
     try {

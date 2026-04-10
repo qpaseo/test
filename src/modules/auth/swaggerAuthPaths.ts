@@ -208,28 +208,6 @@ export const authSchemas = {
       timestamp: { type: "string" },
     },
   },
-  UserInfoResponse: {
-    type: "object",
-    properties: {
-      success: { type: "boolean" },
-      code: { type: "string" },
-      message: { type: "string" },
-      data: {
-        type: "object",
-        properties: {
-          userId: { type: "string" },
-          email: { type: "string" },
-          name: { type: "string" },
-          hasLoan: { type: "boolean" },
-          hasStock: { type: "boolean" },
-          recentPlanDate: { type: "string" },
-          createdAt: { type: "string" },
-          updatedAt: { type: "string" },
-        },
-      },
-      timestamp: { type: "string" },
-    },
-  },
   RefreshTokenResponse: {
     type: "object",
     properties: {
