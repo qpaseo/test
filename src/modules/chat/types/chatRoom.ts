@@ -1,6 +1,4 @@
-import { RowDataPacket } from "mysql2";
-
-export interface ChatRoomRow extends RowDataPacket {
+export interface ChatRoomRow {
   id: string;
   memory_count: number;
   name: string;

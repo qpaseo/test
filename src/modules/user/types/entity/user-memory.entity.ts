@@ -1,12 +1,10 @@
-import { RowDataPacket } from "mysql2";
-
 export interface UserMemoryContent {
   memory: string;
   important_information: string;
 }
 
 //db 타입
-export interface UserMemoryRow extends RowDataPacket {
+export interface UserMemoryRow {
   id: string;
   user_id: string;
   content: string;

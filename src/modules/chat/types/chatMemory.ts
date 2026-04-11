@@ -1,6 +1,4 @@
-import { RowDataPacket } from "mysql2/promise";
-
-export interface ChatMemoryRow extends RowDataPacket {
+export interface ChatMemoryRow {
   id: string;
   chat_room_id: string;
   content: string;

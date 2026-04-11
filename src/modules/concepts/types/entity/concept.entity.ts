@@ -1,7 +1,5 @@
-import { RowDataPacket } from "mysql2";
-
 //db 타입
-export interface ConceptRow extends RowDataPacket {
+export interface ConceptRow {
   concept_id: string;
   name: string;
   description: string | null;

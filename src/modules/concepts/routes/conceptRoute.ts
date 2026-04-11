@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Pool } from "mysql2/promise";
+import { Pool } from "pg";
 import { ConceptRepository } from "../repositories/conceptsRepository";
 import { ConceptService } from "../services/conceptService";
 import { ConceptController } from "../controllers/conceptController";

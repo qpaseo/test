@@ -1,9 +1,8 @@
-import { RowDataPacket } from "mysql2";
 
 export type FinancialChatSender = "USER" | "AI";
 
 //db 타입
-export interface FinancialStatementChatMessageRow extends RowDataPacket {
+export interface FinancialStatementChatMessageRow  {
   id: string;
   financial_statement_chat_room_id: string;
   sender: string;

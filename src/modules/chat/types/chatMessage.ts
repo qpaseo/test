@@ -1,8 +1,6 @@
-import { RowDataPacket } from "mysql2/promise";
-
 export type ChatSender = "USER" | "AI";
 
-export interface ChatMessageRow extends RowDataPacket {
+export interface ChatMessageRow  {
   id: string;
   chat_room_id: string;
   sender: string;

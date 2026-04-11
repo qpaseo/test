@@ -1,12 +1,10 @@
-import { RowDataPacket } from "mysql2";
-
 export interface ExpenseItem {
   name: string;
   money: string;
 }
 
 //db 타입
-export interface FinancialStatementRow extends RowDataPacket {
+export interface FinancialStatementRow {
   id: string;
   user_id: string;
   net_monthly_income: number;

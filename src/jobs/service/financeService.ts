@@ -3,39 +3,36 @@ import {
   FinancialStatement,
   ExpenseItem,
 } from "../../modules/financial/types/financialStatement";
-import { RowDataPacket } from "mysql2/promise";
 
-/**
- * 특정 날짜 기준으로 모든 유저의 월별 재무 정보를 업데이트
- * 1) financial_statements에서 유니크한 user_id 조회
- * 2) 각 유저의 최신 financial statement 조회
- * 3) 월별 고정 지출 합산 후 monthly_finances 테이블에 삽입
- * @param date 업데이트 기준 날짜
- */
 export async function runMonthlyFinancesUpdate(date: Date) {
   const db = getDatabase();
 
   // 1) DISTINCT user_id 가져오기
-  const [usersRows] = await db.query<RowDataPacket[]>(
+  const usersResult = await db.query<{ user_id: string }>(
     "SELECT DISTINCT user_id FROM financial_statements",
   );
-  const users = usersRows as { user_id: string }[];
+  const users = usersResult.rows;
 
   for (const user of users) {
     // 2) 최신 financial statement 가져오기
-    const [fsRows] = await db.query<RowDataPacket[]>(
-      "SELECT net_monthly_income, monthly_fixed_expenses FROM financial_statements WHERE user_id = ? ORDER BY created_at DESC LIMIT 1",
+    const fsResult = await db.query<{
+      net_monthly_income: number;
+      monthly_fixed_expenses: string;
+    }>(
+      "SELECT net_monthly_income, monthly_fixed_expenses FROM financial_statements WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1",
       [user.user_id],
     );
 
-    if (!fsRows[0]) continue;
+    if (!fsResult.rows[0]) continue;
+
+    const row = fsResult.rows[0];
 
     const latestFS: FinancialStatement = {
-      id: "", // 여기선 ID 필요 없으므로 빈 문자열
+      id: "",
       userId: user.user_id,
-      netMonthlyIncome: fsRows[0].net_monthly_income,
-      monthlyFixedExpenses: fsRows[0].monthly_fixed_expenses
-        ? (JSON.parse(fsRows[0].monthly_fixed_expenses) as ExpenseItem[])
+      netMonthlyIncome: row.net_monthly_income,
+      monthlyFixedExpenses: row.monthly_fixed_expenses
+        ? (row.monthly_fixed_expenses as unknown as ExpenseItem[]) // pg는 JSONB 자동 파싱
         : null,
       monthlySavingsInvestment: null,
       createdAt: new Date(),
@@ -53,7 +50,7 @@ export async function runMonthlyFinancesUpdate(date: Date) {
     await db.query(
       `INSERT INTO monthly_finances 
        (id, user_id, year, month, income, expense, created_at, updated_at)
-       VALUES (UUID(), ?, ?, ?, ?, ?, NOW(), NOW())`,
+       VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, NOW(), NOW())`,
       [
         latestFS.userId,
         date.getFullYear(),

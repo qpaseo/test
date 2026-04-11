@@ -1,4 +1,4 @@
-import { Pool } from "mysql2/promise";
+import { Pool } from "pg";
 import { ConceptRow } from "../types/entity/concept.entity";
 
 const PAGE_SIZE = 12;
@@ -9,31 +9,33 @@ export class ConceptRepository {
   async findAll(page: number): Promise<{ rows: ConceptRow[]; total: number }> {
     const offset = (page - 1) * PAGE_SIZE;
 
-    const [[countResult], [rows]] = await Promise.all([
-      this.pool.execute<any[]>("SELECT COUNT(*) AS total FROM concepts"),
-      this.pool.execute<ConceptRow[]>(
+    const [countResult, rowsResult] = await Promise.all([
+      this.pool.query<{ total: string }>(
+        "SELECT COUNT(*) AS total FROM concepts",
+      ),
+      this.pool.query<ConceptRow>(
         `SELECT concept_id, name, description, category, created_at
          FROM concepts
          ORDER BY created_at DESC
-         LIMIT ? OFFSET ?`,
+         LIMIT $1 OFFSET $2`,
         [PAGE_SIZE, offset],
       ),
     ]);
 
     return {
-      rows,
-      total: countResult[0].total as number,
+      rows: rowsResult.rows,
+      total: parseInt(countResult.rows[0].total, 10),
     };
   }
 
   async findById(conceptId: string): Promise<ConceptRow | null> {
-    const [rows] = await this.pool.execute<ConceptRow[]>(
+    const result = await this.pool.query<ConceptRow>(
       `SELECT concept_id, name, description, content, category, document_url, created_at
        FROM concepts
-       WHERE concept_id = ?`,
+       WHERE concept_id = $1`,
       [conceptId],
     );
 
-    return rows[0] ?? null;
+    return result.rows[0] ?? null;
   }
 }
