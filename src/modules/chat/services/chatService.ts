@@ -23,7 +23,7 @@ import { ChatMemoryRepository } from "../repositories/chatMemoryRepository";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const MEMORY_TRIGGER_COUNT = 20;
+//const MEMORY_TRIGGER_COUNT = 20;
 
 // ─── Row → Entity ─────────────────────────────────────────
 
@@ -125,7 +125,7 @@ export class ChatService {
   }
 
   async getRagChatRooms(userId: string) {
-    const rows = await this.roomRepo.findChatRoomsWithFirstMessage(userId);
+    const rows = await this.roomRepo.findChatRoomsWithLastMessage(userId);
 
     return rows.map((row) => ({
       id: row.id,
@@ -199,7 +199,7 @@ export class ChatService {
       room = await this.roomRepo.findRoomById(roomId);
     }
 
-    if (!room || room.user_id !== userId) {
+    if (room == null || room.user_id !== userId) {
       throw new Error("권한 없음");
     }
 
@@ -207,7 +207,7 @@ export class ChatService {
 
     await this.messageRepo.createMessage({
       chatRoomId: roomId,
-      sender: "user",
+      sender: "USER",
       content: userMessage,
       messageIndex: nextIndex,
     });
@@ -247,7 +247,7 @@ export class ChatService {
 
     await this.messageRepo.createMessage({
       chatRoomId: roomId,
-      sender: "ai",
+      sender: "AI",
       content: finalContent,
       messageIndex: aiIndex,
     });

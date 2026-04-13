@@ -9,8 +9,9 @@ import {
 } from "../../types/dto/response/basic.response";
 import { UserDashboardResponse } from "../types/dto/response/user-dashboard.response";
 import { FinancialService } from "../../financial/services/FinancialService";
-import { ChatService } from "../../chat/services/chatService";
 import { handleAuthError } from "../../../common/errors/HandleAuthError";
+import { ChatService } from "../../chat/services/chatService";
+import { FsChatService } from "../../chat/services/financialChatService";
 
 export class UserController {
   /**
@@ -53,11 +54,11 @@ export class UserController {
         throw AppError.fromCode(ErrorCode.UNAUTHORIZED);
       }
 
-      const [goals, finances, financialChats, ragChats] = await Promise.all([
+      const [goals, finances, financialChats, Chats] = await Promise.all([
         FinancialService.getGoals(req.userId),
         FinancialService.getMonthlyFinances(req.userId),
-        FinancialChatService.getFinancialChatRooms(req.userId),
-        ChatService.getRagChatRooms(req.userId),
+        FsChatService.getFinancialChatRoomsWithLastMessage(req.userId),
+        ChatService.(req.userId),
       ]);
 
       const result = {
@@ -65,7 +66,7 @@ export class UserController {
         monthlyFinances: finances,
         chatRooms: {
           financialStatementChats: financialChats,
-          chats: ragChats,
+          chats: Chats,
         },
       };
 

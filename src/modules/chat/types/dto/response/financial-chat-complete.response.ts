@@ -1,5 +1,5 @@
-import { FinancialStatementResponse } from "./financial-statement.response";
+import { FsResponse } from "./financial-statement.response";
 
 export interface FsChatCompleteResponse {
-  statement: FinancialStatementResponse;
+  statement: FsResponse;
 }

@@ -1,9 +1,42 @@
 import { Pool } from "pg";
 import { CreateChatRoomInput } from "../types/internal";
-import { ChatRoomRow } from "../types/entity/chat-room.entity";
+import {
+  ChatRoomRow,
+  ChatRoomWithLastMessage,
+} from "../types/entity/chat-room.entity";
 
 export class ChatRoomRepository {
   constructor(private readonly db: Pool) {}
+
+  /**
+   * 일반 채팅방 조회 + 마지막 메세지
+   * @param userId
+   * @returns
+   */
+  async findChatRoomsWithLastMessage(
+    userId: string,
+  ): Promise<ChatRoomWithLastMessage[]> {
+    const { rows } = await this.db.query(
+      `
+        SELECT 
+          r.*,
+          m.content AS last_message
+        FROM chat_rooms r
+        LEFT JOIN LATERAL (
+          SELECT content
+          FROM chat_messages m
+          WHERE m.chat_room_id = r.id
+          ORDER BY m.created_at DESC
+          LIMIT 1
+        ) m ON true
+        WHERE r.user_id = $1
+        ORDER BY r.created_at DESC;
+      `,
+      [userId],
+    );
+
+    return rows;
+  }
 
   async findRoomsByUserId(
     userId: string,

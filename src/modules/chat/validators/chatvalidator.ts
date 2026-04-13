@@ -18,5 +18,9 @@ export const ChatMessageBodySchema = z.object({
   roomId: z.string().uuid().optional(), // 없으면 서버에서 신규 생성
 });
 
+export const ChatRoomParamsSchema = z.object({
+  roomId: z.string().uuid(),
+});
+
 export type ChatRoomListQuery = z.infer<typeof ChatRoomListQuerySchema>;
 export type ChatMessageBody = z.infer<typeof ChatMessageBodySchema>;

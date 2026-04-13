@@ -15,13 +15,14 @@ import { FsChatRoomListResponse } from "../types/dto/response/financial-chat-roo
 import {
   FsChatMessageBodySchema,
   FsChatRoomListQuerySchema,
+  FsChatRoomParamsSchema,
 } from "../validators/fschatvalidator";
 import { handleAuthError } from "../../../common/errors/HandleAuthError";
 import { FsChatRoomDetailResponse } from "../types/dto/response/financial-chat-room-detail.response";
 import { FsChatCompleteResponse } from "../types/dto/response/financial-chat-complete.response";
 
 export class FsChatController {
-  private fsChatService: FsChatService;
+  private readonly fsChatService: FsChatService;
 
   constructor(db: Pool) {
     this.fsChatService = new FsChatService(db);
@@ -61,9 +62,12 @@ export class FsChatController {
   ): Promise<void> => {
     try {
       const userId = req.userId!;
-      const { roomId } = req.params;
+      const parsed = FsChatRoomParamsSchema.parse(req.params);
 
-      const result = await this.fsChatService.getRoomDetail(roomId, userId);
+      const result = await this.fsChatService.getRoomDetail(
+        parsed.roomId,
+        userId,
+      );
 
       res.status(200).json({
         success: true,
@@ -90,7 +94,7 @@ export class FsChatController {
 
       await this.fsChatService.streamChat(targetRoomId, userId, message, res);
     } catch (error) {
-      if (!res.headersSent) {
+      if (res.headersSent === false) {
         handleAuthError(error, res);
       } else {
         res.write(
@@ -111,7 +115,8 @@ export class FsChatController {
   ): Promise<void> => {
     try {
       const userId = req.userId!;
-      const { roomId } = req.params;
+
+      const { roomId } = FsChatRoomParamsSchema.parse(req.params);
 
       const result = await this.fsChatService.completeAndCreateStatement(
         roomId,

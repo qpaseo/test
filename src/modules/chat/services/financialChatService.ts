@@ -19,6 +19,7 @@ import { FsChatMessageResponse } from "../types/dto/response/financial-chat-mess
 import { ChatSender } from "../types/internal";
 import { FinancialChatMessageRepository } from "../repositories/financialChatMessageRepository";
 import { FinancialChatRoomRepository } from "../repositories/financialChatRoomRepository";
+import { FsChatRoomWithLastMessage } from "../types/dto/response/financial-chat-last-message.response";
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // ─── Row → Entity ─────────────────────────────────
@@ -90,6 +91,12 @@ export class FsChatService {
     this.fsRoomRepo = new FinancialChatRoomRepository(db);
     this.toolRepo = new ChatToolRepository(db);
     this.toolHandler = new FsChatToolHandler(db);
+  }
+
+  async getFinancialChatRoomsWithLastMessage(
+    userId: string,
+  ): Promise<FsChatRoomWithLastMessage[]> {
+    return this.fsRoomRepo.findFinancialChatRoomsWithLastMessage(userId);
   }
 
   async getRoomList(

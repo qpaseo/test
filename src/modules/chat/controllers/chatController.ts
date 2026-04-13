@@ -19,6 +19,7 @@ import {
 import {
   ChatMessageBodySchema,
   ChatRoomListQuerySchema,
+  ChatRoomParamsSchema,
 } from "../validators/chatvalidator";
 
 export class ChatController {
@@ -58,7 +59,8 @@ export class ChatController {
   ): Promise<void> => {
     try {
       const userId = req.userId!;
-      const { roomId } = req.params;
+
+      const { roomId } = ChatRoomParamsSchema.parse(req.params);
 
       const result = await this.chatService.getRoomDetail(roomId, userId);
 
@@ -108,7 +110,8 @@ export class ChatController {
   ): Promise<void> => {
     try {
       const userId = req.userId!;
-      const { roomId } = req.params;
+
+      const { roomId } = ChatRoomParamsSchema.parse(req.params);
 
       await this.chatService.deleteRoom(roomId, userId);
 

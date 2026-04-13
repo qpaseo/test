@@ -1,5 +1,6 @@
 // 상세 조회: concept_id · updated_at 제외, 나머지 전부
 export interface ConceptDetailResponse {
+  id: string;
   name: string;
   description: string | null;
   content: string;

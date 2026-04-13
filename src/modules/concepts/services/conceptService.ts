@@ -39,6 +39,7 @@ export class ConceptService {
 
   private toDetailDto(entity: Concept): ConceptDetailResponse {
     return {
+      id: entity.conceptId,
       name: entity.name,
       description: entity.description,
       content: entity.content,
