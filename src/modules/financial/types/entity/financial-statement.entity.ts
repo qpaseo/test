@@ -10,6 +10,7 @@ export interface FinancialStatementRow {
   net_monthly_income: number;
   monthly_fixed_expenses: ExpenseItem[] | null; // JSONB 자동 파싱
   monthly_savings_investment: ExpenseItem[] | null; // JSONB 자동 파싱
+  info: string;
   created_at: string;
   updated_at: string | null;
 }

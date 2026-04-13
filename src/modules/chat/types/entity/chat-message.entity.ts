@@ -1,4 +1,5 @@
-export type ChatSender = "USER" | "AI";
+import { ChatSender } from "../internal";
+
 
 export interface ChatMessageRow  {
   id: string;
@@ -7,7 +8,7 @@ export interface ChatMessageRow  {
   content: string;
   message_index: number;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
 }
 
 export interface ChatMessage {
@@ -17,5 +18,5 @@ export interface ChatMessage {
   content: string;
   messageIndex: number;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }

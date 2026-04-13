@@ -10,7 +10,6 @@ import {
 import { UserDashboardResponse } from "../types/dto/response/user-dashboard.response";
 import { FinancialService } from "../../financial/services/FinancialService";
 import { ChatService } from "../../chat/services/chatService";
-import { FinancialChatService } from "../../chat/services/financialChatService";
 import { handleAuthError } from "../../../common/errors/HandleAuthError";
 
 export class UserController {
@@ -69,7 +68,7 @@ export class UserController {
           chats: ragChats,
         },
       };
-      
+
       res.status(200).json({
         success: true,
         code: "GET_USER_INFO_SUCCESS",

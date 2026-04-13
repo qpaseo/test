@@ -2,6 +2,7 @@
   "compilerOptions": {
     // 언어 및 환경
     "target": "ES2020",
+    "types": ["node", "express", "multer"],
     "module": "commonjs",
     "lib": ["ES2020"],
     "declaration": true,

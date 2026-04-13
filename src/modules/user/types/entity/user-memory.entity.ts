@@ -9,7 +9,7 @@ export interface UserMemoryRow {
   user_id: string;
   content: UserMemoryContent;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
 }
 
 // 서비스에서 변환
@@ -18,5 +18,5 @@ export interface UserMemory {
   userId: string;
   content: UserMemoryContent;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }

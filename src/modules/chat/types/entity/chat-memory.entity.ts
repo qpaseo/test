@@ -5,7 +5,7 @@ export interface ChatMemoryRow {
   start_index: number;
   end_index: number;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
 }
 
 export interface ChatMemory {
@@ -15,5 +15,5 @@ export interface ChatMemory {
   startIndex: number;
   endIndex: number;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }

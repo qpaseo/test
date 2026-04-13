@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import { UserRepository } from "../repositories/userRepository";
 import { UserMemoryRepository } from "../repositories/userMemoryRepository";
 import { AppError, ErrorCode } from "../../../common/errors/AppError";
@@ -51,10 +50,7 @@ export class UserService {
     hasLoan: boolean;
     hasStock: boolean;
   }) {
-    const userId = uuidv4();
-
     const createUserInput: CreateUserInput = {
-      id: userId,
       name: input.name,
       email: input.email,
       password: input.password,

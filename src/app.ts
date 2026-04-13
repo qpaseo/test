@@ -9,6 +9,7 @@ import { ErrorCode } from "./common/errors/AppError";
 import authRoutes from "./modules/auth/routes/authRoutes";
 import { ApiResponse } from "./modules/types/dto/response/basic.response";
 import userRouter from "./modules/user/routes/userRoutes";
+import ragRouter from "./modules/rag/routes/ragRoutes";
 
 const app: Application = express();
 
@@ -34,6 +35,7 @@ if (ENV.SWAGGER_ENABLED) {
 // ============= 라우팅 =============
 app.use("/auth", authRoutes);
 app.use("/user", userRouter);
+app.use("/rag", ragRouter);
 
 // ============= 404 핸들러 =============
 app.use((req: Request, res: Response) => {

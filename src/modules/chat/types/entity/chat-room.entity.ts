@@ -6,7 +6,7 @@ export interface ChatRoomRow {
   description: string | null;
   user_id: string;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
 }
 
 // JOIN 쿼리 결과 타입
@@ -21,5 +21,5 @@ export interface ChatRoom {
   description: string | null;
   userId: string;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }
