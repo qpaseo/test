@@ -1,4 +1,4 @@
-//(db 타입)
+//db 타입
 export interface FinancialStatementChatRoomRow {
   id: string;
   user_id: string;
@@ -6,6 +6,11 @@ export interface FinancialStatementChatRoomRow {
   description: string | null;
   created_at: string;
   updated_at: string | null;
+}
+
+// JOIN 쿼리 결과 타입
+export interface FinancialStatementChatRoomWithLastMessage extends FinancialStatementChatRoomRow {
+  last_message: string | null;
 }
 
 export interface FinancialStatementChatRoom {

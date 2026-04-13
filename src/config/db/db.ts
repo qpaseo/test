@@ -12,11 +12,11 @@ export const initializeDatabase = async (): Promise<Pool> => {
 
     // 연결 테스트용 임시 연결
     const testPool = new Pool({
-      host: ENV.DB_HOST,
-      port: ENV.DB_PORT,
-      user: ENV.DB_USER,
-      password: ENV.DB_PASSWORD,
-      database: ENV.DB_NAME,
+      host: ENV.PG_HOST,
+      port: ENV.PG_PORT,
+      user: ENV.PG_USER,
+      password: ENV.PG_PASSWORD,
+      database: ENV.PG_NAME,
     });
 
     const client = await testPool.connect();
@@ -25,11 +25,11 @@ export const initializeDatabase = async (): Promise<Pool> => {
 
     // 실제 사용할 풀 생성
     pool = new Pool({
-      host: ENV.DB_HOST,
-      port: ENV.DB_PORT,
-      user: ENV.DB_USER,
-      password: ENV.DB_PASSWORD,
-      database: ENV.DB_NAME,
+      host: ENV.PG_HOST,
+      port: ENV.PG_PORT,
+      user: ENV.PG_USER,
+      password: ENV.PG_PASSWORD,
+      database: ENV.PG_NAME,
       max: 10, // connectionLimit 대응
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,

@@ -5,55 +5,53 @@ import {
   ConceptListItemResponse,
   ConceptListResponse,
 } from "../types/dto/response/concept-list.response";
-import { Concept, ConceptRow } from "../types/entity/concept.entity";
+import {
+  Concept,
+  ConceptRow,
+  ConceptSummaryRow,
+} from "../types/entity/concept.entity";
 
 export class ConceptService {
   constructor(private readonly conceptRepository: ConceptRepository) {}
 
-  // ── Row → Entity ──────────────────────────────────────────────
   private toEntity(row: ConceptRow): Concept {
     return {
       conceptId: row.concept_id,
       name: row.name,
       description: row.description,
       content: row.content,
-      category: row.category
-        ? (JSON.parse(row.category) as Record<string, string>)
-        : null,
+      category: row.category,
       documentUrl: row.document_url,
       createdAt: new Date(row.created_at),
       updatedAt: row.updated_at ? new Date(row.updated_at) : null,
     };
   }
 
-  // ── Entity → DTO (list item) ──────────────────────────────────
-  private toListItemDto(entity: Concept): ConceptListItemResponse {
+  private toListItemDto(row: ConceptSummaryRow): ConceptListItemResponse {
     return {
-      conceptId: entity.conceptId,
-      name: entity.name,
-      description: entity.description,
-      category: entity.category ? Object.values(entity.category) : [],
-      createdAt: entity.createdAt.toISOString(),
+      conceptId: row.concept_id,
+      name: row.name,
+      description: row.description,
+      category: row.category ?? [],
+      createdAt: row.created_at,
     };
   }
 
-  // ── Entity → DTO (detail) ─────────────────────────────────────
   private toDetailDto(entity: Concept): ConceptDetailResponse {
     return {
       name: entity.name,
       description: entity.description,
       content: entity.content,
-      category: entity.category ? Object.values(entity.category) : [],
+      category: entity.category ?? [],
       documentUrl: entity.documentUrl,
       createdAt: entity.createdAt.toISOString(),
     };
   }
 
-  // ── 리스트 조회 (12개 페이지네이션) ──────────────────────────
   async getConceptList(page: number): Promise<ConceptListResponse> {
     const { rows, total } = await this.conceptRepository.findAll(page);
 
-    const items = rows.map((row) => this.toListItemDto(this.toEntity(row)));
+    const items = rows.map((row) => this.toListItemDto(row));
 
     return {
       items,
@@ -63,7 +61,6 @@ export class ConceptService {
     };
   }
 
-  // ── 상세 조회 ────────────────────────────────────────────────
   async getConceptById(conceptId: string): Promise<ConceptDetailResponse> {
     const row = await this.conceptRepository.findById(conceptId);
 

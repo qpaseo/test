@@ -3,18 +3,18 @@ export interface ExpenseItem {
   money: string;
 }
 
-//db 타입
+// db 타입
 export interface FinancialStatementRow {
   id: string;
   user_id: string;
   net_monthly_income: number;
-  monthly_fixed_expenses: string | null;
-  monthly_savings_investment: string | null;
+  monthly_fixed_expenses: ExpenseItem[] | null; // JSONB 자동 파싱
+  monthly_savings_investment: ExpenseItem[] | null; // JSONB 자동 파싱
   created_at: string;
   updated_at: string | null;
 }
 
-//서비스 변환
+// 서비스 변환
 export interface FinancialStatement {
   id: string;
   userId: string;

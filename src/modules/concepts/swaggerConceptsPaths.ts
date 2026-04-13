@@ -1,119 +1,94 @@
-export const conceptsPaths = {
-  "/concepts": {
-    get: {
-      summary: "컨셉 리스트 조회",
-      tags: ["Concepts"],
-      security: [{ bearerAuth: [] }],
-      parameters: [
-        {
-          in: "query",
-          name: "page",
-          schema: { type: "integer", default: 1 },
-          description: "페이지 번호 (1부터 시작)",
-        },
-      ],
-      responses: {
-        "200": {
-          description: "컨셉 리스트 조회 성공",
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/ConceptListResponse" },
-            },
-          },
-        },
-        "400": { description: "입력값 검증 실패" },
-        "401": { description: "인증 필요" },
-      },
+export const userSchemas = {
+  UserInfoResponse: {
+    type: "object",
+    properties: {
+      userId: { type: "string", example: "uuid" },
+      email: { type: "string", example: "test@test.com" },
+      name: { type: "string", example: "홍길동" },
+      hasLoan: { type: "boolean", example: true },
+      hasStock: { type: "boolean", example: false },
+      recentPlanDate: { type: ["string", "null"], format: "date-time" },
+      createdAt: { type: "string", format: "date-time" },
+      updatedAt: { type: "string", format: "date-time" },
     },
   },
-  "/concepts/{id}": {
-    get: {
-      summary: "컨셉 상세 조회",
-      tags: ["Concepts"],
-      security: [{ bearerAuth: [] }],
-      parameters: [
-        {
-          in: "path",
-          name: "id",
-          required: true,
-          schema: { type: "string", format: "uuid" },
-          description: "컨셉 UUID",
-        },
-      ],
-      responses: {
-        "200": {
-          description: "컨셉 상세 조회 성공",
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/ConceptDetailResponse" },
-            },
-          },
-        },
-        "400": { description: "유효하지 않은 UUID" },
-        "401": { description: "인증 필요" },
-        "404": { description: "컨셉 없음" },
-      },
-    },
-  },
-};
 
-export const conceptsSchemas = {
-  ConceptListResponse: {
+  GoalProgressItem: {
     type: "object",
     properties: {
-      success: { type: "boolean" },
-      code: { type: "string" },
-      message: { type: "string" },
-      data: {
-        type: "object",
-        properties: {
-          items: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                conceptId: { type: "string", format: "uuid" },
-                name: { type: "string" },
-                description: { type: "string", nullable: true },
-                category: {
-                  type: "array",
-                  items: { type: "string" },
-                  nullable: true,
-                },
-                createdAt: { type: "string", format: "date-time" },
-              },
-            },
-          },
-          total: { type: "integer" },
-          page: { type: "integer" },
-          totalPages: { type: "integer" },
-        },
-      },
-      timestamp: { type: "string" },
+      id: { type: "string" },
+      name: { type: "string" },
+      description: { type: ["string", "null"] },
+      targetAmount: { type: "number" },
+      currentAmount: { type: "number" },
+      progressPercentage: { type: "number" },
+      monthlyContribution: { type: "number" },
+      startDate: { type: ["string", "null"] },
+      endDate: { type: ["string", "null"] },
     },
   },
-  ConceptDetailResponse: {
+
+  MonthlyFinanceItem: {
     type: "object",
     properties: {
-      success: { type: "boolean" },
-      code: { type: "string" },
-      message: { type: "string" },
-      data: {
+      year: { type: "integer" },
+      month: { type: "integer" },
+      income: { type: "number" },
+      expense: { type: "number" },
+    },
+  },
+
+  FinancialStatementChatRoom: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      name: { type: "string" },
+      description: { type: ["string", "null"] },
+      lastMessage: { type: ["string", "null"] },
+      createdAt: { type: "string", format: "date-time" },
+    },
+  },
+
+  RagChatRoom: {
+    type: "object",
+    properties: {
+      id: { type: "string" },
+      name: { type: "string" },
+      description: { type: ["string", "null"] },
+      lastMessage: { type: ["string", "null"] },
+      createdAt: { type: "string", format: "date-time" },
+      updatedAt: { type: ["string", "null"], format: "date-time" },
+    },
+  },
+
+  UserDashboardResponse: {
+    type: "object",
+    properties: {
+      onboardingGoals: {
+        type: "array",
+        items: { $ref: "#/components/schemas/GoalProgressItem" },
+      },
+      financialPlansGoals: {
+        type: "array",
+        items: { $ref: "#/components/schemas/GoalProgressItem" },
+      },
+      monthlyFinances: {
+        type: "array",
+        items: { $ref: "#/components/schemas/MonthlyFinanceItem" },
+      },
+      chatRooms: {
         type: "object",
         properties: {
-          name: { type: "string" },
-          description: { type: "string", nullable: true },
-          content: { type: "string" },
-          category: {
+          financialStatementChats: {
             type: "array",
-            items: { type: "string" },
-            nullable: true,
+            items: { $ref: "#/components/schemas/FinancialStatementChatRoom" },
           },
-          documentUrl: { type: "string", nullable: true },
-          createdAt: { type: "string", format: "date-time" },
+          chats: {
+            type: "array",
+            items: { $ref: "#/components/schemas/RagChatRoom" },
+          },
         },
       },
-      timestamp: { type: "string" },
     },
   },
 };

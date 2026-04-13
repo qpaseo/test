@@ -1,19 +1,21 @@
 import { Pool } from "pg";
-import { ConceptRow } from "../types/entity/concept.entity";
+import { ConceptRow, ConceptSummaryRow } from "../types/entity/concept.entity";
 
 const PAGE_SIZE = 12;
 
 export class ConceptRepository {
   constructor(private readonly pool: Pool) {}
 
-  async findAll(page: number): Promise<{ rows: ConceptRow[]; total: number }> {
+  async findAll(
+    page: number,
+  ): Promise<{ rows: ConceptSummaryRow[]; total: number }> {
     const offset = (page - 1) * PAGE_SIZE;
 
     const [countResult, rowsResult] = await Promise.all([
       this.pool.query<{ total: string }>(
         "SELECT COUNT(*) AS total FROM concepts",
       ),
-      this.pool.query<ConceptRow>(
+      this.pool.query<ConceptSummaryRow>(
         `SELECT concept_id, name, description, category, created_at
          FROM concepts
          ORDER BY created_at DESC
@@ -24,7 +26,7 @@ export class ConceptRepository {
 
     return {
       rows: rowsResult.rows,
-      total: parseInt(countResult.rows[0].total, 10),
+      total: Number.parseInt(countResult.rows[0].total, 10),
     };
   }
 

@@ -4,18 +4,20 @@ import { FinancialChatRoomsResponse } from "../types/dto/response/financial-chat
 export class FinancialChatService {
   static async getFinancialChatRooms(
     userId: string,
-  ): Promise<FinancialChatRoomsResponse[]> {
-    const rows =
+  ): Promise<FinancialChatRoomsResponse | null> {
+    const row =
       await FinancialChatRoomRepository.findFinancialChatRoomsWithFirstMessage(
         userId,
       );
 
-    return rows.map((row) => ({
+    if (!row) return null;
+
+    return {
       id: row.id,
       name: row.name,
       description: row.description,
-      firstMessage: row.first_message,
+      lastMessage: row.last_message,
       createdAt: new Date(row.created_at),
-    }));
+    };
   }
 }

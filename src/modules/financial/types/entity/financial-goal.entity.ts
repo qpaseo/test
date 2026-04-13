@@ -13,6 +13,10 @@ export interface FinancialGoalRow {
   updated_at: string;
 }
 
+export interface FinancialGoalWithProgressRow extends FinancialGoalRow {
+  progress_percentage: string; // numeric → string으로 내려옴
+}
+
 //서비스에서 변환
 export interface FinancialGoal {
   id: string;
@@ -26,4 +30,8 @@ export interface FinancialGoal {
   endDate: Date | null;
   createdAt: Date;
   updatedAt: Date | null;
+}
+
+export interface FinancialGoalWithProgress extends FinancialGoal {
+  progressPercentage: number;
 }

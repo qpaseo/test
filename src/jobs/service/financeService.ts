@@ -2,7 +2,7 @@ import { getDatabase } from "../../config/db/db";
 import {
   FinancialStatement,
   ExpenseItem,
-} from "../../modules/financial/types/financialStatement";
+} from "../../modules/financial/types/entity/financial-statement.entity";
 
 export async function runMonthlyFinancesUpdate(date: Date) {
   const db = getDatabase();

@@ -17,7 +17,6 @@ export const userPaths = {
                   code: { type: "string", example: "GET_USER_INFO_SUCCESS" },
                   message: {
                     type: "string",
-                    example: "사용자 정보 조회가 완료되었습니다",
                   },
                   data: {
                     type: "object",
@@ -187,11 +186,7 @@ export const userSchemas = {
   UserDashboardResponse: {
     type: "object",
     properties: {
-      onboardingGoals: {
-        type: "array",
-        items: { $ref: "#/components/schemas/GoalProgressItem" },
-      },
-      financialPlansGoals: {
+      goals: {
         type: "array",
         items: { $ref: "#/components/schemas/GoalProgressItem" },
       },
@@ -203,16 +198,12 @@ export const userSchemas = {
         type: "object",
         properties: {
           financialStatementChats: {
-            type: "array",
-            items: {
-              $ref: "#/components/schemas/FinancialStatementChatRoom",
-            },
+            $ref: "#/components/schemas/FinancialStatementChatRoom",
+            nullable: true,
           },
           chats: {
             type: "array",
-            items: {
-              $ref: "#/components/schemas/RagChatRoom",
-            },
+            items: { $ref: "#/components/schemas/RagChatRoom" },
           },
         },
       },

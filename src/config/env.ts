@@ -5,22 +5,22 @@ dotenv.config();
 export const ENV = {
   // Server
   NODE_ENV: process.env.NODE_ENV || "development",
-  PORT: parseInt(process.env.PORT || "3000", 10),
+  PORT: Number.parseInt(process.env.PORT || "3000", 10),
 
-  // Database - MySQL
-  DB_HOST: process.env.DB_HOST || "localhost",
-  DB_PORT: parseInt(process.env.DB_PORT || "3306", 10),
-  DB_USER: process.env.DB_USER || "root",
-  DB_PASSWORD: process.env.DB_PASSWORD || "",
-  DB_NAME: process.env.DB_NAME || "path_db",
+  // Database - PostgreSQL
+  PG_HOST: process.env.PG_HOST || "localhost",
+  PG_PORT: Number.parseInt(process.env.PG_PORT || "5432", 10),
+  PG_USER: process.env.PG_USER || "postgres",
+  PG_PASSWORD: process.env.PG_PASSWORD || "",
+  PG_NAME: process.env.PG_NAME || "ragdb",
 
   // Redis
   REDIS_HOST:
     process.env.REDIS_HOST ||
     "redis-11233.c340.ap-northeast-2-1.ec2.cloud.redislabs.com",
-  REDIS_PORT: parseInt(process.env.REDIS_PORT || "11233", 10),
+  REDIS_PORT: Number.parseInt(process.env.REDIS_PORT || "11233", 10),
   REDIS_PASSWORD: process.env.REDIS_PASSWORD || "",
-  REDIS_DB: parseInt(process.env.REDIS_DB || "0", 10),
+  REDIS_DB: Number.parseInt(process.env.REDIS_DB || "0", 10),
 
   // JWT
   JWT_SECRET: process.env.JWT_SECRET || "your-secret-key-change-in-production",

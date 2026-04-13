@@ -1,3 +1,4 @@
+//db 타입
 export interface ChatRoomRow {
   id: string;
   memory_count: number;
@@ -6,6 +7,11 @@ export interface ChatRoomRow {
   user_id: string;
   created_at: string;
   updated_at: string;
+}
+
+// JOIN 쿼리 결과 타입
+export interface ChatRoomWithLastMessage extends ChatRoomRow {
+  last_message: string | null;
 }
 
 export interface ChatRoom {

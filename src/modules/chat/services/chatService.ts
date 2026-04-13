@@ -11,9 +11,8 @@ export class ChatService {
       id: row.id,
       name: row.name,
       description: row.description,
-      firstMessage: row.first_message,
+      lastMessage: row.last_message,
       createdAt: new Date(row.created_at),
-      updatedAt: row.updated_at ? new Date(row.updated_at) : null,
     }));
   }
 }

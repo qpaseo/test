@@ -62,15 +62,14 @@ export class UserController {
       ]);
 
       const result = {
-        onboardingGoals: goals.onboarding,
-        financialPlansGoals: goals.financial,
+        goals,
         monthlyFinances: finances,
         chatRooms: {
           financialStatementChats: financialChats,
           chats: ragChats,
         },
       };
-
+      
       res.status(200).json({
         success: true,
         code: "GET_USER_INFO_SUCCESS",
