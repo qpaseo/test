@@ -1,16 +1,14 @@
 import { Request, Response } from "express";
-import { RagService } from "../services/ragService";
-import { RagRepository } from "../repositories/ragRepository";
 import { ApiResponse } from "../../types/dto/response/basic.response";
 import { UploadResponse } from "../types/dto/response/upload.response";
-import { UploadQuerySchema } from "../validators/ragValidator";
+import { UploadQuerySchema } from "../validators/rag.validator";
 import { handleAuthError } from "../../../common/errors/HandleAuthError";
+import { IRagController } from "../contracts/rag.controller";
+import { IRagService } from "../contracts/rag.service";
 
-const ragRepository = new RagRepository();
-const ragService = new RagService(ragRepository);
+export class RagController implements IRagController {
+  constructor(private readonly ragService: IRagService) {}
 
-export class RagController {
-  // ============= PDF 업로드 =============
   uploadPdf = async (
     req: Request,
     res: Response<ApiResponse<UploadResponse>>,
@@ -37,7 +35,7 @@ export class RagController {
       }
 
       const query = UploadQuerySchema.parse(req.query);
-      const result = await ragService.uploadPdf(req.file, query);
+      const result = await this.ragService.uploadPdf(req.file, query);
 
       res.status(201).json({
         success: true,

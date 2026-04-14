@@ -1,24 +1,22 @@
-import { getDatabase } from "../../../config/db/db";
 import {
   FinancialGoalRow,
   FinancialGoalWithProgressRow,
 } from "../types/entity/financial-goal.entity";
 import { AppError, ErrorCode } from "../../../common/errors/AppError";
 import { FinancialStatementRow } from "../types/entity/financial-statement.entity";
+import { Pool } from "pg";
+import { IFinancialRepository } from "../contracts/financial.repository";
 
-export class FinancialRepository {
-  /**
-   * Financial Goal 생성 (기본 계획)
-   */
-  static async createFinancialGoal(
+export class FinancialRepository implements IFinancialRepository {
+  constructor(private readonly db: Pool) {}
+
+  async createFinancialGoal(
     userId: string,
     targetAmount: number,
     monthlyContribution: number,
   ): Promise<FinancialGoalRow> {
     try {
-      const pool = getDatabase();
-
-      const result = await pool.query<FinancialGoalRow>(
+      const result = await this.db.query<FinancialGoalRow>(
         `INSERT INTO financial_goals 
           (id, user_id, name, description, target_amount, current_amount, monthly_contribution, start_date, end_date, created_at, updated_at)
          VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
@@ -51,24 +49,19 @@ export class FinancialRepository {
     }
   }
 
-  /**
-   * Financial Statement 생성
-   */
-  static async createFinancialStatement(
+  async createFinancialStatement(
     userId: string,
     netMonthlyIncome: number,
     monthlyFixedExpenses: any,
     monthlyFixedExpensesAmount: number,
   ): Promise<FinancialStatementRow> {
     try {
-      const pool = getDatabase();
-
       const monthlySavingsInvestment = {
         amount: netMonthlyIncome - monthlyFixedExpensesAmount,
         description: "저축 및 투자 가능 금액",
       };
 
-      const result = await pool.query<FinancialStatementRow>(
+      const result = await this.db.query<FinancialStatementRow>(
         `INSERT INTO financial_statements 
           (id, user_id, net_monthly_income, monthly_fixed_expenses, monthly_savings_investment, created_at, updated_at)
          VALUES (gen_random_uuid(), $1, $2, $3, $4, NOW(), NOW())
@@ -97,18 +90,11 @@ export class FinancialRepository {
     }
   }
 
-  /**
-   * Financial Goal 조회
-   */
-  static async findGoalsByUserId(
+  async findGoalsByUserId(
     userId: string,
   ): Promise<FinancialGoalWithProgressRow[]> {
-    // 단일 -> 배열
-
     try {
-      const pool = getDatabase();
-
-      const result = await pool.query<FinancialGoalWithProgressRow>(
+      const result = await this.db.query<FinancialGoalWithProgressRow>(
         `
         SELECT 
           *,
@@ -123,7 +109,7 @@ export class FinancialRepository {
         [userId],
       );
 
-      return result.rows; // rows[0] -> rows
+      return result.rows;
     } catch (error) {
       throw AppError.fromCode(ErrorCode.INTERNAL_SERVER_ERROR, {
         originalError: error,
@@ -131,14 +117,9 @@ export class FinancialRepository {
     }
   }
 
-  /**
-   * monthly_finances 조회
-   */
-  static async findMonthlyFinancesByUserId(userId: string) {
+  async findMonthlyFinancesByUserId(userId: string): Promise<any[]> {
     try {
-      const pool = getDatabase();
-
-      const result = await pool.query(
+      const result = await this.db.query(
         `SELECT * FROM monthly_finances WHERE user_id = $1 ORDER BY created_at ASC`,
         [userId],
       );
@@ -151,21 +132,16 @@ export class FinancialRepository {
     }
   }
 
-  /**
-   * Financial Statement 조회
-   */
-  static async getFinancialStatement(
+  async getFinancialStatement(
     userId: string,
   ): Promise<FinancialStatementRow | null> {
     try {
-      const pool = getDatabase();
-
-      const result = await pool.query<FinancialStatementRow>(
+      const result = await this.db.query<FinancialStatementRow>(
         `SELECT * FROM financial_statements WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1`,
         [userId],
       );
 
-      return result.rows[0] ?? null; // JSONB라 JSON.parse 불필요
+      return result.rows[0] ?? null;
     } catch (error) {
       throw AppError.fromCode(ErrorCode.INTERNAL_SERVER_ERROR, {
         originalError: error,

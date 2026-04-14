@@ -8,8 +8,8 @@ import { ENV } from "./config/env";
 import { ErrorCode } from "./common/errors/AppError";
 import authRoutes from "./modules/auth/routes/authRoutes";
 import { ApiResponse } from "./modules/types/dto/response/basic.response";
-import userRouter from "./modules/user/routes/userRoutes";
-import ragRouter from "./modules/rag/routes/ragRoutes";
+import userRouter from "./modules/user/routes/user.routes";
+import ragRouter from "./modules/rag/routes/rag.routes";
 
 const app: Application = express();
 

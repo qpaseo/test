@@ -1,10 +1,9 @@
 import * as pdfjs from "pdfjs-dist";
-import { OpenAI } from "openai";
-import { ENV } from "../../../config/env";
-import { RagRepository } from "../repositories/ragRepository";
 import { UploadResponse } from "../types/dto/response/upload.response";
-import { UploadQuery } from "../validators/ragValidator";
+import { UploadQuery } from "../validators/rag.validator";
 import { encodingForModel } from "js-tiktoken";
+import { IEmbeddingClient, IRagService } from "../contracts/rag.service";
+import { IRagRepository } from "../contracts/rag.repository";
 
 /**
  * 서비스 구현 포인트
@@ -27,16 +26,16 @@ import { encodingForModel } from "js-tiktoken";
  *    - finally 블록에서 반드시 free() 호출해 메모리 누수 방지
  */
 
-const CHUNK_TOKEN_SIZE = 512;
-const CHUNK_OVERLAP_TOKEN = 50;
-const EMBEDDING_BATCH_SIZE = 20;
+export class RagService implements IRagService {
+  private readonly CHUNK_TOKEN_SIZE = 512;
+  private readonly CHUNK_OVERLAP_TOKEN = 50;
+  private readonly EMBEDDING_BATCH_SIZE = 20;
 
-const openai = new OpenAI({ apiKey: ENV.OPENAI_API_KEY });
+  constructor(
+    private readonly ragRepository: IRagRepository,
+    private readonly embeddingClient: IEmbeddingClient,
+  ) {}
 
-export class RagService {
-  constructor(private readonly ragRepository: RagRepository) {}
-
-  // ============= PDF 업로드 파이프라인 =============
   async uploadPdf(
     file: Express.Multer.File,
     query: UploadQuery,
@@ -44,13 +43,10 @@ export class RagService {
     const encoder = encodingForModel("text-embedding-3-small");
 
     try {
-      // 1. PDF 페이지별 텍스트 추출
       const { pages, pageCount } = await this.extractPagesFromPdf(file.buffer);
 
-      // 2. 페이지별 텍스트 → 청크 생성
       const rawChunks = this.buildChunks(pages, encoder);
 
-      // 3. 문서 DB 저장
       const documentRow = await this.ragRepository.insertDocument({
         fileName: file.originalname,
         fileSize: file.size,
@@ -58,10 +54,8 @@ export class RagService {
         metadata: query.metadata,
       });
 
-      // 4. 청크 임베딩 생성
       const chunksWithEmbedding = await this.generateEmbeddings(rawChunks);
 
-      // 5. 청크 DB 저장
       await this.ragRepository.insertChunks(
         chunksWithEmbedding.map((chunk) => ({
           docId: documentRow.id,
@@ -88,7 +82,6 @@ export class RagService {
     }
   }
 
-  // ============= PDF 페이지별 텍스트 추출 =============
   private async extractPagesFromPdf(buffer: Buffer): Promise<{
     pages: { pageNumber: number; text: string }[];
     pageCount: number;
@@ -114,7 +107,6 @@ export class RagService {
     return { pages, pageCount };
   }
 
-  // ============= 청킹 =============
   private buildChunks(
     pages: { pageNumber: number; text: string }[],
     encoder: ReturnType<typeof encodingForModel>,
@@ -138,7 +130,7 @@ export class RagService {
       let start = 0;
 
       while (start < tokens.length) {
-        const end = Math.min(start + CHUNK_TOKEN_SIZE, tokens.length);
+        const end = Math.min(start + this.CHUNK_TOKEN_SIZE, tokens.length);
         const chunkTokens = tokens.slice(start, end);
         const content = new TextDecoder()
           .decode(encoder.decode(chunkTokens) as unknown as Uint8Array)
@@ -153,14 +145,13 @@ export class RagService {
           });
         }
 
-        start += CHUNK_TOKEN_SIZE - CHUNK_OVERLAP_TOKEN;
+        start += this.CHUNK_TOKEN_SIZE - this.CHUNK_OVERLAP_TOKEN;
       }
     }
 
     return chunks;
   }
 
-  // ============= 임베딩 생성 =============
   private async generateEmbeddings(
     chunks: {
       chunkIndex: number;
@@ -185,18 +176,17 @@ export class RagService {
       embedding: number[];
     }[] = [];
 
-    for (let i = 0; i < chunks.length; i += EMBEDDING_BATCH_SIZE) {
-      const batch = chunks.slice(i, i + EMBEDDING_BATCH_SIZE);
+    for (let i = 0; i < chunks.length; i += this.EMBEDDING_BATCH_SIZE) {
+      const batch = chunks.slice(i, i + this.EMBEDDING_BATCH_SIZE);
 
-      const response = await openai.embeddings.create({
-        model: "text-embedding-3-small",
-        input: batch.map((c) => c.content),
-      });
+      const embeddings = await this.embeddingClient.createEmbeddings(
+        batch.map((c) => c.content),
+      );
 
       batch.forEach((chunk, idx) => {
         result.push({
           ...chunk,
-          embedding: response.data[idx].embedding,
+          embedding: embeddings[idx],
         });
       });
     }

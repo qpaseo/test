@@ -15,21 +15,22 @@
  *    - <=> 연산자는 pgvector의 코사인 유사도 거리 연산자
  */
 
-import { getDatabase } from "../../../config/db/db";
+import { Pool } from "pg";
+import { IRagRepository } from "../contracts/rag.repository";
 import { PdfDocumentRow, PdfChunkRow } from "../types/internal";
 
-export class RagRepository {
-  // ============= 문서 저장 =============
+export class RagRepository implements IRagRepository {
+  constructor(private readonly db: Pool) {}
+
   async insertDocument(params: {
     fileName: string;
     fileSize: number;
     pageCount: number;
     metadata: Record<string, any> | null;
   }): Promise<PdfDocumentRow> {
-    const db = getDatabase();
     const { fileName, fileSize, pageCount, metadata } = params;
 
-    const result = await db.query<PdfDocumentRow>(
+    const result = await this.db.query<PdfDocumentRow>(
       `INSERT INTO pdf_documents (file_name, file_size, page_count, metadata)
        VALUES ($1, $2, $3, $4)
        RETURNING *`,
@@ -44,7 +45,6 @@ export class RagRepository {
     return result.rows[0];
   }
 
-  // ============= 청크 배치 저장 =============
   async insertChunks(
     chunks: {
       docId: string;
@@ -55,9 +55,6 @@ export class RagRepository {
       embedding: number[];
     }[],
   ): Promise<void> {
-    const db = getDatabase();
-
-    // 청크가 많을 수 있으므로 배치로 나눠서 삽입
     const BATCH_SIZE = 50;
 
     for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
@@ -77,7 +74,7 @@ export class RagRepository {
         return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4}, $${base + 5}, $${base + 6})`;
       });
 
-      await db.query(
+      await this.db.query(
         `INSERT INTO pdf_chunks (doc_id, chunk_index, page_number, token_count, content, embedding)
          VALUES ${placeholders.join(", ")}`,
         values,
@@ -85,17 +82,15 @@ export class RagRepository {
     }
   }
 
-  // ============= 유사 청크 검색 =============
   async findSimilarChunks(params: {
     embedding: number[];
     topK: number;
     docId?: string;
   }): Promise<PdfChunkRow[]> {
-    const db = getDatabase();
     const { embedding, topK, docId } = params;
 
     if (docId) {
-      const result = await db.query<PdfChunkRow>(
+      const result = await this.db.query<PdfChunkRow>(
         `SELECT id, doc_id, chunk_index, page_number, token_count, content, created_at
          FROM pdf_chunks
          WHERE doc_id = $1
@@ -106,21 +101,19 @@ export class RagRepository {
       return result.rows;
     }
 
-    const result = await db.query<PdfChunkRow>(
+    const result = await this.db.query<PdfChunkRow>(
       `SELECT id, doc_id, chunk_index, page_number, token_count, content, created_at
        FROM pdf_chunks
        ORDER BY embedding <=> $1
        LIMIT $2`,
       [JSON.stringify(embedding), topK],
     );
+
     return result.rows;
   }
 
-  // ============= 문서 존재 여부 확인 =============
   async findDocumentById(docId: string): Promise<PdfDocumentRow | null> {
-    const db = getDatabase();
-
-    const result = await db.query<PdfDocumentRow>(
+    const result = await this.db.query<PdfDocumentRow>(
       `SELECT * FROM pdf_documents WHERE id = $1`,
       [docId],
     );

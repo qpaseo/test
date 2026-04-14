@@ -1,6 +1,6 @@
 import { swaggerBase } from "./swaggerBase";
 import { authPaths, authSchemas } from "../../modules/auth/swaggerAuthPaths";
-import { userPaths, userSchemas } from "../../modules/user/swaggerUserPaths";
+import { userPaths, userSchemas } from "../../modules/user/swagger.user.paths";
 import {
   conceptPaths,
   conceptSchemas,

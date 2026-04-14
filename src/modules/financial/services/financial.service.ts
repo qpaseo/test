@@ -1,22 +1,22 @@
-import { FinancialRepository } from "../repositories/financialRepository";
+import { IFinancialRepository } from "../contracts/financial.repository";
+import { IFinancialService } from "../contracts/financial.service";
 import {
   FinancialGoalWithProgress,
   FinancialGoalWithProgressRow,
 } from "../types/entity/financial-goal.entity";
 import { MonthlyFinance } from "../types/entity/monthly-finances.entity";
 
-export class FinancialService {
-  /**
-   * 회원가입 시 재무 데이터 초기화
-   */
-  static async initialize(
+export class FinancialService implements IFinancialService {
+  constructor(private readonly financialRepository: IFinancialRepository) {}
+
+  async initialize(
     userId: string,
     input: {
       targetAmount: number;
       netMonthlyIncome: number;
       monthlyFixedExpenses: { money: string }[];
     },
-  ) {
+  ): Promise<void> {
     const fixedExpensesTotal = input.monthlyFixedExpenses.reduce(
       (sum, expense) => sum + Number.parseFloat(expense.money),
       0,
@@ -24,13 +24,13 @@ export class FinancialService {
 
     const monthlyContribution = input.netMonthlyIncome - fixedExpensesTotal;
 
-    await FinancialRepository.createFinancialGoal(
+    await this.financialRepository.createFinancialGoal(
       userId,
       input.targetAmount,
       monthlyContribution,
     );
 
-    await FinancialRepository.createFinancialStatement(
+    await this.financialRepository.createFinancialStatement(
       userId,
       input.netMonthlyIncome,
       input.monthlyFixedExpenses,
@@ -38,11 +38,8 @@ export class FinancialService {
     );
   }
 
-  /**
-   * 유저 목표 조회
-   */
-  static async getGoals(userId: string): Promise<FinancialGoalWithProgress[]> {
-    const rows = await FinancialRepository.findGoalsByUserId(userId);
+  async getGoals(userId: string): Promise<FinancialGoalWithProgress[]> {
+    const rows = await this.financialRepository.findGoalsByUserId(userId);
 
     return rows.map((row: FinancialGoalWithProgressRow) => ({
       id: row.id,
@@ -60,11 +57,9 @@ export class FinancialService {
     }));
   }
 
-  /**
-   * 유저 재정상황 달별 조회
-   */
-  static async getMonthlyFinances(userId: string): Promise<MonthlyFinance[]> {
-    const rows = await FinancialRepository.findMonthlyFinancesByUserId(userId);
+  async getMonthlyFinances(userId: string): Promise<MonthlyFinance[]> {
+    const rows =
+      await this.financialRepository.findMonthlyFinancesByUserId(userId);
 
     return rows.map((row) => ({
       id: row.id,

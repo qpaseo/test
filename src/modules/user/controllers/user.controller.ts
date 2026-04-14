@@ -1,24 +1,25 @@
 import { Response } from "express";
 
 import { AppError, ErrorCode } from "../../../common/errors/AppError";
-import { UserService } from "../services/userService";
-import { UserInfoResponse } from "../types/dto/response/user-info.response";
 import {
   ApiResponse,
   AuthenticatedRequest,
 } from "../../types/dto/response/basic.response";
+import { UserInfoResponse } from "../types/dto/response/user-info.response";
 import { UserDashboardResponse } from "../types/dto/response/user-dashboard.response";
-import { FinancialService } from "../../financial/services/FinancialService";
 import { handleAuthError } from "../../../common/errors/HandleAuthError";
-import { ChatService } from "../../chat/services/chatService";
-import { FsChatService } from "../../chat/services/financialChatService";
+import { IUserService } from "../contracts/user.service";
+import { IUserController } from "../contracts/user.controller";
 
-export class UserController {
-  /**
-   * 사용자 정보 조회
-   * GET /user
-   */
-  static async getUserInfo(
+export class UserController implements IUserController {
+  constructor(
+    private readonly userService: IUserService,
+    private readonly financialService: any,
+    private readonly chatService: any,
+    private readonly fsChatService: any,
+  ) {}
+
+  async getUserInfo(
     req: AuthenticatedRequest,
     res: Response<ApiResponse<UserInfoResponse>>,
   ): Promise<void> {
@@ -27,7 +28,7 @@ export class UserController {
         throw AppError.fromCode(ErrorCode.UNAUTHORIZED);
       }
 
-      const result = await UserService.getUserById(req.userId);
+      const result = await this.userService.getUserById(req.userId);
 
       res.status(200).json({
         success: true,
@@ -41,11 +42,7 @@ export class UserController {
     }
   }
 
-  /**
-   * 메인화면 정보 조회
-   * GET /user/main
-   */
-  static async getUserDashboard(
+  async getUserDashboard(
     req: AuthenticatedRequest,
     res: Response<ApiResponse<UserDashboardResponse>>,
   ): Promise<void> {
@@ -54,11 +51,11 @@ export class UserController {
         throw AppError.fromCode(ErrorCode.UNAUTHORIZED);
       }
 
-      const [goals, finances, financialChats, Chats] = await Promise.all([
-        FinancialService.getGoals(req.userId),
-        FinancialService.getMonthlyFinances(req.userId),
-        FsChatService.getFinancialChatRoomsWithLastMessage(req.userId),
-        ChatService.(req.userId),
+      const [goals, finances, financialChats, chats] = await Promise.all([
+        this.financialService.getGoals(req.userId),
+        this.financialService.getMonthlyFinances(req.userId),
+        this.fsChatService.getFinancialChatRoomsWithLastMessage(req.userId),
+        this.chatService.getChatRooms(req.userId),
       ]);
 
       const result = {
@@ -66,14 +63,14 @@ export class UserController {
         monthlyFinances: finances,
         chatRooms: {
           financialStatementChats: financialChats,
-          chats: Chats,
+          chats,
         },
       };
 
       res.status(200).json({
         success: true,
-        code: "GET_USER_INFO_SUCCESS",
-        message: "사용자 정보 조회가 완료되었습니다",
+        code: "GET_USER_DASHBOARD_SUCCESS",
+        message: "사용자 대시보드 조회가 완료되었습니다",
         data: result,
         timestamp: new Date().toISOString(),
       });

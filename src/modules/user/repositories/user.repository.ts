@@ -1,14 +1,15 @@
 import { AppError, ErrorCode } from "../../../common/errors/AppError";
-import { getDatabase } from "../../../config/db/db";
+import { Pool } from "pg";
 import { UserRow } from "../types/entity/user.entity";
 import { CreateUserInput } from "../types/internal";
+import { IUserRepository } from "../contracts/user.repository.interface";
 
-export class UserRepository {
-  static async findByEmail(email: string): Promise<UserRow | null> {
+export class UserRepository implements IUserRepository {
+  constructor(private readonly db: Pool) {}
+
+  async findByEmail(email: string): Promise<UserRow | null> {
     try {
-      const pool = getDatabase();
-
-      const result = await pool.query<UserRow>(
+      const result = await this.db.query<UserRow>(
         "SELECT * FROM users WHERE email = $1",
         [email],
       );
@@ -21,11 +22,9 @@ export class UserRepository {
     }
   }
 
-  static async findById(id: string): Promise<UserRow | null> {
+  async findById(id: string): Promise<UserRow | null> {
     try {
-      const pool = getDatabase();
-
-      const result = await pool.query<UserRow>(
+      const result = await this.db.query<UserRow>(
         "SELECT * FROM users WHERE id = $1",
         [id],
       );
@@ -38,16 +37,13 @@ export class UserRepository {
     }
   }
 
-  static async create(input: CreateUserInput): Promise<UserRow> {
+  async create(input: CreateUserInput): Promise<UserRow> {
     try {
-      const pool = getDatabase();
-
-      const result = await pool.query<UserRow>(
-        `INSERT INTO users (id, name, email, password, has_loan, has_stock, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+      const result = await this.db.query<UserRow>(
+        `INSERT INTO users (name, email, password, has_loan, has_stock)
+         VALUES ($1, $2, $3, $4, $5)
          RETURNING *`,
         [
-          input.id,
           input.name,
           input.email,
           input.password,
@@ -60,7 +56,6 @@ export class UserRepository {
     } catch (error) {
       if (error instanceof AppError) throw error;
 
-      // PostgreSQL 중복 키 에러
       if (error instanceof Error && error.message.includes("duplicate key")) {
         throw AppError.fromCode(ErrorCode.USER_ALREADY_EXISTS);
       }
@@ -71,13 +66,11 @@ export class UserRepository {
     }
   }
 
-  static async update(
+  async update(
     id: string,
     updates: Partial<CreateUserInput>,
   ): Promise<UserRow> {
     try {
-      const pool = getDatabase();
-
       const updateFields: string[] = [];
       const values: any[] = [];
       let paramIndex = 1;
@@ -98,17 +91,16 @@ export class UserRepository {
 
       values.push(id);
 
-      const result = await pool.query<UserRow>(
-        `UPDATE users SET ${updateFields.join(", ")}, updated_at = NOW() WHERE id = $${paramIndex} RETURNING *`,
+      const result = await this.db.query<UserRow>(
+        `UPDATE users 
+       SET ${updateFields.join(", ")}, updated_at = NOW() 
+       WHERE id = $${paramIndex} 
+       RETURNING *`,
         values,
       );
 
       if (!result.rows[0]) {
-        throw new AppError(
-          ErrorCode.USER_NOT_FOUND,
-          "사용자를 찾을 수 없습니다",
-          404,
-        );
+        throw AppError.fromCode(ErrorCode.USER_NOT_FOUND);
       }
 
       return result.rows[0];
@@ -122,10 +114,9 @@ export class UserRepository {
     }
   }
 
-  static async delete(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     try {
-      const pool = getDatabase();
-      await pool.query("DELETE FROM users WHERE id = $1", [id]);
+      await this.db.query("DELETE FROM users WHERE id = $1", [id]);
     } catch (error) {
       throw AppError.fromCode(ErrorCode.INTERNAL_SERVER_ERROR, {
         originalError: error,

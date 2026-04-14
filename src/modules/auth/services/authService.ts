@@ -1,4 +1,4 @@
-import { UserRepository } from "../../user/repositories/userRepository";
+import { UserRepository } from "../../user/repositories/user.repository";
 import { SignUpRequest, LoginRequest } from "../validators/authValidator";
 import { LoginResponse, SignUpResponse } from "../types";
 import {
@@ -12,9 +12,9 @@ import {
   generateRefreshToken,
   TokenPayload,
 } from "../../../common/utils/tokenManager";
-import { UserService } from "../../user/services/userService";
-import { FinancialService } from "../../financial/services/FinancialService";
-import { FinancialChatRoomRepository } from "../../chat/repositories/financialChatRepository";
+import { UserService } from "../../user/services/user.service";
+import { FinancialService } from "../../financial/services/financial.service";
+import { FinancialChatRoomRepository } from "../../chat/repositories/financialChatRoomRepository";
 import { UserInfoResponse } from "../../user/types/dto/response/user-info.response";
 
 /**
