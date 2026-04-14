@@ -2,8 +2,7 @@
 // Response Types
 // ============================================
 
-import { GetChatRoomsResponse } from "../../../../chat/types/dto/response/chat-rooms.response";
-import { FsChatRoomsResponse } from "../../../../chat/types/dto/response/financial-chat-rooms.response";
+import { ChatRoomsResponse } from "../../../../chat/types/dto/response/chat-rooms.response";
 
 /**
  * 3.1.1 목표 진척도 (온보딩 질문)
@@ -38,7 +37,7 @@ export interface UserDashboardResponse {
   goals: GoalProgressItem[];
   monthlyFinances: MonthlyFinanceItem[];
   chatRooms: {
-    financialStatementChats: FsChatRoomsResponse | null;
-    chats: GetChatRoomsResponse[];
+    financialStatementChats: ChatRoomsResponse[] | null;
+    chats: ChatRoomsResponse[] | null;
   };
 }

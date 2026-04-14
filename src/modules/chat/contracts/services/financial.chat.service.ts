@@ -1,8 +1,8 @@
 import { Response } from "express";
-import { FsChatCompleteResponse } from "../types/dto/response/financial-chat-complete.response";
-import { FsChatRoomWithLastMessage } from "../types/dto/response/financial-chat-last-message.response";
-import { FsChatRoomDetailResponse } from "../types/dto/response/financial-chat-room-detail.response";
-import { FsChatRoomListResponse } from "../types/dto/response/financial-chat-room-list.response";
+import { FsChatRoomWithLastMessage } from "../../types/dto/response/financial-chat-last-message.response";
+import { FsChatRoomListResponse } from "../../types/dto/response/financial-chat-room-list.response";
+import { FsChatRoomDetailResponse } from "../../types/dto/response/financial-chat-room-detail.response";
+import { FsChatCompleteResponse } from "../../types/dto/response/financial-chat-complete.response";
 
 export interface IFsChatService {
   getFinancialChatRoomsWithLastMessage(

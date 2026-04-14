@@ -6,5 +6,5 @@ export interface FsChatMessageResponse {
   sender: ChatSender;
   content: string;
   messageIndex: number;
-  createdAt: string;
+  createdAt: Date;
 }

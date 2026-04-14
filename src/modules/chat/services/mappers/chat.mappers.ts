@@ -4,7 +4,10 @@ import {
 } from "../../../user/types/entity/user-memory.entity";
 import { ChatMemoryResponse } from "../../types/dto/response/chat-memory.response";
 import { ChatMessageResponse } from "../../types/dto/response/chat-message.response";
-import { ChatRoomSummaryResponse } from "../../types/dto/response/chat-rooms.response";
+import {
+  ChatRoomSummaryResponse,
+  ChatRoomsResponse,
+} from "../../types/dto/response/chat-rooms.response";
 import {
   ChatMemory,
   ChatMemoryRow,
@@ -13,7 +16,11 @@ import {
   ChatMessage,
   ChatMessageRow,
 } from "../../types/entity/chat-message.entity";
-import { ChatRoom, ChatRoomRow } from "../../types/entity/chat-room.entity";
+import {
+  ChatRoom,
+  ChatRoomRow,
+  ChatRoomWithLastMessage,
+} from "../../types/entity/chat-room.entity";
 import { ChatSender } from "../../types/internal";
 
 // ─── Row → Entity ─────────────────────────────────────────
@@ -73,7 +80,7 @@ function toMessageDto(entity: ChatMessage): ChatMessageResponse {
     sender: entity.sender,
     content: entity.content,
     messageIndex: entity.messageIndex,
-    createdAt: entity.createdAt.toISOString(),
+    createdAt: entity.createdAt,
   };
 }
 
@@ -83,7 +90,7 @@ function toMemoryDto(entity: ChatMemory): ChatMemoryResponse {
     content: entity.content,
     startIndex: entity.startIndex,
     endIndex: entity.endIndex,
-    createdAt: entity.createdAt.toISOString(),
+    createdAt: entity.createdAt,
   };
 }
 
@@ -93,8 +100,20 @@ function toRoomSummaryDto(entity: ChatRoom): ChatRoomSummaryResponse {
     name: entity.name,
     description: entity.description,
     memoryCount: entity.memoryCount,
-    createdAt: entity.createdAt.toISOString(),
-    updatedAt: entity.updatedAt ? entity.updatedAt.toISOString() : null,
+    createdAt: entity.createdAt,
+    updatedAt: entity.updatedAt,
+  };
+}
+
+function toChatRoomWithLastMessageDto(
+  row: ChatRoomWithLastMessage,
+): ChatRoomsResponse {
+  return {
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    lastMessage: row.last_message,
+    createdAt: new Date(row.created_at),
   };
 }
 
@@ -106,4 +125,5 @@ export {
   toMessageDto,
   toMemoryDto,
   toRoomSummaryDto,
+  toChatRoomWithLastMessageDto,
 };

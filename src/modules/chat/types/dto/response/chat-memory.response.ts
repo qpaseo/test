@@ -4,5 +4,5 @@ export interface ChatMemoryResponse {
   content: string;
   startIndex: number;
   endIndex: number;
-  createdAt: string;
+  createdAt: Date;
 }

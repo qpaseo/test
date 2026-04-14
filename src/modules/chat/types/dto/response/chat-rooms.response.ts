@@ -2,7 +2,7 @@ import { ChatMemoryResponse } from "./chat-memory.response";
 import { ChatMessageResponse } from "./chat-message.response";
 
 //대시보드용 마지막 매세지 포함 반환 dto
-export interface GetChatRoomsResponse {
+export interface ChatRoomsResponse {
   id: string;
   name: string;
   description: string | null;
@@ -16,8 +16,8 @@ export interface ChatRoomSummaryResponse {
   name: string;
   description: string | null;
   memoryCount: number;
-  createdAt: string;
-  updatedAt: string | null;
+  createdAt: Date;
+  updatedAt: Date | null;
 }
 
 //chat room 관련 정보 포함한 반환 dto (user id 생략)
@@ -26,8 +26,8 @@ export interface ChatRoomDetailResponse {
   name: string;
   description: string | null;
   memoryCount: number;
-  createdAt: string;
-  updatedAt: string | null;
+  createdAt: Date;
+  updatedAt: Date | null;
   messages: ChatMessageResponse[];
   memories: ChatMemoryResponse[];
 }

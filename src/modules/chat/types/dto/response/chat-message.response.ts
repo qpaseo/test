@@ -7,5 +7,5 @@ export interface ChatMessageResponse {
   sender: ChatSender;
   content: string;
   messageIndex: number;
-  createdAt: string;
+  createdAt: Date;
 }

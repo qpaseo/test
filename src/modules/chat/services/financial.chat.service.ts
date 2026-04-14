@@ -5,6 +5,7 @@ import { FinancialChatRoomRepository } from "../repositories/financial.chat.room
 import { FinancialChatMessageRepository } from "../repositories/financial.chat.message.repository";
 import { IOpenAIClient } from "../../../infrastructure/ai/contracts/openai-client";
 import {
+  toFsChatRoomWithLastMessageDto,
   toMessageDto,
   toMessageEntity,
   toRoomEntity,
@@ -12,6 +13,7 @@ import {
 } from "./mappers/financial.mappers";
 import { buildFsChatSystemPrompt } from "./prompts/financial.chat.prompts";
 import { IFsChatService } from "../contracts/services/financial.chat.service";
+import { FsChatRoomWithLastMessage } from "../types/dto/response/financial-chat-last-message.response";
 
 export class FsChatService implements IFsChatService {
   constructor(
@@ -22,8 +24,13 @@ export class FsChatService implements IFsChatService {
     private readonly openaiClient: IOpenAIClient,
   ) {}
 
-  async getFinancialChatRoomsWithLastMessage(userId: string) {
-    return this.fsRoomRepo.findFinancialChatRoomsWithLastMessage(userId);
+  async getFinancialChatRoomsWithLastMessage(
+    userId: string,
+  ): Promise<FsChatRoomWithLastMessage[]> {
+    const rows =
+      await this.fsRoomRepo.findFinancialChatRoomsWithLastMessage(userId);
+
+    return rows.map(toFsChatRoomWithLastMessageDto);
   }
 
   async getRoomList(userId: string, page: number, pageSize: number) {
@@ -53,10 +60,8 @@ export class FsChatService implements IFsChatService {
       id: roomRow.id,
       name: roomRow.name,
       description: roomRow.description,
-      createdAt: new Date(roomRow.created_at).toISOString(),
-      updatedAt: roomRow.updated_at
-        ? new Date(roomRow.updated_at).toISOString()
-        : null,
+      createdAt: new Date(roomRow.created_at),
+      updatedAt: roomRow.updated_at ? new Date(roomRow.updated_at) : null,
       messages: messages.map((m) => toMessageDto(toMessageEntity(m))),
     };
   }
@@ -112,7 +117,7 @@ export class FsChatService implements IFsChatService {
     let finalContent = "";
 
     try {
-      finalContent = await this.runToolLoop(messages, res);
+      finalContent = await this.runToolLoop(messages, res, userId);
     } catch {
       res.write(`data: ${JSON.stringify({ error: "AI 오류" })}\n\n`);
       res.write("data: [DONE]\n\n");
@@ -133,7 +138,11 @@ export class FsChatService implements IFsChatService {
     res.end();
   }
 
-  private async runToolLoop(messages: any[], res: Response): Promise<string> {
+  private async runToolLoop(
+    messages: any[],
+    res: Response,
+    userId: string,
+  ): Promise<string> {
     let final = "";
 
     while (true) {
@@ -151,9 +160,13 @@ export class FsChatService implements IFsChatService {
         for (const call of choice.message.tool_calls ?? []) {
           if (call.type !== "function") continue;
 
+          const args = JSON.parse(call.function.arguments);
+
+          if ("user_id" in args) args.user_id = userId;
+
           const result = await this.toolHandler.handle(
             call.function.name,
-            JSON.parse(call.function.arguments),
+            args,
           );
 
           messages.push({
@@ -237,7 +250,7 @@ export class FsChatService implements IFsChatService {
         monthlyFixedExpenses: stmt.monthly_fixed_expenses ?? null,
         monthlySavingsInvestment: stmt.monthly_savings_investment ?? null,
         info: stmt.info,
-        createdAt: stmt.created_at,
+        createdAt: new Date(stmt.created_at),
       },
     };
   }

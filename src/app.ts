@@ -6,10 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger/swagger.spec";
 import { ENV } from "./config/env";
 import { ErrorCode } from "./common/errors/app.error";
-import authRoutes from "./modules/auth/routes/auth.routes";
 import { ApiResponse } from "./modules/types/dto/response/basic.response";
-import userRouter from "./modules/user/routes/user.routes";
-import ragRouter from "./modules/rag/routes/rag.routes";
 
 const app: Application = express();
 
@@ -27,15 +24,9 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 // ============= Swagger 설정 =============
 if (ENV.SWAGGER_ENABLED) {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  console.log("Swagger 문서: http://localhost:" + ENV.PORT + "/api-docs");
 
   console.log("Swagger 문서: http://localhost:" + ENV.PORT + "/api-docs");
 }
-
-// ============= 라우팅 =============
-app.use("/auth", authRoutes);
-app.use("/user", userRouter);
-app.use("/rag", ragRouter);
 
 // ============= 404 핸들러 =============
 app.use((req: Request, res: Response) => {

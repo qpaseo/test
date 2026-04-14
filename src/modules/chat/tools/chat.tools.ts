@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import { ChatMemoryRepository } from "../repositories/chat.memory.repository";
 import { ChatMessageRepository } from "../repositories/chat.message.repository";
 import { ChatToolRepository } from "../repositories/chat.tool.repository";
+import { UserMemoryContent } from "../../user/types/entity/user-memory.entity";
 
 // ─── Tool 정의 ───────────────────────────────────────────
 
@@ -260,8 +261,12 @@ export class ChatToolHandler {
 
         case "get_user_memory": {
           const mem = await this.toolRepo.findUserMemoryByUserId(args.user_id);
-          if (!mem) return JSON.stringify({ 메모리: "", 중요정보: "" });
-          return mem.content; // JSON string 그대로 반환
+          if (!mem)
+            return JSON.stringify({
+              memory: "",
+              important_information: "",
+            } as UserMemoryContent);
+          return JSON.stringify(mem.content);
         }
 
         case "get_financial_statement": {

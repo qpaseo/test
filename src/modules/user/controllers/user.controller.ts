@@ -10,13 +10,16 @@ import { UserDashboardResponse } from "../types/dto/response/user-dashboard.resp
 import { handleAuthError } from "../../../common/errors/handle.auth.error";
 import { IUserService } from "../contracts/service/user.service";
 import { IUserController } from "../contracts/controller/user.controller";
+import { IFinancialService } from "../../financial/contracts/service/financial.service";
+import { IChatService } from "../../chat/contracts/services/chat.service";
+import { IFsChatService } from "../../chat/contracts/services/financial.chat.service";
 
 export class UserController implements IUserController {
   constructor(
     private readonly userService: IUserService,
-    private readonly financialService: any,
-    private readonly chatService: any,
-    private readonly fsChatService: any,
+    private readonly financialService: IFinancialService,
+    private readonly chatService: IChatService,
+    private readonly fsChatService: IFsChatService,
   ) {}
 
   async getUserInfo(
@@ -55,7 +58,7 @@ export class UserController implements IUserController {
         this.financialService.getGoals(req.userId),
         this.financialService.getMonthlyFinances(req.userId),
         this.fsChatService.getFinancialChatRoomsWithLastMessage(req.userId),
-        this.chatService.getChatRooms(req.userId),
+        this.chatService.getRagChatRooms(req.userId),
       ]);
 
       const result = {

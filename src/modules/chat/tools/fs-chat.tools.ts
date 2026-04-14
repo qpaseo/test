@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { Pool } from "pg";
 import { ChatToolRepository } from "../repositories/chat.tool.repository";
+import { UserMemoryContent } from "../../user/types/entity/user-memory.entity";
 
 // ─── Tool 정의 ────────────────────────────────────────────
 
@@ -91,7 +92,7 @@ export const FS_CHAT_TOOLS: OpenAI.Chat.ChatCompletionTool[] = [
 // ─── Tool Handler ─────────────────────────────────────────
 
 export class FsChatToolHandler {
-  private toolRepo: ChatToolRepository;
+  private readonly toolRepo: ChatToolRepository;
 
   constructor(db: Pool) {
     this.toolRepo = new ChatToolRepository(db);
@@ -121,11 +122,11 @@ export class FsChatToolHandler {
 
         case "get_user_memory": {
           const mem = await this.toolRepo.findUserMemoryByUserId(args.user_id);
-
-          if (!mem) {
-            return JSON.stringify({ 메모리: "", 중요정보: "" });
-          }
-
+          if (!mem)
+            return JSON.stringify({
+              memory: "",
+              important_information: "",
+            } as UserMemoryContent);
           return JSON.stringify(mem.content);
         }
 

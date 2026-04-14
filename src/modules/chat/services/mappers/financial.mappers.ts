@@ -1,3 +1,4 @@
+import { FsChatRoomWithLastMessage } from "../../types/dto/response/financial-chat-last-message.response";
 import { FsChatMessageResponse } from "../../types/dto/response/financial-chat-message.response";
 import { FsChatRoomSummaryResponse } from "../../types/dto/response/financial-chat-room-summary.response";
 import {
@@ -7,6 +8,7 @@ import {
 import {
   FinancialStatementChatRoom,
   FinancialStatementChatRoomRow,
+  FinancialStatementChatRoomWithLastMessage,
 } from "../../types/entity/financial-chat-room.entity";
 import { ChatSender } from "../../types/internal";
 
@@ -50,7 +52,7 @@ function toMessageDto(
     sender: entity.sender,
     content: entity.content,
     messageIndex: entity.messageIndex,
-    createdAt: entity.createdAt.toISOString(),
+    createdAt: entity.createdAt,
   };
 }
 
@@ -61,9 +63,29 @@ function toRoomSummaryDto(
     id: entity.id,
     name: entity.name,
     description: entity.description,
-    createdAt: entity.createdAt.toISOString(),
-    updatedAt: entity.updatedAt ? entity.updatedAt.toISOString() : null,
+    createdAt: entity.createdAt,
+    updatedAt: entity.updatedAt,
   };
 }
 
-export { toRoomEntity, toMessageEntity, toMessageDto, toRoomSummaryDto };
+function toFsChatRoomWithLastMessageDto(
+  row: FinancialStatementChatRoomWithLastMessage,
+): FsChatRoomWithLastMessage {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    name: row.name,
+    description: row.description,
+    lastMessage: row.last_message,
+    createdAt: new Date(row.created_at),
+    updatedAt: row.updated_at ? new Date(row.updated_at) : null,
+  };
+}
+
+export {
+  toRoomEntity,
+  toMessageEntity,
+  toMessageDto,
+  toRoomSummaryDto,
+  toFsChatRoomWithLastMessageDto,
+};

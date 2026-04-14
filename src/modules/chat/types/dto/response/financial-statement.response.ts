@@ -6,5 +6,5 @@ export interface FsResponse {
   monthlyFixedExpenses: ExpenseItem[] | null;
   monthlySavingsInvestment: ExpenseItem[] | null;
   info: string;
-  createdAt: string;
+  createdAt: Date;
 }

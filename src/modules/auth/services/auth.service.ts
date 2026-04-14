@@ -7,15 +7,18 @@ import { TokenPayload } from "../../../common/utils/contracts/token.manager.util
 import { IUserService } from "../../user/contracts/service/user.service";
 import { IFinancialService } from "../../financial/contracts/service/financial.service";
 import { IAuthService } from "../contracts/services/auth.service";
+import { TokenManager } from "../../../common/utils/token.manager.util";
+import { PasswordManager } from "../../../common/utils/password.util";
+import { UserRepository } from "../../user/repositories/user.repository";
 
 export class AuthService implements IAuthService {
   constructor(
     private readonly userService: IUserService,
     private readonly financialService: IFinancialService,
     private readonly financialChatRoomRepository: any,
-    private readonly passwordManager: any,
-    private readonly tokenManager: any,
-    private readonly userRepository: any,
+    private readonly passwordManager: PasswordManager,
+    private readonly tokenManager: TokenManager,
+    private readonly userRepository: UserRepository,
   ) {}
 
   /**
