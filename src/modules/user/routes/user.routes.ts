@@ -1,11 +1,32 @@
+// user.routes.ts
+
 import { Router } from "express";
-import { authMiddleware } from "../../../common/middlewares/auth.middleware";
-import { IUserController } from "../contracts/user.controller";
+import { AuthMiddleware } from "../../../common/middlewares/auth.middleware";
+import { IUserController } from "../contracts/controller/user.controller";
 
-export const createUserRouter = (userController: IUserController): Router => {
-  const router = Router();
+/**
+ * User Routes (DI Version)
+ */
+export class UserRoutes {
+  constructor(
+    private readonly userController: IUserController,
+    private readonly authMiddleware: AuthMiddleware,
+  ) {}
 
-  router.get("/user", authMiddleware, userController.getUserInfo);
+  build(): Router {
+    const router = Router();
 
-  return router;
-};
+    /**
+     * GET /user
+     * - 인증된 사용자 정보 조회
+     * - Access Token 기반으로 사용자 식별
+     */
+    router.get(
+      "/user",
+      this.authMiddleware.auth,
+      this.userController.getUserInfo,
+    );
+
+    return router;
+  }
+}

@@ -1,5 +1,5 @@
-import { FinancialStatementChatMessageRow } from "../types/entity/financial-chat-message.entity";
-import { CreateFsChatMessageInput } from "../types/internal";
+import { FinancialStatementChatMessageRow } from "../../types/entity/financial-chat-message.entity";
+import { CreateFsChatMessageInput } from "../../types/internal";
 
 export interface IFinancialChatMessageRepository {
   findMessagesByRoomId(

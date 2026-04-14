@@ -1,5 +1,5 @@
-import { UserRow } from "../types/entity/user.entity";
-import { CreateUserInput } from "../types/internal";
+import { UserRow } from "../../types/entity/user.entity";
+import { CreateUserInput } from "../../types/internal";
 
 export interface IUserRepository {
   findByEmail(email: string): Promise<UserRow | null>;

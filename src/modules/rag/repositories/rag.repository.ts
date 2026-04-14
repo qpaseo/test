@@ -16,7 +16,7 @@
  */
 
 import { Pool } from "pg";
-import { IRagRepository } from "../contracts/rag.repository";
+import { IRagRepository } from "../contracts/repository/rag.repository";
 import { PdfDocumentRow, PdfChunkRow } from "../types/internal";
 
 export class RagRepository implements IRagRepository {

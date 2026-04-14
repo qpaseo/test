@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { CreateChatMessageInput } from "../types/internal";
 import { ChatMessageRow } from "../types/entity/chat-message.entity";
-import { IChatMessageRepository } from "../contracts/chat.message.repository";
+import { IChatMessageRepository } from "../contracts/repositories/chat.message.repository";
 
 export class ChatMessageRepository implements IChatMessageRepository {
   constructor(private readonly db: Pool) {}

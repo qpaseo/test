@@ -10,9 +10,9 @@ import {
   AuthenticatedRequest,
 } from "../../types/dto/response/basic.response";
 import { handleAuthError } from "../../../common/errors/handle.auth.error";
-import { IAuthService } from "../contracts/auth.service";
 import { ITokenManager } from "../../../common/utils/contracts/token.manager.util";
-import { IAuthController } from "../contracts/auth.controller";
+import { IAuthService } from "../contracts/services/auth.service";
+import { IAuthController } from "../contracts/controllers/auth.controller";
 
 /**
  * Auth Controller

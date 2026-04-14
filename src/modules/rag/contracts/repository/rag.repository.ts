@@ -1,4 +1,4 @@
-import { PdfChunkRow, PdfDocumentRow } from "../types/internal";
+import { PdfChunkRow, PdfDocumentRow } from "../../types/internal";
 
 export interface IRagRepository {
   insertDocument(params: {

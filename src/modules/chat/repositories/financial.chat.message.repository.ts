@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import { FinancialStatementChatMessageRow } from "../types/entity/financial-chat-message.entity";
 import { CreateFsChatMessageInput } from "../types/internal";
-import { IFinancialChatMessageRepository } from "../contracts/financial.chat.message.repository";
+import { IFinancialChatMessageRepository } from "../contracts/repositories/financial.chat.message.repository";
 
 export class FinancialChatMessageRepository implements IFinancialChatMessageRepository {
   constructor(private readonly db: Pool) {}

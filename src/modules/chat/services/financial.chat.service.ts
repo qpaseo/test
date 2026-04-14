@@ -1,8 +1,7 @@
 import { Response } from "express";
 import { ChatToolRepository } from "../repositories/chat.tool.repository";
-import { FsChatToolHandler, FS_CHAT_TOOLS } from "../tools/fsChatTools";
+import { FsChatToolHandler, FS_CHAT_TOOLS } from "../tools/fs-chat.tools";
 import { FinancialChatRoomRepository } from "../repositories/financial.chat.room.repository";
-import { IFsChatService } from "../contracts/financial.chat.service";
 import { FinancialChatMessageRepository } from "../repositories/financial.chat.message.repository";
 import { IOpenAIClient } from "../../../infrastructure/ai/contracts/openai-client";
 import {
@@ -12,6 +11,7 @@ import {
   toRoomSummaryDto,
 } from "./mappers/financial.mappers";
 import { buildFsChatSystemPrompt } from "./prompts/financial.chat.prompts";
+import { IFsChatService } from "../contracts/services/financial.chat.service";
 
 export class FsChatService implements IFsChatService {
   constructor(

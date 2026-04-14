@@ -2,11 +2,11 @@ import { Response } from "express";
 import {
   ApiResponse,
   AuthenticatedRequest,
-} from "../../types/dto/response/basic.response";
+} from "../../../types/dto/response/basic.response";
 import {
   ConceptDetailResponse,
   ConceptListResponse,
-} from "../types/dto/response/concept-list.response";
+} from "../../types/dto/response/concept-list.response";
 
 export interface IConceptController {
   getConceptList(

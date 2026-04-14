@@ -1,12 +1,12 @@
 import { SignUpRequest, LoginRequest } from "../validators/auth.validator";
 import { AppError, ErrorCode } from "../../../common/errors/app.error";
 import { UserInfoResponse } from "../../user/types/dto/response/user-info.response";
-import { IAuthService } from "../contracts/auth.service";
 import { SignUpResponse } from "../types/dto/response/sign-up.response";
 import { LoginResponse } from "../types/dto/response/login.response";
 import { TokenPayload } from "../../../common/utils/contracts/token.manager.util";
-import { IUserService } from "../../user/contracts/user.service";
-import { IFinancialService } from "../../financial/contracts/financial.service";
+import { IUserService } from "../../user/contracts/service/user.service";
+import { IFinancialService } from "../../financial/contracts/service/financial.service";
+import { IAuthService } from "../contracts/services/auth.service";
 
 export class AuthService implements IAuthService {
   constructor(

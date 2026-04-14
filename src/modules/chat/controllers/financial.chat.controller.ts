@@ -12,8 +12,9 @@ import {
 } from "../validators/fschat.validator";
 import { handleAuthError } from "../../../common/errors/handle.auth.error";
 import { IIdGenerator } from "../../../common/utils/contracts/uuid.generator.util";
-import { IFsChatService } from "../contracts/financial.chat.service";
-import { IFsChatController } from "../contracts/financial.chat.controller";
+import { IFsChatService } from "../contracts/services/financial.chat.service";
+import { IFsChatController } from "../contracts/controllers/financial.chat.controller";
+
 
 export class FsChatController implements IFsChatController {
   constructor(

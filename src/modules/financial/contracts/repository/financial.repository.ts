@@ -1,8 +1,8 @@
 import {
   FinancialGoalRow,
   FinancialGoalWithProgressRow,
-} from "../types/entity/financial-goal.entity";
-import { FinancialStatementRow } from "../types/entity/financial-statement.entity";
+} from "../../types/entity/financial-goal.entity";
+import { FinancialStatementRow } from "../../types/entity/financial-statement.entity";
 
 export interface IFinancialRepository {
   createFinancialGoal(

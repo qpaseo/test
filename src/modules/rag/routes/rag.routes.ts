@@ -1,6 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
-import { IRagController } from "../contracts/rag.controller";
+import { IRagController } from "../contracts/controller/rag.controller";
 
 export const createRagRouter = (ragController: IRagController): Router => {
   const router = Router();

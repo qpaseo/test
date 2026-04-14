@@ -1,5 +1,5 @@
-import { FinancialGoalWithProgress } from "../types/entity/financial-goal.entity";
-import { MonthlyFinance } from "../types/entity/monthly-finances.entity";
+import { FinancialGoalWithProgress } from "../../types/entity/financial-goal.entity";
+import { MonthlyFinance } from "../../types/entity/monthly-finances.entity";
 
 export interface IFinancialService {
   initialize(

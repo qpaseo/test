@@ -1,5 +1,5 @@
 import { ConceptRow, ConceptSummaryRow } from "../types/entity/concept.entity";
-import { IConceptRepository } from "../contracts/concepts.repository";
+import { IConceptRepository } from "../contracts/repository/concepts.repository";
 import { Pool } from "pg";
 
 export class ConceptRepository implements IConceptRepository {

@@ -1,4 +1,4 @@
-import { UserInfoResponse } from "../types/dto/response/user-info.response";
+import { UserInfoResponse } from "../../types/dto/response/user-info.response";
 
 export interface IUserService {
   getUserByEmail(email: string): Promise<any>;

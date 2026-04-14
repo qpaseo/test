@@ -1,7 +1,7 @@
 import {
   ConceptDetailResponse,
   ConceptListResponse,
-} from "../types/dto/response/concept-list.response";
+} from "../../types/dto/response/concept-list.response";
 
 export interface IConceptService {
   getConceptList(page: number): Promise<ConceptListResponse>;

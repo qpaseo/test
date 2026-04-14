@@ -1,13 +1,13 @@
 // runMonthlyFinancesUpdate와 cron 설정
 
 import cron from "node-cron";
-import { runMonthlyFinancesUpdate } from "./service/financeService";
+import { runMonthlyFinancesUpdate } from "./service/finance.service";
 import {
   getLastRunDate,
   updateLastRunDate,
   initLastRunDate,
-} from "./schedulerSettings";
-import { runMonthlyGoalUpdate } from "./service/goalService";
+} from "./scheduler.settings";
+import { runMonthlyGoalUpdate } from "./service/goal.service";
 
 /**
  * 월별 재무 업데이트 스케줄러 초기화

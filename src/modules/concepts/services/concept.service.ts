@@ -1,6 +1,6 @@
 import { AppError, ErrorCode } from "../../../common/errors/app.error";
-import { IConceptService } from "../contracts/concept.service";
-import { IConceptRepository } from "../contracts/concepts.repository";
+import { IConceptService } from "../contracts/service/concept.service";
+import { IConceptRepository } from "../contracts/repository/concepts.repository";
 import {
   ConceptDetailResponse,
   ConceptListItemResponse,

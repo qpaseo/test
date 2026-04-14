@@ -1,5 +1,5 @@
-import { UploadResponse } from "../types/dto/response/upload.response";
-import { UploadQuery } from "../validators/rag.validator";
+import { UploadResponse } from "../../types/dto/response/upload.response";
+import { UploadQuery } from "../../validators/rag.validator";
 
 export interface IEmbeddingClient {
   createEmbeddings(inputs: string[]): Promise<number[][]>;

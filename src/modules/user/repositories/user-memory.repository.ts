@@ -4,7 +4,7 @@ import {
   UserMemoryRow,
 } from "../types/entity/user-memory.entity";
 import { AppError, ErrorCode } from "../../../common/errors/app.error";
-import { IUserMemoryRepository } from "../contracts/user-memory.repository.interface";
+import { IUserMemoryRepository } from "../contracts/repository/user-memory.repository.interface";
 
 export class UserMemoryRepository implements IUserMemoryRepository {
   constructor(private readonly db: Pool) {}

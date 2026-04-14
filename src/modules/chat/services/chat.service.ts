@@ -5,12 +5,11 @@ import {
   ChatRoomListResponse,
   GetChatRoomsResponse,
 } from "../types/dto/response/chat-rooms.response";
-import { ChatToolHandler } from "../tools/chatTools";
+import { ChatToolHandler } from "../tools/chat.tools";
 import { ChatToolRepository } from "../repositories/chat.tool.repository";
 import { ChatRoomRepository } from "../repositories/chat.room.repository";
 import { ChatMessageRepository } from "../repositories/chat.message.repository";
 import { ChatMemoryRepository } from "../repositories/chat.memory.repository";
-import { IChatService } from "../contracts/chat.service";
 import { IOpenAIClient } from "../../../infrastructure/ai/contracts/openai-client";
 import {
   toMemoryDto,
@@ -22,6 +21,7 @@ import {
   toUserMemoryEntity,
 } from "./mappers/chat.mappers";
 import { buildChatSystemPrompt } from "./prompts/chat.prompts";
+import { IChatService } from "../contracts/services/chat.service";
 
 // ─── Service ─────────────────────────────────────────────
 

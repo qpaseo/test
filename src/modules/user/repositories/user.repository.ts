@@ -2,7 +2,7 @@ import { AppError, ErrorCode } from "../../../common/errors/app.error";
 import { Pool } from "pg";
 import { UserRow } from "../types/entity/user.entity";
 import { CreateUserInput } from "../types/internal";
-import { IUserRepository } from "../contracts/user.repository.interface";
+import { IUserRepository } from "../contracts/repository/user.repository.interface";
 
 export class UserRepository implements IUserRepository {
   constructor(private readonly db: Pool) {}

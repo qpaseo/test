@@ -4,7 +4,7 @@ import {
   ChatRoomRow,
   ChatRoomWithLastMessage,
 } from "../types/entity/chat-room.entity";
-import { IChatRoomRepository } from "../contracts/chat.room.repository";
+import { IChatRoomRepository } from "../contracts/repositories/chat.room.repository";
 
 export class ChatRoomRepository implements IChatRoomRepository {
   constructor(private readonly db: Pool) {}

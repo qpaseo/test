@@ -1,5 +1,5 @@
-import { IFinancialRepository } from "../contracts/financial.repository";
-import { IFinancialService } from "../contracts/financial.service";
+import { IFinancialRepository } from "../contracts/repository/financial.repository";
+import { IFinancialService } from "../contracts/service/financial.service";
 import {
   FinancialGoalWithProgress,
   FinancialGoalWithProgressRow,

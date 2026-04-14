@@ -11,9 +11,9 @@ import {
   ChatRoomListQuerySchema,
   ChatRoomParamsSchema,
 } from "../validators/chat.validator";
-import { IChatService } from "../contracts/chat.service";
 import { IIdGenerator } from "../../../common/utils/contracts/uuid.generator.util";
-import { IChatController } from "../contracts/chat.controller";
+import { IChatController } from "../contracts/controllers/chat.controller";
+import { IChatService } from "../contracts/services/chat.service";
 
 export class ChatController implements IChatController {
   constructor(

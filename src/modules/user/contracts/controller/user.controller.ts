@@ -2,9 +2,9 @@ import { Response } from "express";
 import {
   ApiResponse,
   AuthenticatedRequest,
-} from "../../types/dto/response/basic.response";
-import { UserInfoResponse } from "../types/dto/response/user-info.response";
-import { UserDashboardResponse } from "../types/dto/response/user-dashboard.response";
+} from "../../../types/dto/response/basic.response";
+import { UserInfoResponse } from "../../types/dto/response/user-info.response";
+import { UserDashboardResponse } from "../../types/dto/response/user-dashboard.response";
 
 export interface IUserController {
   getUserInfo(

@@ -1,9 +1,5 @@
 import { Response } from "express";
-import {
-  ChatRoomDetailResponse,
-  ChatRoomListResponse,
-  GetChatRoomsResponse,
-} from "../types/dto/response/chat-rooms.response";
+import { ChatRoomDetailResponse, ChatRoomListResponse, GetChatRoomsResponse } from "../../types/dto/response/chat-rooms.response";
 
 export interface IChatService {
   getRagChatRooms(userId: string): Promise<GetChatRoomsResponse[]>;

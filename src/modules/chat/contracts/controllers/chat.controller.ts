@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { AuthenticatedRequest } from "../../types/dto/response/basic.response";
+import { AuthenticatedRequest } from "../../../types/dto/response/basic.response";
 
 export interface IChatController {
   getRoomList(req: AuthenticatedRequest, res: Response): Promise<void>;

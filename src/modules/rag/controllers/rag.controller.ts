@@ -3,8 +3,8 @@ import { ApiResponse } from "../../types/dto/response/basic.response";
 import { UploadResponse } from "../types/dto/response/upload.response";
 import { UploadQuerySchema } from "../validators/rag.validator";
 import { handleAuthError } from "../../../common/errors/handle.auth.error";
-import { IRagController } from "../contracts/rag.controller";
-import { IRagService } from "../contracts/rag.service";
+import { IRagController } from "../contracts/controller/rag.controller";
+import { IRagService } from "../contracts/service/rag.service";
 
 export class RagController implements IRagController {
   constructor(private readonly ragService: IRagService) {}

@@ -5,7 +5,7 @@ import {
 import { AppError, ErrorCode } from "../../../common/errors/app.error";
 import { FinancialStatementRow } from "../types/entity/financial-statement.entity";
 import { Pool } from "pg";
-import { IFinancialRepository } from "../contracts/financial.repository";
+import { IFinancialRepository } from "../contracts/repository/financial.repository";
 
 export class FinancialRepository implements IFinancialRepository {
   constructor(private readonly db: Pool) {}

@@ -12,8 +12,8 @@ import {
   ConceptListResponse,
 } from "../types/dto/response/concept-list.response";
 import { handleAuthError } from "../../../common/errors/handle.auth.error";
-import { IConceptController } from "../contracts/concept.controller";
-import { IConceptService } from "../contracts/concept.service";
+import { IConceptController } from "../contracts/controller/concept.controller";
+import { IConceptService } from "../contracts/service/concept.service";
 
 export class ConceptController implements IConceptController {
   constructor(private readonly conceptService: IConceptService) {}

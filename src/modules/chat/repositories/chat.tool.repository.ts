@@ -7,7 +7,7 @@ import {
 import { MonthlyFinanceRow } from "../../financial/types/entity/monthly-finances.entity";
 import { FinancialGoalRow } from "../../financial/types/entity/financial-goal.entity";
 import { FinancialStatementRow } from "../../financial/types/entity/financial-statement.entity";
-import { IChatToolRepository } from "../contracts/chat.tool.repository";
+import { IChatToolRepository } from "../contracts/repositories/chat.tool.repository";
 
 /**
  * AI Tool 에서 사용하는 공용 Repository

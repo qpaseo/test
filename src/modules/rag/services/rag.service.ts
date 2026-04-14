@@ -2,8 +2,11 @@ import * as pdfjs from "pdfjs-dist";
 import { UploadResponse } from "../types/dto/response/upload.response";
 import { UploadQuery } from "../validators/rag.validator";
 import { encodingForModel } from "js-tiktoken";
-import { IEmbeddingClient, IRagService } from "../contracts/rag.service";
-import { IRagRepository } from "../contracts/rag.repository";
+import {
+  IEmbeddingClient,
+  IRagService,
+} from "../contracts/service/rag.service";
+import { IRagRepository } from "../contracts/repository/rag.repository";
 
 /**
  * 서비스 구현 포인트

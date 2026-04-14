@@ -4,7 +4,7 @@ import {
   FinancialStatementChatRoomWithLastMessage,
 } from "../types/entity/financial-chat-room.entity";
 import { CreateFsChatRoomInput } from "../types/internal";
-import { IFinancialChatRoomRepository } from "../contracts/financial.chat.room.repository";
+import { IFinancialChatRoomRepository } from "../contracts/repositories/financial.chat.room.repository";
 
 export class FinancialChatRoomRepository implements IFinancialChatRoomRepository {
   constructor(private readonly db: Pool) {}

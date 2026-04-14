@@ -8,8 +8,8 @@ import {
 import { UserInfoResponse } from "../types/dto/response/user-info.response";
 import { UserDashboardResponse } from "../types/dto/response/user-dashboard.response";
 import { handleAuthError } from "../../../common/errors/handle.auth.error";
-import { IUserService } from "../contracts/user.service";
-import { IUserController } from "../contracts/user.controller";
+import { IUserService } from "../contracts/service/user.service";
+import { IUserController } from "../contracts/controller/user.controller";
 
 export class UserController implements IUserController {
   constructor(

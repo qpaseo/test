@@ -4,7 +4,7 @@ import { UserInfoResponse } from "../types/dto/response/user-info.response";
 import { CreateUserInput } from "../types/internal";
 import { UserRepository } from "../repositories/user.repository";
 import { UserMemoryRepository } from "../repositories/user-memory.repository";
-import { IUserService } from "../contracts/user.service";
+import { IUserService } from "../contracts/service/user.service";
 
 export class UserService implements IUserService {
   constructor(
