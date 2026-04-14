@@ -22,7 +22,8 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
 // ============= Swagger 설정 =============
-if (ENV.SWAGGER_ENABLED) {
+const isSwaggerEnabled = process.env.SWAGGER_ENABLED === "true";
+if (isSwaggerEnabled) {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   console.log("Swagger 문서: http://localhost:" + ENV.PORT + "/api-docs");

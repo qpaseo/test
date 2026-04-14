@@ -15,9 +15,7 @@ export const ENV = {
   PG_NAME: process.env.PG_NAME || "ragdb",
 
   // Redis
-  REDIS_HOST:
-    process.env.REDIS_HOST ||
-    "redis-11233.c340.ap-northeast-2-1.ec2.cloud.redislabs.com",
+  REDIS_HOST: process.env.REDIS_HOST,
   REDIS_PORT: Number.parseInt(process.env.REDIS_PORT || "11233", 10),
   REDIS_PASSWORD: process.env.REDIS_PASSWORD || "",
   REDIS_DB: Number.parseInt(process.env.REDIS_DB || "0", 10),
@@ -31,7 +29,7 @@ export const ENV = {
   OPENAI_API_KEY: process.env.OPENAI_API_KEY || "",
 
   // Swagger
-  SWAGGER_ENABLED: process.env.SWAGGER_ENABLED !== "false",
+  SWAGGER_ENABLED: process.env.SWAGGER_ENABLED,
 };
 
 // 환경 변수 검증
