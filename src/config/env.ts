@@ -21,9 +21,9 @@ export const ENV = {
   REDIS_DB: Number.parseInt(process.env.REDIS_DB || "0", 10),
 
   // JWT
-  JWT_SECRET: process.env.JWT_SECRET || "your-secret-key-change-in-production",
-  JWT_ACCESS_EXPIRY: "1h", // 1시간
-  JWT_REFRESH_EXPIRY: "5d", // 5일
+  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_ACCESS_EXPIRY: process.env.JWT_ACCESS_EXPIRY,
+  JWT_REFRESH_EXPIRY: process.env.JWT_REFRESH_EXPIRY,
 
   // OpenAI
   OPENAI_API_KEY: process.env.OPENAI_API_KEY || "",
