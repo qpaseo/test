@@ -3,7 +3,7 @@ import {
   UserMemoryContent,
   UserMemoryRow,
 } from "../types/entity/user-memory.entity";
-import { AppError, ErrorCode } from "../../../common/errors/AppError";
+import { AppError, ErrorCode } from "../../../common/errors/app.error";
 import { IUserMemoryRepository } from "../contracts/user-memory.repository.interface";
 
 export class UserMemoryRepository implements IUserMemoryRepository {

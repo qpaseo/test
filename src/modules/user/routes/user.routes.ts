@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authMiddleware } from "../../../common/middlewares/authMiddleware";
+import { authMiddleware } from "../../../common/middlewares/auth.middleware";
 import { IUserController } from "../contracts/user.controller";
 
 export const createUserRouter = (userController: IUserController): Router => {

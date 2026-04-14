@@ -1,13 +1,13 @@
 import { Response } from "express";
 
-import { AppError, ErrorCode } from "../../../common/errors/AppError";
+import { AppError, ErrorCode } from "../../../common/errors/app.error";
 import {
   ApiResponse,
   AuthenticatedRequest,
 } from "../../types/dto/response/basic.response";
 import { UserInfoResponse } from "../types/dto/response/user-info.response";
 import { UserDashboardResponse } from "../types/dto/response/user-dashboard.response";
-import { handleAuthError } from "../../../common/errors/HandleAuthError";
+import { handleAuthError } from "../../../common/errors/handle.auth.error";
 import { IUserService } from "../contracts/user.service";
 import { IUserController } from "../contracts/user.controller";
 

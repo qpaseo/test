@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Pool } from "pg";
-import { ChatController } from "../controllers/chatController";
-import { authMiddleware } from "../../../common/middlewares/authMiddleware";
+import { ChatController } from "../controllers/chat.controller";
+import { authMiddleware } from "../../../common/middlewares/auth.middleware";
 
 export function createChatRouter(db: Pool): Router {
   const router = Router();

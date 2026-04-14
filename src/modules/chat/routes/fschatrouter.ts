@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Pool } from "pg";
-import { authMiddleware } from "../../../common/middlewares/authMiddleware";
-import { FsChatController } from "../controllers/financialChatController";
+import { authMiddleware } from "../../../common/middlewares/auth.middleware";
+import { FsChatController } from "../controllers/financial.chat.controller";
 
 export function createFsChatRouter(db: Pool): Router {
   const router = Router();

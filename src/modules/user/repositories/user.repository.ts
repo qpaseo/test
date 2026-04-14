@@ -1,4 +1,4 @@
-import { AppError, ErrorCode } from "../../../common/errors/AppError";
+import { AppError, ErrorCode } from "../../../common/errors/app.error";
 import { Pool } from "pg";
 import { UserRow } from "../types/entity/user.entity";
 import { CreateUserInput } from "../types/internal";

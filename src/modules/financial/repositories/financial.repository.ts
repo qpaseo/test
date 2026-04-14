@@ -2,7 +2,7 @@ import {
   FinancialGoalRow,
   FinancialGoalWithProgressRow,
 } from "../types/entity/financial-goal.entity";
-import { AppError, ErrorCode } from "../../../common/errors/AppError";
+import { AppError, ErrorCode } from "../../../common/errors/app.error";
 import { FinancialStatementRow } from "../types/entity/financial-statement.entity";
 import { Pool } from "pg";
 import { IFinancialRepository } from "../contracts/financial.repository";

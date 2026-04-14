@@ -5,5 +5,5 @@ export interface SignUpResponse {
   userId: string;
   email: string;
   name: string;
-  createdAt: string;
+  createdAt: Date;
 }

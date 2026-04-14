@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { Pool } from "pg";
-import { ChatToolRepository } from "../repositories/chatToolRepository";
+import { ChatToolRepository } from "../repositories/chat.tool.repository";
 
 // ─── Tool 정의 ────────────────────────────────────────────
 

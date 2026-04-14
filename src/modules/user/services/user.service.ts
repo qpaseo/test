@@ -1,4 +1,4 @@
-import { AppError, ErrorCode } from "../../../common/errors/AppError";
+import { AppError, ErrorCode } from "../../../common/errors/app.error";
 import { UserMemoryContent } from "../types/entity/user-memory.entity";
 import { UserInfoResponse } from "../types/dto/response/user-info.response";
 import { CreateUserInput } from "../types/internal";
