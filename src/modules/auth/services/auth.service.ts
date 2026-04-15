@@ -10,12 +10,13 @@ import { IAuthService } from "../contracts/services/auth.service";
 import { TokenManager } from "../../../common/utils/token.manager.util";
 import { PasswordManager } from "../../../common/utils/password.util";
 import { UserRepository } from "../../user/repositories/user.repository";
+import { IFinancialChatRoomRepository } from "../../chat/contracts/repositories/financial.chat.room.repository";
 
 export class AuthService implements IAuthService {
   constructor(
     private readonly userService: IUserService,
     private readonly financialService: IFinancialService,
-    private readonly financialChatRoomRepository: any,
+    private readonly financialChatRoomRepository: IFinancialChatRoomRepository,
     private readonly passwordManager: PasswordManager,
     private readonly tokenManager: TokenManager,
     private readonly userRepository: UserRepository,
@@ -32,14 +33,20 @@ export class AuthService implements IAuthService {
       throw new AppError(ErrorCode.USER_ALREADY_EXISTS, "...", 409);
     }
 
+    console.log("유저 검증 완료");
+
     const hashedPassword = await this.passwordManager.hashPassword(
       input.password,
     );
+
+    console.log("비밀번호 검증 완료");
 
     const user = await this.userService.createUser({
       ...input,
       password: hashedPassword,
     });
+
+    console.log("유저 생성 완료");
 
     await this.userService.initializeUserProfile(user.userId, input);
     await this.financialService.initialize(user.userId, input);

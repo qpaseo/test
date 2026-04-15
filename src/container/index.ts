@@ -25,6 +25,16 @@ import { FsChatService } from "../modules/chat/services/financial.chat.service";
 import { FinancialChatMessageRepository } from "../modules/chat/repositories/financial.chat.message.repository";
 import { FsChatToolHandler } from "../modules/chat/tools/fs-chat.tools";
 import { FinancialChatRoomRepository } from "../modules/chat/repositories/financial.chat.room.repository";
+import { ConceptRoutes } from "../modules/concepts/routes/concept.route";
+import { ConceptController } from "../modules/concepts/controllers/concept.controller";
+import { ConceptService } from "../modules/concepts/services/concept.service";
+import { ConceptRepository } from "../modules/concepts/repositories/concepts.repository";
+import { ChatRoutes } from "../modules/chat/routes/chatRouter";
+import { ChatController } from "../modules/chat/controllers/chat.controller";
+import { UuidGenerator } from "../common/utils/uuid.generator.util";
+import { FsChatRoutes } from "../modules/chat/routes/fschatrouter";
+import { FsChatController } from "../modules/chat/controllers/financial.chat.controller";
+import { ChatAiService } from "../modules/chat/services/chat.ai.service";
 
 export const buildContainer = () => {
   // =========================
@@ -33,6 +43,7 @@ export const buildContainer = () => {
   const openAIClient = new OpenAIClient();
   const passwordManager = new PasswordManager();
   const tokenManager = new TokenManager();
+  const uuidGenerator = new UuidGenerator();
 
   // =========================
   // middleware
@@ -50,21 +61,23 @@ export const buildContainer = () => {
   const fsToolHandler = new FsChatToolHandler(db);
   const chatToolRepository = new ChatToolRepository(db);
   //chat
-  const chatRoomRepository = new ChatRoomRepository(db);
+  const chatRoomRepository = new ChatRoomRepository(db, uuidGenerator);
   const chatMessageRepository = new ChatMessageRepository(db);
   const chatMemoryRepository = new ChatMemoryRepository(db);
   const financialChatMessageRepository = new FinancialChatMessageRepository(db);
   const financialChatRoomRepository = new FinancialChatRoomRepository(db);
+  const conceptRepository = new ConceptRepository(db);
 
   // =========================
   // services
   // =========================
+  const aiService = new ChatAiService(openAIClient, toolHandler);
   const financialService = new FinancialService(financialRepository);
   const userService = new UserService(userRepository, userMemoryRepository);
   const authService = new AuthService(
     userService,
     financialService,
-    null, // financialChatRoomRepository (나중에 주입)
+    financialChatRoomRepository,
     passwordManager,
     tokenManager,
     userRepository,
@@ -73,8 +86,7 @@ export const buildContainer = () => {
     chatRoomRepository,
     chatMessageRepository,
     chatMemoryRepository,
-    toolHandler,
-    openAIClient,
+    aiService,
   );
   const fsChatService = new FsChatService(
     financialChatMessageRepository,
@@ -83,6 +95,7 @@ export const buildContainer = () => {
     fsToolHandler,
     openAIClient,
   );
+  const conceptService = new ConceptService(conceptRepository);
 
   // =========================
   // controllers
@@ -94,15 +107,30 @@ export const buildContainer = () => {
     chatService,
     fsChatService,
   );
+  const conceptController = new ConceptController(conceptService);
+  const chatController = new ChatController(chatService);
+  const fsChatController = new FsChatController(fsChatService, uuidGenerator);
 
   // =========================
   // routes
   // =========================
   const authRoutes = new AuthRoutes(authController).build();
   const userRoutes = new UserRoutes(userController, authMiddleware).build();
+  const conceptRoutes = new ConceptRoutes(
+    conceptController,
+    authMiddleware,
+  ).build();
+  const chatRoutes = new ChatRoutes(chatController, authMiddleware).build();
+  const fsChatRoutes = new FsChatRoutes(
+    fsChatController,
+    authMiddleware,
+  ).build();
 
   return {
     authRoutes,
     userRoutes,
+    conceptRoutes,
+    chatRoutes,
+    fsChatRoutes,
   };
 };

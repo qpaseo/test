@@ -17,7 +17,7 @@ export class ChatRoutes {
     const router = Router();
 
     /**
-     * GET /api/chat/rooms
+     * GET /chat/rooms
      */
     router.get(
       "/rooms",
@@ -26,7 +26,7 @@ export class ChatRoutes {
     );
 
     /**
-     * GET /api/chat/rooms/:roomId
+     * GET /chat/rooms/:roomId
      */
     router.get(
       "/rooms/:roomId",
@@ -35,7 +35,25 @@ export class ChatRoutes {
     );
 
     /**
-     * DELETE /api/chat/rooms/:roomId
+     * POST /chat/rooms/:roomId
+     */
+    router.post(
+      "/rooms/create",
+      this.authMiddleware.auth,
+      this.chatController.createRoom,
+    );
+
+    /**
+     * PATCH /chat/rooms/:roomId
+     */
+    router.patch(
+      "/rooms/:roomId",
+      this.authMiddleware.auth,
+      this.chatController.updateRoom,
+    );
+
+    /**
+     * DELETE /chat/rooms/:roomId
      */
     router.delete(
       "/rooms/:roomId",
@@ -44,7 +62,7 @@ export class ChatRoutes {
     );
 
     /**
-     * POST /api/chat/stream
+     * POST /chat/stream
      */
     router.post(
       "/stream",

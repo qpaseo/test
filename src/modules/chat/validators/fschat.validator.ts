@@ -22,5 +22,14 @@ export const FsChatRoomParamsSchema = z.object({
   roomId: z.string().uuid(),
 });
 
+export const FsChatRoomUpdateParamsSchema = z.object({
+  name: z.string().min(1).max(50),
+  description: z.string().max(255).nullable().optional(),
+});
+
 export type FsChatRoomListQuery = z.infer<typeof FsChatRoomListQuerySchema>;
 export type FsChatMessageBody = z.infer<typeof FsChatMessageBodySchema>;
+export type FsChatRoomUpdateParams = z.infer<
+  typeof FsChatRoomUpdateParamsSchema
+>;
+export type FsChatRoomParams = z.infer<typeof FsChatRoomParamsSchema>;

@@ -1,5 +1,5 @@
 export const conceptPaths = {
-  "/api/concepts": {
+  "/concepts": {
     get: {
       tags: ["Concepts"],
       summary: "컨셉 리스트 조회",
@@ -47,7 +47,7 @@ export const conceptPaths = {
     },
   },
 
-  "/api/concepts/{id}": {
+  "/concepts/{id}": {
     get: {
       tags: ["Concepts"],
       summary: "컨셉 상세 조회",

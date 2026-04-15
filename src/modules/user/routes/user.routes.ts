@@ -21,10 +21,12 @@ export class UserRoutes {
      * - 인증된 사용자 정보 조회
      * - Access Token 기반으로 사용자 식별
      */
+    router.get("/", this.authMiddleware.auth, this.userController.getUserInfo);
+
     router.get(
-      "/user",
+      "/main",
       this.authMiddleware.auth,
-      this.userController.getUserInfo,
+      this.userController.getUserDashboard,
     );
 
     return router;

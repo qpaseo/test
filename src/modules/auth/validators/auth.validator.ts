@@ -31,9 +31,7 @@ export const SignUpRequestSchema = z.object({
     ),
   targetAmount: z.number().positive("목표 금액은 0보다 커야 합니다"),
   netMonthlyIncome: z.number().positive("세후 월급은 0보다 커야 합니다"),
-  monthlyFixedExpenses: z
-    .array(ExpenseItemSchema)
-    .min(1, "고정 지출은 최소 1개 이상 입력해야 합니다"),
+  monthlyFixedExpenses: z.array(ExpenseItemSchema),
   hasLoan: z.boolean(),
   hasStock: z.boolean(),
 });

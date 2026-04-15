@@ -17,7 +17,7 @@ export class FsChatRoutes {
     /**
      * GET /api/fs-chat/rooms
      */
-    router.get("/rooms", this.authMiddleware.auth, this.controller.getRoomList);
+    // router.get("/rooms", this.authMiddleware.auth, this.controller.getRoomList);
 
     /**
      * GET /api/fs-chat/rooms/:roomId

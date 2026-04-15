@@ -1,27 +1,30 @@
-// import app from "./app";
-// import { initializeDatabase } from "./config/db/db";
-// import { ENV } from "./config/env";
-// import { initMonthlyFinancesJob } from "./jobs/monthly-finances-job";
-
-// app.listen(ENV.PORT, async () => {
-//   console.log(`Server running on port ${ENV.PORT}`);
-//   await initializeDatabase();
-//   await initMonthlyFinancesJob();
-// });
-
 import app from "./app";
+import cors from "cors";
 import { initializeDatabase } from "./config/db/db";
 import { ENV } from "./config/env";
 import { initMonthlyFinancesJob } from "./jobs/monthly-finances-job";
 import { buildContainer } from "./container";
+import { initializeRedis } from "./config/redis";
 
 const bootstrap = async () => {
   await initializeDatabase();
+  await initializeRedis();
 
-  const { authRoutes, userRoutes } = buildContainer();
+  app.use(
+    cors({
+      origin: "http://localhost:5173",
+      credentials: true,
+    }),
+  );
+
+  const { authRoutes, userRoutes, conceptRoutes, chatRoutes, fsChatRoutes } =
+    buildContainer();
 
   app.use("/auth", authRoutes);
   app.use("/user", userRoutes);
+  app.use("/concepts", conceptRoutes);
+  app.use("/chat", chatRoutes);
+  app.use("/fs-chat", fsChatRoutes);
 
   await initMonthlyFinancesJob();
 

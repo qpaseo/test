@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { FsChatRoomWithLastMessage } from "../../types/dto/response/financial-chat-last-message.response";
-import { FsChatRoomListResponse } from "../../types/dto/response/financial-chat-room-list.response";
+//import { FsChatRoomListResponse } from "../../types/dto/response/financial-chat-room-list.response";
 import { FsChatRoomDetailResponse } from "../../types/dto/response/financial-chat-room-detail.response";
 import { FsChatCompleteResponse } from "../../types/dto/response/financial-chat-complete.response";
 
@@ -9,11 +9,11 @@ export interface IFsChatService {
     userId: string,
   ): Promise<FsChatRoomWithLastMessage[]>;
 
-  getRoomList(
-    userId: string,
-    page: number,
-    pageSize: number,
-  ): Promise<FsChatRoomListResponse>;
+  // getRoomList(
+  //   userId: string,
+  //   page: number,
+  //   pageSize: number,
+  // ): Promise<FsChatRoomListResponse>;
 
   getRoomDetail(
     roomId: string,
@@ -31,4 +31,10 @@ export interface IFsChatService {
     roomId: string,
     userId: string,
   ): Promise<FsChatCompleteResponse>;
+
+  updateRoom(
+    roomId: string,
+    userId: string,
+    input: { name?: string; description?: string | null },
+  ): Promise<any>;
 }

@@ -3,7 +3,7 @@ import {
   FinancialGoalWithProgressRow,
 } from "../types/entity/financial-goal.entity";
 import { AppError, ErrorCode } from "../../../common/errors/app.error";
-import { FinancialStatementRow } from "../types/entity/financial-statement.entity";
+import { ExpenseItem, FinancialStatementRow } from "../types/entity/financial-statement.entity";
 import { Pool } from "pg";
 import { IFinancialRepository } from "../contracts/repository/financial.repository";
 
@@ -52,25 +52,33 @@ export class FinancialRepository implements IFinancialRepository {
   async createFinancialStatement(
     userId: string,
     netMonthlyIncome: number,
-    monthlyFixedExpenses: any,
+    monthlyFixedExpenses: ExpenseItem[],
     monthlyFixedExpensesAmount: number,
   ): Promise<FinancialStatementRow> {
+    console.log(
+      "createFinancialStatement 전달 값",
+      userId,
+      netMonthlyIncome,
+      monthlyFixedExpenses,
+      monthlyFixedExpensesAmount,
+    );
     try {
       const monthlySavingsInvestment = {
         amount: netMonthlyIncome - monthlyFixedExpensesAmount,
         description: "저축 및 투자 가능 금액",
       };
 
-      const result = await this.db.query<FinancialStatementRow>(
+      const result = await this.db.query(
         `INSERT INTO financial_statements 
-          (id, user_id, net_monthly_income, monthly_fixed_expenses, monthly_savings_investment, created_at, updated_at)
-         VALUES (gen_random_uuid(), $1, $2, $3, $4, NOW(), NOW())
-         RETURNING *`,
+    (user_id, net_monthly_income, monthly_fixed_expenses, monthly_savings_investment, info)
+   VALUES ($1, $2, $3, $4, $5)
+   RETURNING *`,
         [
           userId,
           netMonthlyIncome,
           monthlyFixedExpenses,
           monthlySavingsInvestment,
+          "첫 재무제표 입니다. 자동생성이기에 상세 정보는 없습니다.",
         ],
       );
 

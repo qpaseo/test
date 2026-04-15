@@ -8,12 +8,13 @@ import {
   toFsChatRoomWithLastMessageDto,
   toMessageDto,
   toMessageEntity,
-  toRoomEntity,
-  toRoomSummaryDto,
+  //toRoomEntity,
+  //toRoomSummaryDto,
 } from "./mappers/financial.mappers";
 import { buildFsChatSystemPrompt } from "./prompts/financial.chat.prompts";
 import { IFsChatService } from "../contracts/services/financial.chat.service";
 import { FsChatRoomWithLastMessage } from "../types/dto/response/financial-chat-last-message.response";
+import { AppError, ErrorCode } from "../../../common/errors/app.error";
 
 export class FsChatService implements IFsChatService {
   constructor(
@@ -33,25 +34,50 @@ export class FsChatService implements IFsChatService {
     return rows.map(toFsChatRoomWithLastMessageDto);
   }
 
-  async getRoomList(userId: string, page: number, pageSize: number) {
-    const { rows, total } = await this.fsRoomRepo.findRoomsByUserId(
-      userId,
-      page,
-      pageSize,
-    );
+  // async getRoomList(userId: string, page: number, pageSize: number) {
+  //   const { rows, total } = await this.fsRoomRepo.findRoomsByUserId(
+  //     userId,
+  //     page,
+  //     pageSize,
+  //   );
+
+  //   return {
+  //     rooms: rows.map((r) => toRoomSummaryDto(toRoomEntity(r))),
+  //     total,
+  //     page,
+  //     pageSize,
+  //   };
+  // }
+
+  async updateRoom(
+    roomId: string,
+    userId: string,
+    input: { name: string; description?: string | null },
+  ) {
+    const room = await this.fsRoomRepo.findRoomById(roomId);
+
+    if (!room) throw AppError.fromCode(ErrorCode.NOT_FOUND);
+    if (room.user_id !== userId) {
+      throw new Error("접근 권한이 없습니다.");
+    }
+
+    await this.fsRoomRepo.updateRoom(roomId, input);
+
+    const updated = await this.fsRoomRepo.findRoomById(roomId);
 
     return {
-      rooms: rows.map((r) => toRoomSummaryDto(toRoomEntity(r))),
-      total,
-      page,
-      pageSize,
+      id: updated!.id,
+      name: updated!.name,
+      description: updated!.description,
+      createdAt: new Date(updated!.created_at),
+      updatedAt: updated!.updated_at ? new Date(updated!.updated_at) : null,
     };
   }
 
   async getRoomDetail(roomId: string, userId: string) {
     const roomRow = await this.fsRoomRepo.findRoomById(roomId);
 
-    if (!roomRow) throw new Error("채팅방을 찾을 수 없습니다.");
+    if (!roomRow) throw AppError.fromCode(ErrorCode.NOT_FOUND);
     if (roomRow.user_id !== userId) throw new Error("접근 권한이 없습니다.");
 
     const messages = await this.fsMessageRepo.findMessagesByRoomId(roomId);
@@ -74,17 +100,19 @@ export class FsChatService implements IFsChatService {
   ): Promise<void> {
     let roomRow = await this.fsRoomRepo.findRoomById(roomId);
 
-    if (!roomRow) {
-      await this.fsRoomRepo.createRoom({
-        userId,
-        name: userMessage.slice(0, 50),
-      });
-      roomRow = await this.fsRoomRepo.findRoomById(roomId);
+    if (!roomRow || roomRow.user_id !== userId) {
+      // await this.fsRoomRepo.createRoom({
+      //   userId,
+      //   name: userMessage.slice(0, 50),
+      // });
+      // roomRow = await this.fsRoomRepo.findRoomById(roomId);
+      throw new AppError(
+        ErrorCode.NOT_FOUND,
+        "해당 채팅방을 찾을수 없거나 접근할수 없습니다.",
+      );
     }
 
-    if (!roomRow || roomRow.user_id !== userId) {
-      throw new Error("채팅방 접근 권한이 없습니다.");
-    }
+    console.log("streamChat test : ", roomRow, roomRow?.user_id, userId);
 
     const nextIndex = await this.fsMessageRepo.getNextMessageIndex(roomId);
 

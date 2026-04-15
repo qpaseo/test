@@ -1,5 +1,5 @@
 export const chatPaths = {
-  "/api/chat/rooms": {
+  "/chat/rooms": {
     get: {
       tags: ["Chat"],
       summary: "일반 채팅방 리스트 조회",
@@ -47,9 +47,47 @@ export const chatPaths = {
         500: { description: "서버 오류" },
       },
     },
+
+    post: {
+      tags: ["Chat"],
+      summary: "채팅방 생성",
+      description: "첫 메시지를 기반으로 AI가 채팅방 이름과 설명을 생성합니다.",
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/CreateChatRoomRequest" },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "채팅방 생성 성공",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  success: { type: "boolean", example: true },
+                  code: { type: "string", example: "CHAT_ROOM_CREATED" },
+                  message: { type: "string" },
+                  data: {
+                    $ref: "#/components/schemas/CreateChatRoomResponse",
+                  },
+                  timestamp: { type: "string", format: "date-time" },
+                },
+              },
+            },
+          },
+        },
+        401: { description: "인증 실패" },
+        500: { description: "서버 오류" },
+      },
+    },
   },
 
-  "/api/chat/rooms/{roomId}": {
+  "/chat/rooms/{roomId}": {
     get: {
       tags: ["Chat"],
       summary: "채팅방 상세 조회",
@@ -89,6 +127,51 @@ export const chatPaths = {
             },
           },
         },
+      },
+    },
+
+    patch: {
+      tags: ["Chat"],
+      summary: "채팅방 수정",
+      description: "채팅방 이름 또는 설명을 수정합니다.",
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: "path",
+          name: "roomId",
+          required: true,
+          schema: { type: "string", format: "uuid" },
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/UpdateChatRoomRequest" },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "수정 성공",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  success: { type: "boolean", example: true },
+                  code: { type: "string", example: "CHAT_ROOM_UPDATED" },
+                  message: { type: "string" },
+                  timestamp: { type: "string", format: "date-time" },
+                },
+              },
+            },
+          },
+        },
+        401: { description: "인증 실패" },
+        403: { description: "권한 없음" },
+        404: { description: "채팅방 없음" },
+        500: { description: "서버 오류" },
       },
     },
 
@@ -132,7 +215,7 @@ export const chatPaths = {
     },
   },
 
-  "/api/chat/stream": {
+  "/chat/stream": {
     post: {
       tags: ["Chat"],
       summary: "채팅 SSE 스트리밍",
@@ -168,6 +251,7 @@ export const chatPaths = {
 export const chatSchemas = {
   ChatRoomSummaryResponse: {
     type: "object",
+    required: ["id", "name", "memoryCount", "createdAt"],
     properties: {
       id: { type: "string", format: "uuid" },
       name: { type: "string" },
@@ -182,8 +266,37 @@ export const chatSchemas = {
     },
   },
 
+  Message: {
+    type: "object",
+    required: ["id", "role", "content", "createdAt"],
+    properties: {
+      id: { type: "string", format: "uuid" },
+      role: { type: "string", enum: ["user", "assistant"] },
+      content: { type: "string" },
+      createdAt: { type: "string", format: "date-time" },
+    },
+  },
+
+  Memory: {
+    type: "object",
+    required: ["id", "content", "createdAt"],
+    properties: {
+      id: { type: "string", format: "uuid" },
+      content: { type: "string" },
+      createdAt: { type: "string", format: "date-time" },
+    },
+  },
+
   ChatRoomDetailResponse: {
     type: "object",
+    required: [
+      "id",
+      "name",
+      "memoryCount",
+      "createdAt",
+      "messages",
+      "memories",
+    ],
     properties: {
       id: { type: "string", format: "uuid" },
       name: { type: "string" },
@@ -197,17 +310,22 @@ export const chatSchemas = {
       },
       messages: {
         type: "array",
-        items: { type: "object" }, // 상세 필요
+        items: {
+          $ref: "#/components/schemas/Message",
+        },
       },
       memories: {
         type: "array",
-        items: { type: "object" }, // 상세 필요
+        items: {
+          $ref: "#/components/schemas/Memory",
+        },
       },
     },
   },
 
   ChatRoomListResponse: {
     type: "object",
+    required: ["rooms", "total", "page", "pageSize"],
     properties: {
       rooms: {
         type: "array",
@@ -218,6 +336,42 @@ export const chatSchemas = {
       total: { type: "number" },
       page: { type: "number" },
       pageSize: { type: "number" },
+    },
+  },
+
+  CreateChatRoomRequest: {
+    type: "object",
+    required: ["firstMessage"],
+    properties: {
+      firstMessage: {
+        type: "string",
+        example: "오늘 점심 뭐 먹을지 고민이야",
+      },
+    },
+  },
+
+  UpdateChatRoomRequest: {
+    type: "object",
+    minProperties: 1, // 중요
+    properties: {
+      name: {
+        type: "string",
+        maxLength: 50,
+        example: "새 채팅방 이름",
+      },
+      description: {
+        type: "string",
+        maxLength: 200,
+        example: "새 설명",
+      },
+    },
+  },
+
+  CreateChatRoomResponse: {
+    type: "object",
+    required: ["roomId"],
+    properties: {
+      roomId: { type: "string", format: "uuid" },
     },
   },
 

@@ -1,13 +1,17 @@
 import { Pool } from "pg";
-import { CreateChatRoomInput } from "../types/internal";
+import { CreateChatRoomInput, UpdateChatRoomInput } from "../types/internal";
 import {
   ChatRoomRow,
   ChatRoomWithLastMessage,
 } from "../types/entity/chat-room.entity";
 import { IChatRoomRepository } from "../contracts/repositories/chat.room.repository";
+import { IIdGenerator } from "../../../common/utils/contracts/uuid.generator.util";
 
 export class ChatRoomRepository implements IChatRoomRepository {
-  constructor(private readonly db: Pool) {}
+  constructor(
+    private readonly db: Pool,
+    private readonly idGenerator: IIdGenerator,
+  ) {}
 
   async findChatRoomsWithLastMessage(
     userId: string,
@@ -67,10 +71,26 @@ export class ChatRoomRepository implements IChatRoomRepository {
     return result.rows[0] ?? null;
   }
 
-  async createRoom(input: CreateChatRoomInput): Promise<void> {
+  async createRoom(input: CreateChatRoomInput): Promise<string> {
+    const id = this.idGenerator.generate();
+
     await this.db.query(
-      `INSERT INTO chat_rooms (user_id, name, description) VALUES ($1, $2, $3)`,
-      [input.userId, input.name, input.description ?? null],
+      `INSERT INTO chat_rooms (id, user_id, name, description) VALUES ($1, $2, $3, $4)`,
+      [id, input.userId, input.name, input.description ?? null],
+    );
+
+    return id;
+  }
+
+  async updateRoom(roomId: string, input: UpdateChatRoomInput): Promise<void> {
+    await this.db.query(
+      `UPDATE chat_rooms 
+     SET 
+       name = COALESCE($1, name), 
+       description = COALESCE($2, description),
+       updated_at = NOW()
+     WHERE id = $3`,
+      [input.name ?? null, input.description ?? null, roomId],
     );
   }
 

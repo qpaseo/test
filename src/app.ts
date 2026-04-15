@@ -1,12 +1,10 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger/swagger.spec";
 import { ENV } from "./config/env";
-import { ErrorCode } from "./common/errors/app.error";
-import { ApiResponse } from "./modules/types/dto/response/basic.response";
 
 const app: Application = express();
 
@@ -28,15 +26,5 @@ if (isSwaggerEnabled) {
 
   console.log("Swagger 문서: http://localhost:" + ENV.PORT + "/api-docs");
 }
-
-// ============= 404 핸들러 =============
-app.use((req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    code: ErrorCode.NOT_FOUND,
-    message: "요청한 리소스를 찾을 수 없습니다",
-    timestamp: new Date().toISOString(),
-  } as ApiResponse);
-});
 
 export default app;

@@ -4,6 +4,10 @@ export type ChatSender = "USER" | "AI";
 // Internal Types (Service / Repository Input)
 // ========================
 
+export interface UpdateChatRoomInput {
+  name: string;
+  description?: string;
+}
 export interface CreateChatRoomInput {
   userId: string;
   name: string;

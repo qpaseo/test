@@ -46,30 +46,30 @@ export class FinancialChatRoomRepository implements IFinancialChatRoomRepository
     return rows as FinancialStatementChatRoomWithLastMessage[];
   }
 
-  async findRoomsByUserId(
-    userId: string,
-    page: number,
-    pageSize: number,
-  ): Promise<{ rows: FinancialStatementChatRoomRow[]; total: number }> {
-    const offset = (page - 1) * pageSize;
+  // async findRoomsByUserId(
+  //   userId: string,
+  //   page: number,
+  //   pageSize: number,
+  // ): Promise<{ rows: FinancialStatementChatRoomRow[]; total: number }> {
+  //   const offset = (page - 1) * pageSize;
 
-    const [countResult, rowsResult] = await Promise.all([
-      this.db.query<{ total: number }>(
-        `SELECT COUNT(*)::int AS total FROM financial_statement_chat_rooms WHERE user_id = $1`,
-        [userId],
-      ),
-      this.db.query<FinancialStatementChatRoomRow>(
-        `SELECT * FROM financial_statement_chat_rooms WHERE user_id = $1
-         ORDER BY updated_at DESC LIMIT $2 OFFSET $3`,
-        [userId, pageSize, offset],
-      ),
-    ]);
+  //   const [countResult, rowsResult] = await Promise.all([
+  //     this.db.query<{ total: number }>(
+  //       `SELECT COUNT(*)::int AS total FROM financial_statement_chat_rooms WHERE user_id = $1`,
+  //       [userId],
+  //     ),
+  //     this.db.query<FinancialStatementChatRoomRow>(
+  //       `SELECT * FROM financial_statement_chat_rooms WHERE user_id = $1
+  //        ORDER BY updated_at DESC LIMIT $2 OFFSET $3`,
+  //       [userId, pageSize, offset],
+  //     ),
+  //   ]);
 
-    return {
-      rows: rowsResult.rows,
-      total: countResult.rows[0].total,
-    };
-  }
+  //   return {
+  //     rows: rowsResult.rows,
+  //     total: countResult.rows[0].total,
+  //   };
+  // }
 
   async findRoomById(
     roomId: string,
@@ -87,6 +87,39 @@ export class FinancialChatRoomRepository implements IFinancialChatRoomRepository
       `INSERT INTO financial_statement_chat_rooms (user_id, name, description)
        VALUES ($1, $2, $3)`,
       [input.userId, input.name, input.description ?? null],
+    );
+  }
+
+  async updateRoom(
+    roomId: string,
+    input: { name: string; description?: string | null },
+  ): Promise<void> {
+    const fields: string[] = [];
+    const values: any[] = [];
+
+    let idx = 1;
+
+    if (input.name !== undefined) {
+      fields.push(`name = $${idx++}`);
+      values.push(input.name);
+    }
+
+    if (input.description !== undefined) {
+      fields.push(`description = $${idx++}`);
+      values.push(input.description);
+    }
+
+    if (fields.length === 0) return;
+
+    values.push(roomId);
+
+    await this.db.query(
+      `
+    UPDATE financial_statement_chat_rooms
+    SET ${fields.join(", ")}, updated_at = NOW()
+    WHERE id = $${idx}
+    `,
+      values,
     );
   }
 }

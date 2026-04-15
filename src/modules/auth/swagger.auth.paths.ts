@@ -90,24 +90,6 @@ export const authPaths = {
       },
     },
   },
-  "/auth/user": {
-    get: {
-      summary: "사용자 정보 조회",
-      tags: ["Auth"],
-      security: [{ bearerAuth: [] }],
-      responses: {
-        "200": {
-          description: "사용자 정보 조회 성공",
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/UserInfoResponse" },
-            },
-          },
-        },
-        "401": { description: "인증 필요" },
-      },
-    },
-  },
   "/auth/refresh": {
     post: {
       summary: "액세스 토큰 갱신",

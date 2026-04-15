@@ -10,16 +10,14 @@ import {
   ChatMessageBodySchema,
   ChatRoomListQuerySchema,
   ChatRoomParamsSchema,
+  CreateChatRoomBodySchema,
+  UpdateChatRoomBodySchema,
 } from "../validators/chat.validator";
-import { IIdGenerator } from "../../../common/utils/contracts/uuid.generator.util";
 import { IChatController } from "../contracts/controllers/chat.controller";
 import { IChatService } from "../contracts/services/chat.service";
 
 export class ChatController implements IChatController {
-  constructor(
-    private readonly chatService: IChatService,
-    private readonly idGenerator: IIdGenerator,
-  ) {}
+  constructor(private readonly chatService: IChatService) {}
 
   getRoomList = async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -64,9 +62,7 @@ export class ChatController implements IChatController {
       const userId = req.userId!;
       const { message, roomId } = ChatMessageBodySchema.parse(req.body);
 
-      const targetRoomId = roomId ?? this.idGenerator.generate();
-
-      await this.chatService.streamChat(targetRoomId, userId, message, res);
+      await this.chatService.streamChat(userId, message, res, roomId);
     } catch (error) {
       if (!res.headersSent) {
         handleAuthError(error, res);
@@ -75,6 +71,44 @@ export class ChatController implements IChatController {
         res.write("data: [DONE]\n\n");
         res.end();
       }
+    }
+  };
+
+  createRoom = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.userId!;
+      const { firstMessage } = CreateChatRoomBodySchema.parse(req.body);
+
+      const roomId = await this.chatService.createRoom(userId, firstMessage);
+
+      res.status(201).json({
+        success: true,
+        code: "CHAT_ROOM_CREATED",
+        message: "채팅방 생성 완료",
+        data: { roomId },
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      handleAuthError(error, res);
+    }
+  };
+
+  updateRoom = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.userId!;
+      const { roomId } = ChatRoomParamsSchema.parse(req.params);
+      const body = UpdateChatRoomBodySchema.parse(req.body);
+
+      await this.chatService.updateRoom(roomId, userId, body);
+
+      res.status(200).json({
+        success: true,
+        code: "CHAT_ROOM_UPDATED",
+        message: "수정 완료",
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      handleAuthError(error, res);
     }
   };
 

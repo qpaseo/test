@@ -22,10 +22,10 @@ export class UserController implements IUserController {
     private readonly fsChatService: IFsChatService,
   ) {}
 
-  async getUserInfo(
+  getUserInfo = async (
     req: AuthenticatedRequest,
     res: Response<ApiResponse<UserInfoResponse>>,
-  ): Promise<void> {
+  ): Promise<void> => {
     try {
       if (!req.userId) {
         throw AppError.fromCode(ErrorCode.UNAUTHORIZED);
@@ -43,12 +43,12 @@ export class UserController implements IUserController {
     } catch (error) {
       handleAuthError(error, res);
     }
-  }
+  };
 
-  async getUserDashboard(
+  getUserDashboard = async (
     req: AuthenticatedRequest,
     res: Response<ApiResponse<UserDashboardResponse>>,
-  ): Promise<void> {
+  ): Promise<void> => {
     try {
       if (!req.userId) {
         throw AppError.fromCode(ErrorCode.UNAUTHORIZED);
@@ -80,5 +80,5 @@ export class UserController implements IUserController {
     } catch (error) {
       handleAuthError(error, res);
     }
-  }
+  };
 }

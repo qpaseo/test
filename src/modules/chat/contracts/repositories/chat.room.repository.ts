@@ -1,5 +1,8 @@
-import { ChatRoomRow, ChatRoomWithLastMessage } from "../types/entity/chat-room.entity";
-import { CreateChatRoomInput } from "../types/internal";
+import {
+  ChatRoomRow,
+  ChatRoomWithLastMessage,
+} from "../../types/entity/chat-room.entity";
+import { CreateChatRoomInput, UpdateChatRoomInput } from "../../types/internal";
 
 export interface IChatRoomRepository {
   findChatRoomsWithLastMessage(
@@ -14,7 +17,9 @@ export interface IChatRoomRepository {
 
   findRoomById(roomId: string): Promise<ChatRoomRow | null>;
 
-  createRoom(input: CreateChatRoomInput): Promise<void>;
+  createRoom(input: CreateChatRoomInput): Promise<string>;
+
+  updateRoom(roomId: string, input: UpdateChatRoomInput): Promise<void>;
 
   deleteRoom(roomId: string): Promise<void>;
 

@@ -23,6 +23,14 @@ export class TokenManager implements ITokenManager {
       type: "access",
     };
 
+    if (!ENV.JWT_SECRET) {
+      throw new Error("JWT_SECRET not set");
+    }
+
+    if (!ENV.JWT_ACCESS_EXPIRY) {
+      throw new Error("JWT_ACCESS_EXPIRY not set");
+    }
+
     return jwt.sign(payload, ENV.JWT_SECRET, {
       expiresIn: ENV.JWT_ACCESS_EXPIRY as SignOptions["expiresIn"],
     });
@@ -44,6 +52,14 @@ export class TokenManager implements ITokenManager {
       type: "refresh",
     };
 
+    if (!ENV.JWT_SECRET) {
+      throw new Error("JWT_SECRET not set");
+    }
+
+    if (!ENV.JWT_REFRESH_EXPIRY) {
+      throw new Error("JWT_REFRESH_EXPIRY not set");
+    }
+
     const token = jwt.sign(payload, ENV.JWT_SECRET, {
       expiresIn: ENV.JWT_REFRESH_EXPIRY as SignOptions["expiresIn"],
     });
@@ -64,6 +80,10 @@ export class TokenManager implements ITokenManager {
    */
   verifyToken(token: string): TokenPayload {
     try {
+      if (!ENV.JWT_SECRET) {
+        throw new Error("JWT_SECRET not set");
+      }
+
       return jwt.verify(token, ENV.JWT_SECRET) as TokenPayload;
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {

@@ -7,14 +7,13 @@ import { Response } from "express";
 import { AuthenticatedRequest } from "../../types/dto/response/basic.response";
 import {
   FsChatMessageBodySchema,
-  FsChatRoomListQuerySchema,
   FsChatRoomParamsSchema,
+  FsChatRoomUpdateParamsSchema,
 } from "../validators/fschat.validator";
 import { handleAuthError } from "../../../common/errors/handle.auth.error";
 import { IIdGenerator } from "../../../common/utils/contracts/uuid.generator.util";
 import { IFsChatService } from "../contracts/services/financial.chat.service";
 import { IFsChatController } from "../contracts/controllers/financial.chat.controller";
-
 
 export class FsChatController implements IFsChatController {
   constructor(
@@ -22,28 +21,28 @@ export class FsChatController implements IFsChatController {
     private readonly idGenerator: IIdGenerator,
   ) {}
 
-  getRoomList = async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const userId = req.userId!;
-      const { page, pageSize } = FsChatRoomListQuerySchema.parse(req.query);
+  // getRoomList = async (req: AuthenticatedRequest, res: Response) => {
+  //   try {
+  //     const userId = req.userId!;
+  //     const { page, pageSize } = FsChatRoomListQuerySchema.parse(req.query);
 
-      const result = await this.fsChatService.getRoomList(
-        userId,
-        page,
-        pageSize,
-      );
+  //     const result = await this.fsChatService.getRoomList(
+  //       userId,
+  //       page,
+  //       pageSize,
+  //     );
 
-      res.status(200).json({
-        success: true,
-        code: "FS_CHAT_ROOMS_RETRIEVED",
-        message: "조회 완료",
-        data: result,
-        timestamp: new Date().toISOString(),
-      });
-    } catch (error) {
-      handleAuthError(error, res);
-    }
-  };
+  //     res.status(200).json({
+  //       success: true,
+  //       code: "FS_CHAT_ROOMS_RETRIEVED",
+  //       message: "조회 완료",
+  //       data: result,
+  //       timestamp: new Date().toISOString(),
+  //     });
+  //   } catch (error) {
+  //     handleAuthError(error, res);
+  //   }
+  // };
 
   getRoomDetail = async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -73,15 +72,7 @@ export class FsChatController implements IFsChatController {
 
       await this.fsChatService.streamChat(targetRoomId, userId, message, res);
     } catch (error) {
-      if (res.headersSent === false) {
-        handleAuthError(error, res);
-      } else {
-        res.write(
-          `event: message\ndata: ${JSON.stringify({ error: "error" })}\n\n`,
-        );
-        res.write("data: [DONE]\n\n");
-        res.end();
-      }
+      handleAuthError(error, res);
     }
   };
 
@@ -99,6 +90,32 @@ export class FsChatController implements IFsChatController {
         success: true,
         code: "FS_STATEMENT_CREATED",
         message: "생성 완료",
+        data: result,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      handleAuthError(error, res);
+    }
+  };
+
+  updateRoom = async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.userId!;
+      const { roomId } = FsChatRoomParamsSchema.parse(req.params);
+
+      const { name, description } = FsChatRoomUpdateParamsSchema.parse(
+        req.body,
+      );
+
+      const result = await this.fsChatService.updateRoom(roomId, userId, {
+        name,
+        description,
+      });
+
+      res.status(200).json({
+        success: true,
+        code: "FS_CHAT_ROOM_UPDATED",
+        message: "수정 완료",
         data: result,
         timestamp: new Date().toISOString(),
       });

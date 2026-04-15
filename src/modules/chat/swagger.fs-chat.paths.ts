@@ -1,53 +1,53 @@
 export const fsChatPaths = {
-  "/api/fs-chat/rooms": {
-    get: {
-      tags: ["FsChat"],
-      summary: "재무재표 채팅방 리스트 조회",
-      description: "재무재표 채팅방 목록을 페이징하여 조회합니다.",
-      security: [{ bearerAuth: [] }],
-      parameters: [
-        {
-          in: "query",
-          name: "page",
-          schema: { type: "integer", default: 1 },
-        },
-        {
-          in: "query",
-          name: "pageSize",
-          schema: { type: "integer", default: 20 },
-        },
-      ],
-      responses: {
-        200: {
-          description: "채팅방 리스트 조회 성공",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  success: { type: "boolean", example: true },
-                  code: {
-                    type: "string",
-                    example: "FS_CHAT_ROOMS_RETRIEVED",
-                  },
-                  message: { type: "string" },
-                  data: {
-                    $ref: "#/components/schemas/FsChatRoomListResponse",
-                  },
-                  timestamp: {
-                    type: "string",
-                    format: "date-time",
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
+  // "/fs-chat/rooms": {
+  //   get: {
+  //     tags: ["FsChat"],
+  //     summary: "재무재표 채팅방 리스트 조회",
+  //     description: "재무재표 채팅방 목록을 페이징하여 조회합니다.",
+  //     security: [{ bearerAuth: [] }],
+  //     parameters: [
+  //       {
+  //         in: "query",
+  //         name: "page",
+  //         schema: { type: "integer", default: 1 },
+  //       },
+  //       {
+  //         in: "query",
+  //         name: "pageSize",
+  //         schema: { type: "integer", default: 20 },
+  //       },
+  //     ],
+  //     responses: {
+  //       200: {
+  //         description: "채팅방 리스트 조회 성공",
+  //         content: {
+  //           "application/json": {
+  //             schema: {
+  //               type: "object",
+  //               properties: {
+  //                 success: { type: "boolean", example: true },
+  //                 code: {
+  //                   type: "string",
+  //                   example: "FS_CHAT_ROOMS_RETRIEVED",
+  //                 },
+  //                 message: { type: "string" },
+  //                 data: {
+  //                   $ref: "#/components/schemas/FsChatRoomListResponse",
+  //                 },
+  //                 timestamp: {
+  //                   type: "string",
+  //                   format: "date-time",
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //   },
+  // },
 
-  "/api/fs-chat/rooms/{roomId}": {
+  "/fs-chat/rooms/{roomId}": {
     get: {
       tags: ["FsChat"],
       summary: "재무재표 채팅방 상세 조회",
@@ -89,9 +89,73 @@ export const fsChatPaths = {
         },
       },
     },
+
+    patch: {
+      tags: ["FsChat"],
+      summary: "재무재표 채팅방 이름/설명 수정",
+      description: "채팅방 이름은 필수이며 설명은 선택적으로 수정합니다.",
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: "path",
+          name: "roomId",
+          required: true,
+          schema: { type: "string", format: "uuid" },
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["name"],
+              properties: {
+                name: {
+                  type: "string",
+                  example: "새 채팅방 이름",
+                },
+                description: {
+                  type: "string",
+                  nullable: true,
+                  example: "설명 수정",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "채팅방 수정 성공",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  success: { type: "boolean", example: true },
+                  code: {
+                    type: "string",
+                    example: "FS_CHAT_ROOM_UPDATED",
+                  },
+                  message: { type: "string" },
+                  data: {
+                    $ref: "#/components/schemas/FsChatRoomSummaryResponse",
+                  },
+                  timestamp: {
+                    type: "string",
+                    format: "date-time",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
 
-  "/api/fs-chat/stream": {
+  "/fs-chat/stream": {
     post: {
       tags: ["FsChat"],
       summary: "재무재표 채팅 SSE 스트리밍",
@@ -126,7 +190,7 @@ export const fsChatPaths = {
     },
   },
 
-  "/api/fs-chat/rooms/{roomId}/complete": {
+  "/fs-chat/rooms/{roomId}/complete": {
     post: {
       tags: ["FsChat"],
       summary: "재무재표 채팅 완료 및 재무재표 생성",
