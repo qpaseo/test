@@ -1,3 +1,4 @@
+import { FinancialStatementInput } from "../../types/dto/request/financial-statement.create.request";
 import {
   FinancialGoalRow,
   FinancialGoalWithProgressRow,
@@ -23,4 +24,9 @@ export interface IFinancialRepository {
   findMonthlyFinancesByUserId(userId: string): Promise<any[]>;
 
   getFinancialStatement(userId: string): Promise<FinancialStatementRow | null>;
+
+  updateLatestStatement(
+    userId: string,
+    input: FinancialStatementInput,
+  ): Promise<void>;
 }

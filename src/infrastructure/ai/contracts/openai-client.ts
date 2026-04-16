@@ -10,4 +10,6 @@ export interface IOpenAIClient {
   createChatStream(
     messages: OpenAI.Chat.ChatCompletionMessageParam[],
   ): Promise<AsyncIterable<OpenAI.Chat.ChatCompletionChunk>>;
+
+  createEmbeddings(inputs: string[]): Promise<number[][]>;
 }

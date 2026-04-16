@@ -8,6 +8,7 @@ import { MonthlyFinanceRow } from "../../financial/types/entity/monthly-finances
 import { FinancialGoalRow } from "../../financial/types/entity/financial-goal.entity";
 import { FinancialStatementRow } from "../../financial/types/entity/financial-statement.entity";
 import { IChatToolRepository } from "../contracts/repositories/chat.tool.repository";
+import { FinancialStatementDraft } from "../types/entity/financial-draft-change-proposal.entity";
 
 /**
  * AI Tool 에서 사용하는 공용 Repository
@@ -151,21 +152,32 @@ export class ChatToolRepository implements IChatToolRepository {
   async createStatement(input: {
     id: string;
     userId: string;
-    netMonthlyIncome: number;
-    monthlyFixedExpenses: Record<string, number> | null;
-    monthlySavingsInvestment: Record<string, number> | null;
+    draft: FinancialStatementDraft;
     info: string;
   }): Promise<void> {
+    console.log("createStatement 전달 값", input);
     await this.db.query(
-      `INSERT INTO financial_statements
-        (id, user_id, net_monthly_income, monthly_fixed_expenses, monthly_savings_investment, info, created_at)
-       VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP)`,
+      `
+  INSERT INTO financial_statements (
+    id,
+    user_id,
+    net_monthly_income,
+    monthly_fixed_expenses,
+    monthly_savings_investment,
+    info
+  )
+  VALUES ($1, $2, $3, $4, $5, $6)
+  `,
       [
         input.id,
         input.userId,
-        input.netMonthlyIncome,
-        input.monthlyFixedExpenses,
-        input.monthlySavingsInvestment,
+        input.draft.netMonthlyIncome,
+        input.draft.monthlyFixedExpenses
+          ? JSON.stringify(input.draft.monthlyFixedExpenses)
+          : null,
+        input.draft.monthlySavingsInvestment
+          ? JSON.stringify(input.draft.monthlySavingsInvestment)
+          : null,
         input.info,
       ],
     );

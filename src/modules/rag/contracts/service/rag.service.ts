@@ -10,4 +10,10 @@ export interface IRagService {
     file: Express.Multer.File,
     query: UploadQuery,
   ): Promise<UploadResponse>;
+
+  searchChunks(
+    query: string,
+    topK: number,
+    docId?: string,
+  ): Promise<{ content: string; pageNumber: number }[]>;
 }

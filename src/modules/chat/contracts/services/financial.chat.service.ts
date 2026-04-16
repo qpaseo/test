@@ -3,6 +3,7 @@ import { FsChatRoomWithLastMessage } from "../../types/dto/response/financial-ch
 //import { FsChatRoomListResponse } from "../../types/dto/response/financial-chat-room-list.response";
 import { FsChatRoomDetailResponse } from "../../types/dto/response/financial-chat-room-detail.response";
 import { FsChatCompleteResponse } from "../../types/dto/response/financial-chat-complete.response";
+import { FinancialStatementInput } from "../../../financial/types/dto/request/financial-statement.create.request";
 
 export interface IFsChatService {
   getFinancialChatRoomsWithLastMessage(
@@ -30,6 +31,7 @@ export interface IFsChatService {
   completeAndCreateStatement(
     roomId: string,
     userId: string,
+    input: FinancialStatementInput,
   ): Promise<FsChatCompleteResponse>;
 
   updateRoom(
@@ -37,4 +39,6 @@ export interface IFsChatService {
     userId: string,
     input: { name?: string; description?: string | null },
   ): Promise<any>;
+
+  updateMyLatestStatement(userId: string, input: any): Promise<any>;
 }

@@ -1,4 +1,4 @@
-import * as pdfjs from "pdfjs-dist";
+import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
 import { UploadResponse } from "../types/dto/response/upload.response";
 import { UploadQuery } from "../validators/rag.validator";
 import { encodingForModel } from "js-tiktoken";
@@ -38,6 +38,26 @@ export class RagService implements IRagService {
     private readonly ragRepository: IRagRepository,
     private readonly embeddingClient: IEmbeddingClient,
   ) {}
+
+  // rag.service.ts
+  async searchChunks(
+    query: string,
+    topK: number = 5,
+    docId?: string,
+  ): Promise<{ content: string; pageNumber: number }[]> {
+    const embeddings = await this.embeddingClient.createEmbeddings([query]);
+
+    const chunks = await this.ragRepository.findSimilarChunks({
+      embedding: embeddings[0],
+      topK,
+      docId,
+    });
+
+    return chunks.map((c) => ({
+      content: c.content,
+      pageNumber: c.page_number,
+    }));
+  }
 
   async uploadPdf(
     file: Express.Multer.File,

@@ -33,4 +33,16 @@ export class OpenAIClient implements IOpenAIClient {
 
     return stream;
   }
+
+  async createEmbeddings(inputs: string[]): Promise<number[][]> {
+    const response = await this.client.embeddings.create({
+      model: "text-embedding-3-small",
+      input: inputs,
+    });
+
+    // API는 index 순서를 보장하지 않으므로 정렬
+    return response.data
+      .sort((a, b) => a.index - b.index)
+      .map((item) => item.embedding);
+  }
 }

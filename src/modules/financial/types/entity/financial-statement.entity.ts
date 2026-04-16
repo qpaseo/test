@@ -1,6 +1,6 @@
 export interface ExpenseItem {
   name: string;
-  money: string;
+  money: number;
 }
 
 // db 타입

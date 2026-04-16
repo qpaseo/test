@@ -1,57 +1,10 @@
 export const fsChatPaths = {
-  // "/fs-chat/rooms": {
-  //   get: {
-  //     tags: ["FsChat"],
-  //     summary: "재무재표 채팅방 리스트 조회",
-  //     description: "재무재표 채팅방 목록을 페이징하여 조회합니다.",
-  //     security: [{ bearerAuth: [] }],
-  //     parameters: [
-  //       {
-  //         in: "query",
-  //         name: "page",
-  //         schema: { type: "integer", default: 1 },
-  //       },
-  //       {
-  //         in: "query",
-  //         name: "pageSize",
-  //         schema: { type: "integer", default: 20 },
-  //       },
-  //     ],
-  //     responses: {
-  //       200: {
-  //         description: "채팅방 리스트 조회 성공",
-  //         content: {
-  //           "application/json": {
-  //             schema: {
-  //               type: "object",
-  //               properties: {
-  //                 success: { type: "boolean", example: true },
-  //                 code: {
-  //                   type: "string",
-  //                   example: "FS_CHAT_ROOMS_RETRIEVED",
-  //                 },
-  //                 message: { type: "string" },
-  //                 data: {
-  //                   $ref: "#/components/schemas/FsChatRoomListResponse",
-  //                 },
-  //                 timestamp: {
-  //                   type: "string",
-  //                   format: "date-time",
-  //                 },
-  //               },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     },
-  //   },
-  // },
-
   "/fs-chat/rooms/{roomId}": {
     get: {
       tags: ["FsChat"],
       summary: "재무재표 채팅방 상세 조회",
-      description: "채팅방 정보 및 메시지를 조회합니다.",
+      description:
+        "채팅방 정보, 메시지, 현재 재무재표, 변경 제안(proposal)을 조회합니다.",
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -92,8 +45,7 @@ export const fsChatPaths = {
 
     patch: {
       tags: ["FsChat"],
-      summary: "재무재표 채팅방 이름/설명 수정",
-      description: "채팅방 이름은 필수이며 설명은 선택적으로 수정합니다.",
+      summary: "채팅방 수정",
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -111,15 +63,8 @@ export const fsChatPaths = {
               type: "object",
               required: ["name"],
               properties: {
-                name: {
-                  type: "string",
-                  example: "새 채팅방 이름",
-                },
-                description: {
-                  type: "string",
-                  nullable: true,
-                  example: "설명 수정",
-                },
+                name: { type: "string" },
+                description: { type: "string", nullable: true },
               },
             },
           },
@@ -127,29 +72,7 @@ export const fsChatPaths = {
       },
       responses: {
         200: {
-          description: "채팅방 수정 성공",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  success: { type: "boolean", example: true },
-                  code: {
-                    type: "string",
-                    example: "FS_CHAT_ROOM_UPDATED",
-                  },
-                  message: { type: "string" },
-                  data: {
-                    $ref: "#/components/schemas/FsChatRoomSummaryResponse",
-                  },
-                  timestamp: {
-                    type: "string",
-                    format: "date-time",
-                  },
-                },
-              },
-            },
-          },
+          description: "수정 성공",
         },
       },
     },
@@ -158,11 +81,7 @@ export const fsChatPaths = {
   "/fs-chat/stream": {
     post: {
       tags: ["FsChat"],
-      summary: "재무재표 채팅 SSE 스트리밍",
-      description: `SSE 이벤트:
-- event: message → 일반 텍스트 { chunk }
-- event: statement → 재무재표 업데이트
-- data: [DONE] → 종료`,
+      summary: "재무재표 채팅 SSE",
       security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
@@ -181,7 +100,6 @@ export const fsChatPaths = {
             "text/event-stream": {
               schema: {
                 type: "string",
-                example: "event: message\\ndata: {...}\\n\\n",
               },
             },
           },
@@ -193,9 +111,9 @@ export const fsChatPaths = {
   "/fs-chat/rooms/{roomId}/complete": {
     post: {
       tags: ["FsChat"],
-      summary: "재무재표 채팅 완료 및 재무재표 생성",
+      summary: "재무재표 생성 (유저 입력 반영)",
       description:
-        "대화를 종료하고 재무재표를 생성하며, 기존 메시지는 삭제됩니다.",
+        "유저가 입력한 필드는 반드시 유지하고, 나머지는 AI가 보완하여 재무재표를 생성합니다.",
       security: [{ bearerAuth: [] }],
       parameters: [
         {
@@ -205,28 +123,22 @@ export const fsChatPaths = {
           schema: { type: "string", format: "uuid" },
         },
       ],
+      requestBody: {
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/FinancialStatementPartialInput",
+            },
+          },
+        },
+      },
       responses: {
         200: {
-          description: "재무재표 생성 성공",
+          description: "생성 성공",
           content: {
             "application/json": {
               schema: {
-                type: "object",
-                properties: {
-                  success: { type: "boolean", example: true },
-                  code: {
-                    type: "string",
-                    example: "FS_STATEMENT_CREATED",
-                  },
-                  message: { type: "string" },
-                  data: {
-                    $ref: "#/components/schemas/FsChatCompleteResponse",
-                  },
-                  timestamp: {
-                    type: "string",
-                    format: "date-time",
-                  },
-                },
+                $ref: "#/components/schemas/FsChatCompleteResponse",
               },
             },
           },
@@ -234,20 +146,91 @@ export const fsChatPaths = {
       },
     },
   },
+
+  "/fs-chat/financial-statements/latest": {
+    patch: {
+      tags: ["FsChat"],
+      summary: "최신 재무재표 직접 수정",
+      description:
+        "유저가 최신 재무재표를 직접 수정합니다. 입력된 필드만 업데이트됩니다.",
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/FinancialStatementPartialInput",
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "수정 성공",
+        },
+      },
+    },
+  },
 };
 
 export const fsChatSchemas = {
-  FsChatRoomSummaryResponse: {
+  ExpenseItem: {
+    type: "object",
+    properties: {
+      name: { type: "string" },
+      money: { type: "number" },
+    },
+  },
+
+  FinancialStatement: {
+    type: "object",
+    properties: {
+      netMonthlyIncome: { type: "number" },
+      monthlyFixedExpenses: {
+        type: "array",
+        items: { $ref: "#/components/schemas/ExpenseItem" },
+      },
+      monthlySavingsInvestment: {
+        type: "array",
+        items: { $ref: "#/components/schemas/ExpenseItem" },
+      },
+    },
+  },
+
+  FinancialStatementPartialInput: {
+    type: "object",
+    description: "유저가 수정할 필드만 전달 (모든 필드는 optional)",
+    properties: {
+      net_monthly_income: { type: "number", nullable: true },
+      monthly_fixed_expenses: {
+        type: "array",
+        nullable: true,
+        items: { $ref: "#/components/schemas/ExpenseItem" },
+      },
+      monthly_savings_investment: {
+        type: "array",
+        nullable: true,
+        items: { $ref: "#/components/schemas/ExpenseItem" },
+      },
+    },
+    additionalProperties: false,
+  },
+
+  FinancialDraftProposal: {
     type: "object",
     properties: {
       id: { type: "string", format: "uuid" },
-      name: { type: "string" },
-      description: { type: "string", nullable: true },
-      createdAt: { type: "string", format: "date-time" },
-      updatedAt: {
+      fieldName: { type: "string" },
+      oldValue: {
+        $ref: "#/components/schemas/FinancialStatement",
+      },
+      newValue: {
+        $ref: "#/components/schemas/FinancialStatement",
+      },
+      reason: { type: "string", nullable: true },
+      status: {
         type: "string",
-        format: "date-time",
-        nullable: true,
+        enum: ["PENDING", "ACCEPTED", "REJECTED"],
       },
     },
   },
@@ -285,6 +268,15 @@ export const fsChatSchemas = {
         format: "date-time",
         nullable: true,
       },
+
+      currentStatement: {
+        $ref: "#/components/schemas/FinancialStatement",
+      },
+
+      proposal: {
+        $ref: "#/components/schemas/FinancialDraftProposal",
+      },
+
       messages: {
         type: "array",
         items: {
@@ -294,29 +286,11 @@ export const fsChatSchemas = {
     },
   },
 
-  FsChatRoomListResponse: {
-    type: "object",
-    properties: {
-      rooms: {
-        type: "array",
-        items: {
-          $ref: "#/components/schemas/FsChatRoomSummaryResponse",
-        },
-      },
-      total: { type: "number" },
-      page: { type: "number" },
-      pageSize: { type: "number" },
-    },
-  },
-
   FsChatMessageRequest: {
     type: "object",
     required: ["message"],
     properties: {
-      message: {
-        type: "string",
-        example: "재무 상황을 분석해줘",
-      },
+      message: { type: "string" },
       roomId: {
         type: "string",
         format: "uuid",
@@ -329,8 +303,7 @@ export const fsChatSchemas = {
     type: "object",
     properties: {
       statement: {
-        type: "object",
-        description: "생성된 재무재표",
+        $ref: "#/components/schemas/FinancialStatement",
       },
     },
   },

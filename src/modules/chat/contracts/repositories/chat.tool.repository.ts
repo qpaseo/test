@@ -1,11 +1,12 @@
-import { FinancialGoalRow } from "../../financial/types/entity/financial-goal.entity";
-import { FinancialStatementRow } from "../../financial/types/entity/financial-statement.entity";
-import { MonthlyFinanceRow } from "../../financial/types/entity/monthly-finances.entity";
+import { FinancialGoalRow } from "../../../financial/types/entity/financial-goal.entity";
+import { FinancialStatementRow } from "../../../financial/types/entity/financial-statement.entity";
+import { MonthlyFinanceRow } from "../../../financial/types/entity/monthly-finances.entity";
 import {
   UserMemoryContent,
   UserMemoryRow,
-} from "../../user/types/entity/user-memory.entity";
-import { CreateFinancialGoalInput } from "../types/internal";
+} from "../../../user/types/entity/user-memory.entity";
+import { FinancialStatementDraft } from "../../types/entity/financial-draft-change-proposal.entity";
+import { CreateFinancialGoalInput } from "../../types/internal";
 
 export interface IChatToolRepository {
   findUserMemoryByUserId(userId: string): Promise<UserMemoryRow | null>;
@@ -39,9 +40,7 @@ export interface IChatToolRepository {
   createStatement(input: {
     id: string;
     userId: string;
-    netMonthlyIncome: number;
-    monthlyFixedExpenses: Record<string, number> | null;
-    monthlySavingsInvestment: Record<string, number> | null;
+    draft: FinancialStatementDraft;
     info: string;
   }): Promise<void>;
 

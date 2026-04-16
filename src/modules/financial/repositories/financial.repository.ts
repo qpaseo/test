@@ -3,9 +3,13 @@ import {
   FinancialGoalWithProgressRow,
 } from "../types/entity/financial-goal.entity";
 import { AppError, ErrorCode } from "../../../common/errors/app.error";
-import { ExpenseItem, FinancialStatementRow } from "../types/entity/financial-statement.entity";
+import {
+  ExpenseItem,
+  FinancialStatementRow,
+} from "../types/entity/financial-statement.entity";
 import { Pool } from "pg";
 import { IFinancialRepository } from "../contracts/repository/financial.repository";
+import { FinancialStatementInput } from "../types/dto/request/financial-statement.create.request";
 
 export class FinancialRepository implements IFinancialRepository {
   constructor(private readonly db: Pool) {}
@@ -155,5 +159,52 @@ export class FinancialRepository implements IFinancialRepository {
         originalError: error,
       });
     }
+  }
+
+  // 유저가 직접 재무제표 업데이트 (부분 업데이트 허용)
+  async updateLatestStatement(
+    userId: string,
+    input: FinancialStatementInput,
+  ): Promise<void> {
+    console.log("updateLatestStatement 전달 값", input);
+    const fields: string[] = [];
+    const values: any[] = [];
+    let index = 1;
+
+    if (input.net_monthly_income !== undefined) {
+      fields.push(`net_monthly_income = $${index++}`);
+      values.push(input.net_monthly_income);
+    }
+
+    if (input.monthly_fixed_expenses !== undefined) {
+      fields.push(`monthly_fixed_expenses = $${index++}::jsonb`);
+      values.push(JSON.stringify(input.monthly_fixed_expenses));
+    }
+
+    if (input.monthly_savings_investment !== undefined) {
+      fields.push(`monthly_savings_investment = $${index++}::jsonb`);
+      values.push(JSON.stringify(input.monthly_savings_investment));
+    }
+
+    if (!fields.length) return;
+    console.log("fields", fields);
+    values.push(userId);
+
+    console.log("values before query", values);
+    console.log("typeof", typeof values[1], Array.isArray(values[1]));
+    console.log("first item type", typeof values[1]?.[0]);
+    await this.db.query(
+      `
+    UPDATE financial_statements
+    SET ${fields.join(", ")}, updated_at = NOW()
+    WHERE id = (
+      SELECT id FROM financial_statements
+      WHERE user_id = $${index}
+      ORDER BY created_at DESC
+      LIMIT 1
+    )
+    `,
+      values,
+    );
   }
 }

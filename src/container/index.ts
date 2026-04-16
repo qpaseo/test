@@ -35,6 +35,10 @@ import { UuidGenerator } from "../common/utils/uuid.generator.util";
 import { FsChatRoutes } from "../modules/chat/routes/fschatrouter";
 import { FsChatController } from "../modules/chat/controllers/financial.chat.controller";
 import { ChatAiService } from "../modules/chat/services/chat.ai.service";
+import { FinancialDraftRepository } from "../modules/chat/repositories/financial.draft.repository";
+import { FsDraftService } from "../modules/chat/services/financial.draft.service";
+import { RagService } from "../modules/rag/services/rag.service";
+import { RagRepository } from "../modules/rag/repositories/rag.repository";
 
 export const buildContainer = () => {
   // =========================
@@ -54,11 +58,11 @@ export const buildContainer = () => {
   // repositories
   // =========================
   const db = getDatabase();
+  const ragRepository = new RagRepository(db);
   const userRepository = new UserRepository(db);
   const financialRepository = new FinancialRepository(db);
   const userMemoryRepository = new UserMemoryRepository(db);
   const toolHandler = new ChatToolHandler(db);
-  const fsToolHandler = new FsChatToolHandler(db);
   const chatToolRepository = new ChatToolRepository(db);
   //chat
   const chatRoomRepository = new ChatRoomRepository(db, uuidGenerator);
@@ -67,6 +71,7 @@ export const buildContainer = () => {
   const financialChatMessageRepository = new FinancialChatMessageRepository(db);
   const financialChatRoomRepository = new FinancialChatRoomRepository(db);
   const conceptRepository = new ConceptRepository(db);
+  const financialDraftRepository = new FinancialDraftRepository(db);
 
   // =========================
   // services
@@ -88,13 +93,19 @@ export const buildContainer = () => {
     chatMemoryRepository,
     aiService,
   );
+  const ragService = new RagService(ragRepository, openAIClient);
+  const fsToolHandler = new FsChatToolHandler(db, ragService);
   const fsChatService = new FsChatService(
+    financialRepository,
     financialChatMessageRepository,
     financialChatRoomRepository,
+    financialDraftRepository,
     chatToolRepository,
     fsToolHandler,
     openAIClient,
+    uuidGenerator,
   );
+  const fsDraftService = new FsDraftService(financialDraftRepository);
   const conceptService = new ConceptService(conceptRepository);
 
   // =========================
@@ -109,7 +120,11 @@ export const buildContainer = () => {
   );
   const conceptController = new ConceptController(conceptService);
   const chatController = new ChatController(chatService);
-  const fsChatController = new FsChatController(fsChatService, uuidGenerator);
+  const fsChatController = new FsChatController(
+    fsChatService,
+    fsDraftService,
+    uuidGenerator,
+  );
 
   // =========================
   // routes

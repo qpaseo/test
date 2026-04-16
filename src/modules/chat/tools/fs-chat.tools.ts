@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { Pool } from "pg";
 import { ChatToolRepository } from "../repositories/chat.tool.repository";
 import { UserMemoryContent } from "../../user/types/entity/user-memory.entity";
+import { IRagService } from "../../rag/contracts/service/rag.service";
 
 // ─── Tool 정의 ────────────────────────────────────────────
 
@@ -87,15 +88,75 @@ export const FS_CHAT_TOOLS: OpenAI.Chat.ChatCompletionTool[] = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "propose_draft_change",
+      description:
+        "재무제표 수정을 제안합니다. 실제로 값을 변경하지 않고, 유저의 승인을 기다립니다.",
+      parameters: {
+        type: "object",
+        properties: {
+          field_name: {
+            type: "string",
+            enum: [
+              "net_monthly_income",
+              "monthly_fixed_expenses",
+              "monthly_savings_investment",
+            ],
+          },
+          new_value: {
+            description:
+              "변경할 값. 수입은 number, 지출/저축은 ExpenseItem 배열",
+          },
+          reason: {
+            type: "string",
+          },
+        },
+        required: ["field_name", "new_value"],
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "search_financial_documents",
+      description:
+        "업로드된 PDF 문서에서 질문과 관련된 내용을 검색합니다. " +
+        "유저가 문서 기반으로 질문하거나, 재무 관련 계약서/보고서 내용이 필요할 때 사용하세요.",
+      parameters: {
+        type: "object",
+        properties: {
+          query: {
+            type: "string",
+            description: "검색할 내용 또는 질문",
+          },
+          top_k: {
+            type: "number",
+            description: "반환할 최대 결과 수 (기본값 5, 최대 10)",
+          },
+          doc_id: {
+            type: "string",
+            description:
+              "특정 문서 내에서만 검색할 경우 해당 문서의 UUID. 생략 시 전체 문서 검색.",
+            nullable: true,
+          },
+        },
+        required: ["query"],
+      },
+    },
+  },
 ];
 
 // ─── Tool Handler ─────────────────────────────────────────
 
 export class FsChatToolHandler {
   private readonly toolRepo: ChatToolRepository;
+  private readonly ragService: IRagService;
 
-  constructor(db: Pool) {
+  constructor(db: Pool, ragService: IRagService) {
     this.toolRepo = new ChatToolRepository(db);
+    this.ragService = ragService;
   }
 
   async handle(toolName: string, args: Record<string, any>): Promise<string> {
@@ -200,6 +261,15 @@ export class FsChatToolHandler {
           return JSON.stringify({
             success: true,
           });
+        }
+
+        case "search_financial_documents": {
+          const results = await this.ragService.searchChunks(
+            args.query,
+            args.top_k ?? 5,
+            args.doc_id ?? undefined,
+          );
+          return JSON.stringify(results);
         }
 
         default:
