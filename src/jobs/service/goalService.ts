@@ -1,5 +1,5 @@
 // services/goalService.ts
-import { getDatabase } from "../../config/db";
+import { getDatabase } from "../../config/db/db";
 
 /**
  * 특정 날짜 기준으로 모든 유저의 재무 목표 진행도 업데이트

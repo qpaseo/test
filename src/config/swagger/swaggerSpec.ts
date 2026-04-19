@@ -1,5 +1,5 @@
 import { swaggerBase } from "./swaggerBase";
-import { authPaths, authSchemas } from "../../auth/swaggerAuthPaths";
+import { authPaths, authSchemas } from "../../modules/auth/swaggerAuthPaths";
 
 // 다른 모듈 추가 예시
 // import { userPaths, userSchemas } from "../../user/swaggerUserPaths";

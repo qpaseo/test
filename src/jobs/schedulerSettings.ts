@@ -1,8 +1,8 @@
 // services/schedulerService.ts
 
 import { RowDataPacket } from "mysql2";
-import { getDatabase } from "../config/db";
-import { SchedulerSettings } from "../modules/types/schedulerSettings";
+import { getDatabase } from "../config/db/db";
+import { SchedulerSettings } from "../config/db/types/schedulerSettings";
 
 /**
  * DB에서 마지막 스케줄러 실행 날짜(last_run_date)를 가져옵니다.

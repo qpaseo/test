@@ -1,5 +1,5 @@
 import app from "./app";
-import { initializeDatabase } from "./config/db";
+import { initializeDatabase } from "./config/db/db";
 import { ENV } from "./config/env";
 import { initMonthlyFinancesJob } from "./jobs/monthlyFinancesJob";
 

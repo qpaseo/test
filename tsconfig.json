@@ -40,7 +40,7 @@
     "removeComments": true,
     "incremental": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "auth"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"],
   "ts-node": {
     "transpileOnly": true,
