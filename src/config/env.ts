@@ -13,6 +13,7 @@ export const ENV = {
   PG_USER: process.env.PG_USER || "postgres",
   PG_PASSWORD: process.env.PG_PASSWORD || "",
   PG_NAME: process.env.PG_NAME || "ragdb",
+  DATABASE_URL: process.env.DATABASE_URL,
 
   // Redis
   REDIS_HOST: process.env.REDIS_HOST,

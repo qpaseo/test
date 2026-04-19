@@ -1,3 +1,5 @@
+// db 로컬로 연결할때 사용하는 코드입니다.
+
 import { Pool } from "pg";
 import { ENV } from "../../config/env";
 
@@ -8,18 +10,34 @@ let pool: Pool;
  */
 export const initializeDatabase = async (): Promise<Pool> => {
   try {
-    console.log("데이터베이스 연결 시도 중");
+    console.log("데이터베이스 존재 여부 확인 중");
 
+    // 연결 테스트용 임시 연결
+    const testPool = new Pool({
+      host: ENV.PG_HOST,
+      port: ENV.PG_PORT,
+      user: ENV.PG_USER,
+      password: ENV.PG_PASSWORD,
+      database: ENV.PG_NAME,
+    });
+
+    const client = await testPool.connect();
+    client.release();
+    await testPool.end();
+
+    // 실제 사용할 풀 생성
     pool = new Pool({
-      connectionString: ENV.DATABASE_URL,
-      ssl: {
-        rejectUnauthorized: false,
-      },
-      max: 10,
+      host: ENV.PG_HOST,
+      port: ENV.PG_PORT,
+      user: ENV.PG_USER,
+      password: ENV.PG_PASSWORD,
+      database: ENV.PG_NAME,
+      max: 10, // connectionLimit 대응
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,
     });
 
+    // 연결 테스트
     const connection = await pool.connect();
     console.log("PostgreSQL Database 연결 성공");
     connection.release();
