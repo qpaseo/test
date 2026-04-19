@@ -15,7 +15,7 @@ export interface ApiResponse<T = any> {
 /**
  * 확장된 Request 타입 (인증 정보 포함)
  */
-export interface AuthRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   userId?: string;
   email?: string;
   tokenId?: string;

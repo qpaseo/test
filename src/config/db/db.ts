@@ -1,40 +1,27 @@
-import mysql from "mysql2/promise";
+import { Pool } from "pg";
 import { ENV } from "../../config/env";
 
-let pool: mysql.Pool;
+let pool: Pool;
+
 /**
  * 데이터베이스 연결 풀 초기화
  */
-export const initializeDatabase = async (): Promise<mysql.Pool> => {
+export const initializeDatabase = async (): Promise<Pool> => {
   try {
-    // 첫 번째 연결: 데이터베이스 연결 여부 확인
-    console.log("데이터베이스 존재 여부 확인 중");
-    const adminConnection = await mysql.createConnection({
-      host: ENV.DB_HOST,
-      port: ENV.DB_PORT,
-      user: ENV.DB_USER,
-      password: ENV.DB_PASSWORD,
+    console.log("데이터베이스 연결 시도 중");
+
+    pool = new Pool({
+      connectionString: ENV.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+      max: 10,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 2000,
     });
 
-    await adminConnection.end();
-
-    // 두 번째 연결: 실제 데이터베이스에 연결
-    pool = mysql.createPool({
-      host: ENV.DB_HOST,
-      port: ENV.DB_PORT,
-      user: ENV.DB_USER,
-      password: ENV.DB_PASSWORD,
-      database: ENV.DB_NAME,
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0,
-      charset: "utf8mb4",
-    });
-
-    // 연결 테스트
-    const connection = await pool.getConnection();
-    console.log("MySQL Database 연결 성공");
-
+    const connection = await pool.connect();
+    console.log("PostgreSQL Database 연결 성공");
     connection.release();
 
     return pool;
@@ -45,9 +32,9 @@ export const initializeDatabase = async (): Promise<mysql.Pool> => {
 };
 
 /**
- * 데이터베이스 있는지 없는지 조회
+ * 데이터베이스 풀 반환
  */
-export const getDatabase = (): mysql.Pool => {
+export const getDatabase = (): Pool => {
   if (!pool) {
     throw new Error("데이터베이스가 초기화되지 않았습니다.");
   }
