@@ -1,4 +1,7 @@
-import { Elysia } from "elysia";
+//가드 : 여러가지의 훅과 검증
+import {
+  Elysia, //t
+} from "elysia";
 
 new Elysia()
   .guard({
@@ -9,6 +12,9 @@ new Elysia()
         }
       },
     ],
+    // query: t.Object({
+    //   name: t.String(),
+    // }), 이런식으로 값 검증도 가능
   })
   .get("/auth", ({ query: { name } }) => {
     console.log(`hello ${name}!`);
