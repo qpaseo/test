@@ -1,0 +1,9 @@
+{
+  "name": "example",
+  "workspaces": ["backend", "frontend"],
+  "scripts": {
+    "dev": "bun run --filter '*' dev",
+    "dev:be": "bun run --filter backend dev",
+    "dev:fe": "bun run --filter frontend dev"
+  }
+}

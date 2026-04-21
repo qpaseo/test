@@ -40,3 +40,13 @@ yarn-error.log*
 **/*.log
 package-lock.json
 **/*.bun
+
+#personal
+기록지
+기록지/
+todo
+todo.md
+test/
+test.md
+cli
+cli/
